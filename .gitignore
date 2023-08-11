@@ -2,6 +2,7 @@
 /.idea
 /__pychache__/*
 __pychache__/*
+*.pyc
 2871.txt
 2210.txt
 /prototype
