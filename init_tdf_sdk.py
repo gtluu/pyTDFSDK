@@ -3,13 +3,13 @@ import platform
 import ctypes
 import enum
 
-if platform.system() == 'Windows':
-    TDF_SDK_FILE_NAME = os.path.join(os.path.dirname(__file__), 'tdfsdk2210', 'win64, timsdata.dll')
-elif platform.system() == 'Linux':
-    TDF_SDK_FILE_NAME = os.path.join(os.path.dirname(__file__), 'tdfsdk2210', 'linux64', 'libtimsdata.so')
 
+def init_tdf_sdk_api():
+    if platform.system() == 'Windows':
+        bruker_api_file_name = os.path.join(os.path.dirname(__file__), 'tdfsdk2210', 'win64, timsdata.dll')
+    elif platform.system() == 'Linux':
+        bruker_api_file_name = os.path.join(os.path.dirname(__file__), 'tdfsdk2210', 'linux64', 'libtimsdata.so')
 
-def init_tdf_sdk_api(bruker_api_file_name: str=TDF_SDK_FILE_NAME):
     tdf_sdk = ctypes.cdll.LoadLibrary(os.path.realpath(bruker_api_file_name))
 
     MSMS_SPECTRUM_FUNCTOR = ctypes.CFUNCTYPE(None,
