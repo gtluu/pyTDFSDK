@@ -199,28 +199,28 @@ def init_tdf_sdk_api():
     tdf_sdk.tims_vis_get_chromatogram_line_plot.argtypes = [ctypes.c_uint64,
                                                             ctypes.c_int32,
                                                             ctypes.c_int32,
-                                                            ctypes.POINTER(TimsVisTransformation),
+                                                            ctypes.c_uint32,
                                                             ctypes.POINTER(TimsVisLine),
                                                             ctypes.c_uint32]
     tdf_sdk.tims_vis_get_chromatogram_line_plot.restype = ctypes.c_uint32
 
     # Function 32
     tdf_sdk.tims_vis_get_image_mob_mz.argtypes = [ctypes.c_uint64,
-                                                  ctypes.POINTER(TimsVisTransformation),
+                                                  ctypes.c_uint32,
                                                   ctypes.POINTER(ctypes.c_float),
                                                   ctypes.c_uint32]
     tdf_sdk.tims_vis_get_image_mob_mz.restype = ctypes.c_uint32
 
     # Function 33
     tdf_sdk.tims_vis_get_image_rt_mob.argtypes = [ctypes.c_uint64,
-                                                  ctypes.POINTER(TimsVisTransformation),
+                                                  ctypes.c_uint32,
                                                   ctypes.POINTER(ctypes.c_float),
                                                   ctypes.c_uint32]
     tdf_sdk.tims_vis_get_image_rt_mob.restype = ctypes.c_uint32
 
     # Function 34
     tdf_sdk.tims_vis_get_image_rt_mz.argtypes = [ctypes.c_uint64,
-                                                 ctypes.POINTER(TimsVisTransformation),
+                                                 ctypes.c_uint32,
                                                  ctypes.POINTER(ctypes.c_float),
                                                  ctypes.c_uint32]
     tdf_sdk.tims_vis_get_image_rt_mz.restype = ctypes.c_uint32
@@ -234,7 +234,7 @@ def init_tdf_sdk_api():
     tdf_sdk.tims_vis_get_mobilogram_line_plot.argtypes = [ctypes.c_uint64,
                                                           ctypes.c_int32,
                                                           ctypes.c_int32,
-                                                          ctypes.POINTER(TimsVisTransformation),
+                                                          ctypes.c_uint32,
                                                           ctypes.POINTER(TimsVisLine),
                                                           ctypes.c_uint32]
     tdf_sdk.tims_vis_get_mobilogram_line_plot.restype = ctypes.c_uint32
@@ -243,7 +243,7 @@ def init_tdf_sdk_api():
     tdf_sdk.tims_vis_get_spectrum_line_plot.argtypes = [ctypes.c_uint64,
                                                         ctypes.c_int32,
                                                         ctypes.c_int32,
-                                                        ctypes.POINTER(TimsVisTransformation),
+                                                        ctypes.c_uint32,
                                                         ctypes.POINTER(TimsVisLine),
                                                         ctypes.c_uint32]
     tdf_sdk.tims_vis_get_spectrum_line_plot.restype = ctypes.c_uint32
