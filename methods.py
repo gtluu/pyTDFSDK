@@ -750,8 +750,15 @@ def tims_set_num_threads(tdf_sdk, num_threads):
     ///
     /// returns 1 on success, 0 on error
 '''
-def tims_vis_calculate_async(tdf_sdk, handle):
-    pass
+def tims_vis_calculate_async(tdf_sdk, handle, extraction_filter, heatmap_sizes):
+    try:
+        result = tdf_sdk.tims_vis_calculate_async(handle, extraction_filter, heatmap_sizes)
+        if result == 1:
+            print('Calculation successful.')
+        elif result == 0:
+            print('Calculation failed.')
+    except:
+        raise RuntimeWarning('Unable to perform calculation.')
 
 
 # Method 29
@@ -794,7 +801,7 @@ def tims_vis_close(tdf_sdk, handle, conn):
     ///
     /// returns 0 on error, otherwise the required size of the line_array
 '''
-def tims_vis_get_chromatogram_line_plot(tdf_sdk, handle, x, y):
+def tims_vis_get_chromatogram_line_plot():
     pass
 
 
@@ -812,7 +819,8 @@ def tims_vis_get_chromatogram_line_plot(tdf_sdk, handle, x, y):
     ///
     /// returns 0 on error, otherwise the required size of the image_array
 '''
-def tims_vis_get_image_mob_mz(tdf_sdk, handle, transformation=TimsVisTransformation.NONE.value):
+def tims_vis_get_image_mob_mz(tdf_sdk, handle, image_array, transformation=TimsVisTransformation.NONE.value,
+                              buffer_size=1024):
     pass
 
 
@@ -866,7 +874,7 @@ def tims_vis_get_image_rt_mz():
     ///
     /// returns 0 on error, otherwise the required size of the line_array
 '''
-def tims_vis_get_mobilogram_line_plot():
+def tims_vis_get_mobilogram_line_plot(tdf_sdk, handle, x, y, transformation, line_array):
     pass
 
 
@@ -898,34 +906,9 @@ def tims_vis_get_spectrum_line_plot():
     /// param[out] complete if the last job has been completed
 '''
 def tims_vis_get_state(tdf_sdk, handle, job_id, progress, complete):
-    return tdf_sdk.tims_vis_get_state(handle, job_id, progress, complete)
+    #return tdf_sdk.tims_vis_get_state(handle, job_id, progress, complete)
+    pass
 
-'''
-def tsf_read_line_spectrum_v2(tdf_sdk, handle, frame_id, profile_buffer_size=1024):
-    while True:
-        cnt = int(profile_buffer_size)
-        index_buf = np.empty(shape=cnt, dtype=np.float64)
-        intensity_buf = np.empty(shape=cnt, dtype=np.float32)
-
-        required_len = tdf_sdk.tsf_read_line_spectrum_v2(handle,
-                                                         frame_id,
-                                                         index_buf.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
-                                                         intensity_buf.ctypes.data_as(ctypes.POINTER(ctypes.c_float)),
-                                                         profile_buffer_size)
-
-        if required_len < 0:
-            _throw_last_tsfdata_error(tdf_sdk)
-
-        if required_len > profile_buffer_size:
-            if required_len > 16777216:
-                # arbitrary limit for now...
-                raise RuntimeError('Maximum expected frame size exceeded.')
-            profile_buffer_size = required_len  # grow buffer
-        else:
-            break
-
-    return index_buf[0:required_len], intensity_buf[0:required_len]
-'''
 
 # Method 39
 '''
