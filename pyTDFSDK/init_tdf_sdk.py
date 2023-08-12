@@ -1,13 +1,13 @@
 import os
 import platform
-from constants import *
+from pyTDFSDK.constants import *
 
 
 def init_tdf_sdk_api():
     if platform.system() == 'Windows':
-        bruker_api_file_name = os.path.join(os.path.dirname(__file__), 'tdfsdk2210', 'win64, timsdata.dll')
+        bruker_api_file_name = os.path.join(os.path.dirname(__file__), '../tdfsdk2210', 'win64, timsdata.dll')
     elif platform.system() == 'Linux':
-        bruker_api_file_name = os.path.join(os.path.dirname(__file__), 'tdfsdk2210', 'linux64', 'libtimsdata.so')
+        bruker_api_file_name = os.path.join(os.path.dirname(__file__), '../tdfsdk2210', 'linux64', 'libtimsdata.so')
 
     tdf_sdk = ctypes.cdll.LoadLibrary(os.path.realpath(bruker_api_file_name))
 

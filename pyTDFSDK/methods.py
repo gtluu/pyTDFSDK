@@ -1,5 +1,5 @@
 import numpy as np
-from constants import *
+from pyTDFSDK.constants import *
 
 
 # Method 7
