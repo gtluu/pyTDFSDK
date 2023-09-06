@@ -699,7 +699,17 @@ def tims_read_scans_v2(tdf_sdk, handle, frame_id, scan_begin, scan_end, initial_
         else:
             break
 
-    return buf
+    result = []
+    d = scan_end - scan_begin
+    for i in range(scan_begin, scan_end):
+        npeaks = buf[i-scan_begin]
+        indices = buf[d : d+npeaks]
+        d += npeaks
+        intensities = buf[d : d+npeaks]
+        d += npeaks
+        result.append((indices,intensities))
+
+    return result
 
 
 # Method 25
