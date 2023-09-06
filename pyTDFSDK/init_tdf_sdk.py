@@ -11,7 +11,7 @@ def init_tdf_sdk_api(bruker_api_file_name):
         bruker_api_file_name = os.path.join(os.path.dirname(__file__), '../tdfsdk2210', 'linux64', 'libtimsdata.so')
     '''
 
-    tdf_sdk = ctypes.cdll.LoadLibrary(os.path.realpath(bruker_api_file_name))
+    tdf_sdk = ctypes.cdll.LoadLibrary(bruker_api_file_name)
 
     convfunc_argtypes = [ctypes.c_uint64,
                          ctypes.c_int64,
