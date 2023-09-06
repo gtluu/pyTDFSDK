@@ -8,4 +8,5 @@ setup(name='pyTDFSDK',
       author_email='gtluu912@gmail.com',
       license='Apache License',
       packages=['pyTDFSDK'],
+      include_package_data=True,
       install_requires=['numpy'])
