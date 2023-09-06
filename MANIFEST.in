@@ -1,0 +1,2 @@
+include tdfsdk2210/win64/timsdata.dll
+include tdfsdk2210/linux64/libtimsdata.so
