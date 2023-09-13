@@ -5,3 +5,6 @@ __pychache__/*
 *.pyc
 /prototype
 /data
+/build/*
+build/*
+/pyTDFSDK.egg-info
