@@ -3,13 +3,12 @@ import platform
 from pyTDFSDK.constants import *
 
 
-def init_tdf_sdk_api(bruker_api_file_name):
-    '''
-    if platform.system() == 'Windows':
-        bruker_api_file_name = os.path.join(os.path.dirname(__file__), '../tdfsdk2210', 'win64', 'timsdata.dll')
-    elif platform.system() == 'Linux':
-        bruker_api_file_name = os.path.join(os.path.dirname(__file__), '../tdfsdk2210', 'linux64', 'libtimsdata.so')
-    '''
+def init_tdf_sdk_api(bruker_api_file_name=''):
+    if bruker_api_file_name == '':
+        if platform.system() == 'Windows':
+            bruker_api_file_name = os.path.join(os.path.dirname(__file__), 'timsdata.dll')
+        elif platform.system() == 'Linux':
+            bruker_api_file_name = os.path.join(os.path.dirname(__file__), 'libtimsdata.so')
 
     tdf_sdk = ctypes.cdll.LoadLibrary(bruker_api_file_name)
 
