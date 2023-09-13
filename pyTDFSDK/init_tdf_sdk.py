@@ -6,9 +6,13 @@ from pyTDFSDK.ctypes_data_structures import *
 def init_tdf_sdk_api(bruker_api_file_name=''):
     if bruker_api_file_name == '':
         if platform.system() == 'Windows':
-            bruker_api_file_name = os.path.join(os.path.dirname(__file__), 'timsdata.dll')
+            bruker_api_file_name = os.path.join(os.path.split(os.path.dirname(__file__))[0],
+                                                'TDF-SDK',
+                                                'timsdata.dll')
         elif platform.system() == 'Linux':
-            bruker_api_file_name = os.path.join(os.path.dirname(__file__), 'libtimsdata.so')
+            bruker_api_file_name = os.path.join(os.path.split(os.path.dirname(__file__))[0],
+                                                'TDF-SDK',
+                                                'libtimsdata.so')
 
     tdf_sdk = ctypes.cdll.LoadLibrary(bruker_api_file_name)
 
