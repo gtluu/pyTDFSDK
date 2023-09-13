@@ -1,6 +1,6 @@
 import os
 import platform
-from pyTDFSDK.constants import *
+from pyTDFSDK.ctypes_data_structures import *
 
 
 def init_tdf_sdk_api(bruker_api_file_name=''):
