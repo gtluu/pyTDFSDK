@@ -1,9 +1,0 @@
-Metadata-Version: 2.1
-Name: pyTDFSDK
-Version: 0.1.4
-Summary: Python wrapper for Bruker TDF-SDK
-Home-page: https://github.com/gtluu/pyTDFSDK
-Author: Gordon T. Luu
-Author-email: gtluu912@gmail.com
-License: Apache License
-License-File: LICENSE
