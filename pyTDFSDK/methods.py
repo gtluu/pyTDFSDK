@@ -1,5 +1,5 @@
 import numpy as np
-from pyTDFSDK.constants import *
+from pyTDFSDK.ctypes_data_structures import *
 
 
 # Method 7
