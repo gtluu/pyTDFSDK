@@ -15,7 +15,7 @@ from pyTDFSDK.ctypes_data_structures import *
     /// returned error string was truncated to fit in the provided buffer.
 '''
 # Throw last TimsData error string as an exception.
-def _throw_last_timsdata_error(tdf_sdk):
+def throw_last_timsdata_error(tdf_sdk):
     length = tdf_sdk.tims_get_last_error_string(None, 0)
     buf = ctypes.create_string_buffer(length)
     tdf_sdk.tims_get_last_error_string(buf, length)
@@ -34,7 +34,7 @@ def _throw_last_timsdata_error(tdf_sdk):
     /// byte). If this is longer than the input parameter 'len', you know that the
     /// returned error string was truncated to fit in the provided buffer.
 '''
-def _throw_last_timsvis_error(tdf_sdk):
+def throw_last_timsvis_error(tdf_sdk):
     length = tdf_sdk.tims_vis_get_last_error_string(None, 0)
     buf = ctypes.create_string_buffer(length)
     tdf_sdk.tims_vis_get_last_error_string(buf, length)
@@ -53,7 +53,7 @@ def _throw_last_timsvis_error(tdf_sdk):
     /// byte). If this is longer than the input parameter 'len', you know that the
     /// returned error string was truncated to fit in the provided buffer.
 '''
-def _throw_last_tsfdata_error(tdf_sdk):
+def throw_last_tsfdata_error(tdf_sdk):
     length = tdf_sdk.tsf_get_last_error_string(None, 0)
     buf = ctypes.create_string_buffer(length)
     tdf_sdk.tsf_get_last_error_string(buf, length)
@@ -77,7 +77,7 @@ def __call_conversion_func(tdf_sdk, handle, frame_id, input_data, func):
                    cnt)
 
     if success == 0:
-        _throw_last_timsdata_error(tdf_sdk)
+        throw_last_timsdata_error(tdf_sdk)
 
     return out
 
@@ -149,7 +149,7 @@ def tims_extract_centroided_spectrum_for_frame_ext(tdf_sdk, handle, frame_id, sc
                                                                 None)
 
     if rc == 0:
-        _throw_last_timsdata_error(tdf_sdk)
+        throw_last_timsdata_error(tdf_sdk)
 
     return result
 
@@ -188,7 +188,7 @@ def tims_extract_centroided_spectrum_for_frame_v2(tdf_sdk, handle, frame_id, sca
                                                                None)
 
     if rc == 0:
-        _throw_last_timsdata_error(tdf_sdk)
+        throw_last_timsdata_error(tdf_sdk)
 
     return result
 
@@ -233,7 +233,7 @@ def tims_extract_chromatograms(tdf_sdk, handle, jobs, trace_sink):
     rc = tdf_sdk.tims_extract_chromatogram(handle, wrap_gen, wrap_sink, unused_user_data)
 
     if rc == 0:
-        _throw_last_timsdata_error(tdf_sdk)
+        throw_last_timsdata_error(tdf_sdk)
 
 
 # Method 6
@@ -263,7 +263,7 @@ def tims_extract_profile_for_frame(tdf_sdk, handle, frame_id, scan_begin, scan_e
     rc = tdf_sdk.tims_extract_profile_for_frame(handle, frame_id, scan_begin, scan_end, callback_for_dll, None)
 
     if rc == 0:
-        _throw_last_timsdata_error(tdf_sdk)
+        throw_last_timsdata_error(tdf_sdk)
 
     return result
 
@@ -406,7 +406,7 @@ def tims_read_pasef_msms(tdf_sdk, handle, precursor_list):
                                       callback_for_dll)
 
     if rc == 0:
-        _throw_last_timsdata_error(tdf_sdk)
+        throw_last_timsdata_error(tdf_sdk)
 
     return result
 
@@ -437,7 +437,7 @@ def tims_read_pasef_msms_for_frame(tdf_sdk, handle, frame_id):
     rc = tdf_sdk.tims_read_pasef_msms_for_frame(handle, frame_id, callback_for_dll)
 
     if rc == 0:
-        _throw_last_timsdata_error(tdf_sdk)
+        throw_last_timsdata_error(tdf_sdk)
 
     return result
 
@@ -469,7 +469,7 @@ def tims_read_pasef_msms_for_frame_v2(tdf_sdk, handle, frame_id):
     rc = tdf_sdk.tims_read_pasef_msms_for_frame_v2(handle, frame_id, callback_for_dll, None)
 
     if rc == 0:
-        _throw_last_timsdata_error(tdf_sdk)
+        throw_last_timsdata_error(tdf_sdk)
 
     return result
 
@@ -510,7 +510,7 @@ def tims_read_pasef_msms_v2(tdf_sdk, handle, precursor_list):
                                          None)
 
     if rc == 0:
-        _throw_last_timsdata_error(tdf_sdk)
+        throw_last_timsdata_error(tdf_sdk)
 
     return result
 
@@ -548,7 +548,7 @@ def tims_read_pasef_profile_msms(tdf_sdk, handle, precursor_list):
                                               callback_for_dll)
 
     if rc == 0:
-        _throw_last_timsdata_error(tdf_sdk)
+        throw_last_timsdata_error(tdf_sdk)
 
     return result
 
@@ -579,7 +579,7 @@ def tims_read_pasef_profile_msms_for_frame(tdf_sdk, handle, frame_id):
     rc = tdf_sdk.tims_read_pasef_profile_msms_for_frame(handle, frame_id, callback_for_dll)
 
     if rc == 0:
-        _throw_last_timsdata_error(tdf_sdk)
+        throw_last_timsdata_error(tdf_sdk)
 
     return result
 
@@ -611,7 +611,7 @@ def tims_read_pasef_profile_msms_for_frame_v2(tdf_sdk, handle, frame_id):
     rc = tdf_sdk.tims_read_pasef_profile_msms_for_frame_v2(handle, frame_id, callback_for_dll, None)
 
     if rc == 0:
-        _throw_last_timsdata_error(tdf_sdk)
+        throw_last_timsdata_error(tdf_sdk)
 
     return result
 
@@ -651,7 +651,7 @@ def tims_read_pasef_profile_msms_v2(tdf_sdk, handle, precursor_list):
                                                  None)
 
     if rc == 0:
-        _throw_last_timsdata_error(tdf_sdk)
+        throw_last_timsdata_error(tdf_sdk)
 
     return result
 
@@ -689,7 +689,7 @@ def tims_read_scans_v2(tdf_sdk, handle, frame_id, scan_begin, scan_end, initial_
                                                   length)
 
         if required_len == 0:
-            _throw_last_timsdata_error(tdf_sdk)
+            throw_last_timsdata_error(tdf_sdk)
 
         if required_len > length:
             if required_len > 16777216:
@@ -1111,7 +1111,7 @@ def tsf_read_line_spectrum_v2(tdf_sdk, handle, frame_id, profile_buffer_size=102
                                                          profile_buffer_size)
 
         if required_len < 0:
-            _throw_last_tsfdata_error(tdf_sdk)
+            throw_last_tsfdata_error(tdf_sdk)
 
         if required_len > profile_buffer_size:
             if required_len > 16777216:
@@ -1161,7 +1161,7 @@ def tsf_read_line_spectrum_with_width_v2(tdf_sdk, handle, frame_id, profile_buff
                                                                     profile_buffer_size)
 
         if required_len < 0:
-            _throw_last_tsfdata_error(tdf_sdk)
+            throw_last_tsfdata_error(tdf_sdk)
 
         if required_len > profile_buffer_size:
             if required_len > 16777216:
@@ -1239,7 +1239,7 @@ def tsf_read_profile_spectrum_v2(tdf_sdk, handle, frame_id, profile_buffer_size=
                                                             profile_buffer_size)
 
         if required_len < 0:
-            _throw_last_tsfdata_error(tdf_sdk)
+            throw_last_tsfdata_error(tdf_sdk)
 
         if required_len > profile_buffer_size:
             if required_len > 16777216:
