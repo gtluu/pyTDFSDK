@@ -6,6 +6,15 @@ from pyTDFSDK.ctypes_data_structures import *
 
 
 def init_tdf_sdk_api(bruker_api_file_name=''):
+    """
+    Initialize functions from Bruker's TDF-SDK library using ctypes.
+
+    :param bruker_api_file_name: Path to TDF-SDK library, defaults to packaged library paths if no custom paths are
+        provided.
+    :type bruker_api_file_name: str
+    :return: Handle for TDF-SDK library.
+    :rtype: ctypes.CDLL
+    """
     if bruker_api_file_name == '':
         if platform.system() == 'Windows':
             bruker_api_file_name = os.path.join(os.path.split(os.path.dirname(__file__))[0],
