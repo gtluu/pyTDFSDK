@@ -10,4 +10,4 @@ setup(name='pyTDFSDK',
       packages=['pyTDFSDK', 'TDF-SDK'],
       include_package_data=True,
       package_data={'': ['*.dll', '*.so']},
-      install_requires=['numpy'])
+      install_requires=['numpy', 'pandas'])

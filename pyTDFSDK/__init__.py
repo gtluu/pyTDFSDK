@@ -1,9 +1,10 @@
 from ctypes import CFUNCTYPE, POINTER, Structure, c_int64, c_uint32, c_double, c_float, c_int32, c_void_p, c_uint64, \
     create_string_buffer, cdll, c_char_p, c_bool
-import enum
+from enum import Enum
 import os
 import platform
 import numpy as np
+import pandas as pd
 
 from pyTDFSDK.ctypes_data_structures import *
 from pyTDFSDK.init_tdf_sdk import *
