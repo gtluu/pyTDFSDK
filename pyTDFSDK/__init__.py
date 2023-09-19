@@ -7,6 +7,7 @@ import numpy as np
 
 from pyTDFSDK.ctypes_data_structures import *
 from pyTDFSDK.init_tdf_sdk import *
+from pyTDFSDK.classes import *
 from pyTDFSDK.tims import *
 from pyTDFSDK.tsf import *
 from pyTDFSDK.util import *

@@ -8,7 +8,7 @@ def tsf_close(tdf_sdk, handle, conn):
     """
     Close TSF dataset.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TSF dataset initialized using pyTDFSDK.tsf.tsf_open().
     :type handle: int
@@ -32,7 +32,7 @@ def tsf_has_recalibrated_state(tdf_sdk, handle):
     masses and 1/K0 values in the raw data SQLite files are always in the raw calibration state, not the recalibrated
     state.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TSF dataset initialized using pyTDFSDK.tsf.tsf_open().
     :type handle: int
@@ -46,7 +46,7 @@ def tsf_index_to_mz(tdf_sdk, handle, frame_id, indices):
     """
     Convert (possibly non-integer) index values for the mass dimension to m/z values.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TSF dataset initialized using pyTDFSDK.tsf.tsf_open().
     :type handle: int
@@ -65,7 +65,7 @@ def tsf_mz_to_index(tdf_sdk, handle, frame_id, mzs):
     """
     Convert m/z values to (possibly non-integer) index values for the mass dimension.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TSF dataset initialized using pyTDFSDK.tsf.tsf_open().
     :type handle: int
@@ -84,7 +84,7 @@ def tsf_open(tdf_sdk, bruker_d_folder_name, use_recalibrated_state=True):
     """
     Open TSF dataset and return a non-zero instance handle to be passed to subsequent API calls.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param bruker_d_folder_name: Path to a Bruker .d file containing analysis.tsf.
     :type bruker_d_folder_name: str
@@ -101,7 +101,7 @@ def tsf_read_line_spectrum(tdf_sdk, handle, frame_id, profile_buffer_size=1024):
     """
     Read peak picked spectra for a frame from a non-TIMS (TSF) dataset.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TSF dataset initialized using pyTDFSDK.tsf.tsf_open().
     :type handle: int
@@ -134,7 +134,7 @@ def tsf_read_line_spectrum_v2(tdf_sdk, handle, frame_id, profile_buffer_size=102
     """
     Read peak picked spectra for a frame from a non-TIMS (TSF) dataset.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TSF dataset initialized using pyTDFSDK.tsf.tsf_open().
     :type handle: int
@@ -170,7 +170,7 @@ def tsf_read_line_spectrum_with_width_v2(tdf_sdk, handle, frame_id, profile_buff
     """
     Read peak picked spectra with peak width for a frame from a non-TIMS (TSF) dataset.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TSF dataset initialized using pyTDFSDK.tsf.tsf_open().
     :type handle: int
@@ -209,7 +209,7 @@ def tsf_read_profile_spectrum(tdf_sdk, handle, frame_id, profile_buffer_size=102
     """
     Read profile spectra for a frame from a non-TIMS (TSF) dataset.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TSF dataset initialized using pyTDFSDK.tsf.tsf_open().
     :type handle: int
@@ -241,7 +241,7 @@ def tsf_read_profile_spectrum_v2(tdf_sdk, handle, frame_id, profile_buffer_size=
     """
     Read profile spectra for a frame from a non-TIMS (TSF) dataset.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TSF dataset initialized using pyTDFSDK.tsf.tsf_open().
     :type handle: int
@@ -280,7 +280,7 @@ def tsf_set_num_threads(tdf_sdk, num_threads):
     internally parallelized using OpenMP. THis call is simply forwarded to omp_set_num_threads(). This function has no
     real effect on Linux.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param num_threads: Number of threads to use (>= 1)
     :type num_threads: int
