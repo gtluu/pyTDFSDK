@@ -14,6 +14,7 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
    
@@ -367,7 +368,20 @@ and the tables as a pandas.DataFrame are values; this is stored in pyTDFSDK.clas
 <dl class="py function">
 <dt class="sig sig-object py" id="pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api">
 <span class="sig-prename descclassname"><span class="pre">pyTDFSDK.init_tdf_sdk.</span></span><span class="sig-name descname"><span class="pre">init_tdf_sdk_api</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bruker_api_file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Initialize functions from Bruker’s TDF-SDK library using ctypes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>bruker_api_file_name</strong> (<em>str</em>) – Path to TDF-SDK library, defaults to packaged library paths if no custom paths are
+provided.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Handle for TDF-SDK library.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ctypes.CDLL</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 <section id="module-pyTDFSDK.tims">
@@ -1292,8 +1306,8 @@ pyTDFSDK.tsf.tsf_open().</p></li>
       &copy;2023, Gordon T. Luu.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
       
       |
       <a href="_sources/pyTDFSDK.rst.txt"
