@@ -277,7 +277,7 @@ def tsf_read_profile_spectrum_v2(tdf_sdk, handle, frame_id, profile_buffer_size=
 def tsf_set_num_threads(tdf_sdk, num_threads):
     """
     Set the number of threads that this DLL is allowed to use internally. The index <-> m/z transformation is
-    internally parallelized using OpenMP. THis call is simply forwarded to omp_set_num_threads(). This function has no
+    internally parallelized using OpenMP. This call is simply forwarded to omp_set_num_threads(). This function has no
     real effect on Linux.
 
     :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().

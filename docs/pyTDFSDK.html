@@ -48,8 +48,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>bruker_d_folder_name</strong> (<em>str</em>) – Path to a Bruker .d file containing analysis.tdf.</p></li>
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by timsconvert.init_bruker_dll.init_tdf_sdk_dll().</p></li>
+<li><p><strong>bruker_d_folder_name</strong> (<em>str</em>) – Path to a Bruker .d directory containing analysis.tdf.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>use_recalibrated_state</strong> (<em>bool</em>) – Whether to use recalibrated data (True) or not (False), defaults to True.</p></li>
 <li><p><strong>pressure_compensation_strategy</strong> (<em>enum.Enum</em>) – Pressure compensation when opening TDF data
 (pyTDFSDK.ctypes_data_structures.PressureCompensationStrategy.NoPressureCompensation = None,
@@ -70,7 +70,7 @@ compensation), defaults to No Pressure Compensation.</p></li>
 <dt class="sig sig-object py" id="pyTDFSDK.classes.TdfData.get_db_tables">
 <span class="sig-name descname"><span class="pre">get_db_tables</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.classes.TdfData.get_db_tables" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a dictionary of all tables found in the analysis.tsf SQLite database in which the table names act as keys
-and the tables as a pandas.DataFrame are values; this is stored in pyTDFSDK.classes.TsfData.analysis.</p>
+and the tables as a pandas.DataFrame of values; this is stored in pyTDFSDK.classes.TsfData.analysis.</p>
 </dd></dl>
 
 </dd></dl>
@@ -83,8 +83,8 @@ and the tables as a pandas.DataFrame are values; this is stored in pyTDFSDK.clas
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>bruker_d_folder_name</strong> (<em>str</em>) – Path to a Bruker .d file containing analysis.tsf.</p></li>
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by timsconvert.init_bruker_dll.init_tdf_sdk_dll().</p></li>
+<li><p><strong>bruker_d_folder_name</strong> (<em>str</em>) – Path to a Bruker .d directory containing analysis.tsf.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>use_recalibrated_state</strong> (<em>bool</em>) – Whether to use recalibrated data (True) or not (False), defaults to True.</p></li>
 </ul>
 </dd>
@@ -99,7 +99,7 @@ and the tables as a pandas.DataFrame are values; this is stored in pyTDFSDK.clas
 <dt class="sig sig-object py" id="pyTDFSDK.classes.TsfData.get_db_tables">
 <span class="sig-name descname"><span class="pre">get_db_tables</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.classes.TsfData.get_db_tables" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a dictionary of all tables found in the analysis.tsf SQLite database in which the table names act as keys
-and the tables as a pandas.DataFrame are values; this is stored in pyTDFSDK.classes.TsfData.analysis.</p>
+and the tables as a pandas.DataFrame of values; this is stored in pyTDFSDK.classes.TsfData.analysis.</p>
 </dd></dl>
 
 </dd></dl>
@@ -950,7 +950,7 @@ error.</p>
 <dt class="sig sig-object py" id="pyTDFSDK.tims.tims_set_num_threads">
 <span class="sig-prename descclassname"><span class="pre">pyTDFSDK.tims.</span></span><span class="sig-name descname"><span class="pre">tims_set_num_threads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tdf_sdk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.tims.tims_set_num_threads" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the number of threads that this DLL is allowed to use internally. The index &lt;-&gt; m/z transformation is
-internally parallelized using OpenMP. THis call is simply forwarded to omp_set_num_threads(). This function has no
+internally parallelized using OpenMP. This call is simply forwarded to omp_set_num_threads(). This function has no
 real effect on Linux.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1210,7 +1210,7 @@ error.</p>
 <dt class="sig sig-object py" id="pyTDFSDK.tsf.tsf_set_num_threads">
 <span class="sig-prename descclassname"><span class="pre">pyTDFSDK.tsf.</span></span><span class="sig-name descname"><span class="pre">tsf_set_num_threads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tdf_sdk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.tsf.tsf_set_num_threads" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the number of threads that this DLL is allowed to use internally. The index &lt;-&gt; m/z transformation is
-internally parallelized using OpenMP. THis call is simply forwarded to omp_set_num_threads(). This function has no
+internally parallelized using OpenMP. This call is simply forwarded to omp_set_num_threads(). This function has no
 real effect on Linux.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
