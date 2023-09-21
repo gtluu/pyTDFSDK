@@ -109,7 +109,8 @@ def tsf_read_line_spectrum(tdf_sdk, handle, frame_id, profile_buffer_size=1024):
     :type frame_id: int
     :param profile_buffer_size: Initial number of buffer bytes necessary for the output, defaults to 1024.
     :type profile_buffer_size: int
-    :return: Tuple containing an array of m/z values and an array of detector counts or -1 on error.
+    :return: Tuple containing an array of index values for the mass dimension and an array of detector counts or -1 on
+        error.
     :rtype: tuple[numpy.array] | int
     """
     while True:
@@ -142,7 +143,8 @@ def tsf_read_line_spectrum_v2(tdf_sdk, handle, frame_id, profile_buffer_size=102
     :type frame_id: int
     :param profile_buffer_size: Initial number of buffer bytes necessary for the output, defaults to 1024.
     :type profile_buffer_size: int
-    :return: Tuple containing an array of m/z values and an array of detector counts or -1 on error.
+    :return: Tuple containing an array of index values for the mass dimension and an array of detector counts or -1 on
+        error.
     :rtype: tuple[numpy.array] | int
     """
     while True:
@@ -178,8 +180,8 @@ def tsf_read_line_spectrum_with_width_v2(tdf_sdk, handle, frame_id, profile_buff
     :type frame_id: int
     :param profile_buffer_size: Initial number of buffer bytes necessary for the output, defaults to 1024.
     :type profile_buffer_size: int
-    :return: Tuple containing an array of m/z values, an array of detector counts, and an array of widths or -1 on
-        error.
+    :return: Tuple containing an array of index values for the mass dimension, an array of detector counts, and an
+        array of widths or -1 on error.
     :rtype: tuple[numpy.array] | int
     """
     while True:
@@ -217,7 +219,8 @@ def tsf_read_profile_spectrum(tdf_sdk, handle, frame_id, profile_buffer_size=102
     :type frame_id: int
     :param profile_buffer_size: Initial number of buffer bytes necessary for the output, defaults to 1024.
     :type profile_buffer_size: int
-    :return: Tuple containing an array of m/z values and an array of detector counts or -1 on error.
+    :return: Tuple containing an array of index values for the mass dimension and an array of detector counts or -1 on
+        error.
     :rtype: tuple[numpy.array] | int
     """
     while True:
@@ -249,7 +252,8 @@ def tsf_read_profile_spectrum_v2(tdf_sdk, handle, frame_id, profile_buffer_size=
     :type frame_id: int
     :param profile_buffer_size: Initial number of buffer bytes necessary for the output, defaults to 1024.
     :type profile_buffer_size: int
-    :return: Tuple containing an array of m/z values and an array of detector counts or -1 on error.
+    :return: Tuple containing an array of index values for the mass dimension and an array of detector counts or -1 on
+        error.
     :rtype: tuple[numpy.array] | int
     """
     while True:
