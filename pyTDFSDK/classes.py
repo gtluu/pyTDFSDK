@@ -91,7 +91,7 @@ class TdfData(object):
         self.handle = tims_open_v2(self.api, self.source_file, pressure_compensation_strategy, use_recalibrated_state)
         if self.handle == 0:
             throw_last_timsdata_error(self.api)
-        self.conn = sqlite3.connect(os.path.join(bruker_d_folder_name, 'analysis.tsf'))
+        self.conn = sqlite3.connect(os.path.join(bruker_d_folder_name, 'analysis.tdf'))
 
         self.analysis = None
 
