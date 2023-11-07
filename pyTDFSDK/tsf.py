@@ -1,7 +1,7 @@
 import numpy as np
 from ctypes import POINTER, c_double, c_float, c_uint32
 from pyTDFSDK.error import throw_last_tsfdata_error
-from pyTDFSDK.util import call_conversion_func
+from pyTDFSDK.util import call_conversion_func, get_encoding_dtype, bin_profile_spectrum
 
 
 def tsf_close(tdf_sdk, handle, conn):
@@ -290,3 +290,35 @@ def tsf_set_num_threads(tdf_sdk, num_threads):
     :type num_threads: int
     """
     tdf_sdk.tsf_set_num_threads(num_threads)
+
+
+def extract_tsf_spectrum(tsf_data, frame, mode, profile_bins=0, encoding=64):
+    """
+    Extract spectrum from TSF data with m/z and intensity arrays. Spectrum can either be centroid or quasi-profile
+    mode. If "raw" mode is chosen, centroid mode will automatically be used. "Centroid" mode uses
+    pyTDFSDK.tsf.tsf_read_line_spectrum_v2() method. "Profile" mode uses pyTDFSDK.tsf.tsf_read_profile_spectrum_v2() to
+    extrapolate a quasi-profile spectrum from centroid raw data.
+
+    :param tsf_data: tsf_data object containing metadata from analysis.tsf database.
+    :type tsf_data: timsconvert.classes.TimsconvertTsfData
+    :param frame: Frame ID from the Frames table in analysis.tdf/analysis.tsf database.
+    :type frame: int
+    :param mode: Mode command line parameter, either "profile", "centroid", or "raw".
+    :type mode: str
+    :param profile_bins: Number of bins to bin spectrum to.
+    :type profile_bins: int
+    :param encoding: Encoding command line parameter, either "64" or "32".
+    :type encoding: int
+    :return: Tuple of mz_array (np.array) and intensity_array (np.array).
+    :rtype: tuple[numpy.array]
+    """
+    if mode == 'raw' or mode == 'centroid':
+        index_buf, intensity_array = tsf_read_line_spectrum_v2(tsf_data.api, tsf_data.handle, frame)
+        mz_array = tsf_index_to_mz(tsf_data.api, tsf_data.handle, frame, index_buf)
+    elif mode == 'profile':
+        index_buf, intensity_array = tsf_read_profile_spectrum_v2(tsf_data.api, tsf_data.handle, frame)
+        intensity_array = np.array(intensity_array, dtype=get_encoding_dtype(encoding))
+        mz_array = tsf_index_to_mz(tsf_data.api, tsf_data.handle, frame, index_buf)
+        if profile_bins != 0:
+            mz_array, intensity_array = bin_profile_spectrum(mz_array, intensity_array, profile_bins, encoding)
+    return mz_array, intensity_array
