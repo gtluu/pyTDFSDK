@@ -127,6 +127,21 @@ class TdfData(object):
 
 
 class TsfSpectrum(object):
+    """
+    Class for parsing and storing spectrum metadata and data arrays from BAF format data.
+
+    :param tsf_data: TsfData object containing metadata from analysis.tsf database.
+    :type tsf_data: pyTDFSDK.classes.TsfData
+    :param frame: ID of the frame of interest.
+    :type frame: int
+    :param mode: Data array mode, either "profile", "centroid", or "raw".
+    :type mode: str
+    :param profile_bins: Number of bins to bin spectrum to.
+    :type profile_bins: int
+    :param encoding: Encoding bit mode, either "64" or "32"
+    :type encoding: int
+    """
+
     def __init__(self, tsf_data, frame: int, mode: str, profile_bins=0, encoding=64):
         """
         Constructor Method
@@ -277,6 +292,27 @@ class TsfSpectrum(object):
 
 
 class TdfSpectrum(object):
+    """
+    Class for parsing and storing spectrum metadata and data arrays from BAF format data.
+
+    :param tdf_data: TdfData object containing metadata from analysis.tdf database.
+    :type tdf_data: pyTDFSDK.classes.TdfData
+    :param frame: ID of the frame of interest.
+    :type frame: int
+    :param mode: Data array mode, either "profile", "centroid", or "raw".
+    :type mode: str
+    :param precursor: ID of the precursor of interest for ddaPASEF data. If specified, overrides the frame ID during
+        data parsing.
+    :type precursor: int
+    :param diapasef_window: Dictionary containing a row of metadata from the
+        pyTDFSDK.classesTdfData.analysis['DiaFrameMsMsWindows'] table required for parsing diaPASEF data.
+    :type diapasef_window: dict
+    :param profile_bins: Number of bins to bin spectrum to.
+    :type profile_bins: int
+    :param encoding: Encoding bit mode, either "64" or "32"
+    :type encoding: int
+    """
+
     def __init__(self, tdf_data, frame: int, mode: str, precursor=0, diapasef_window=None, profile_bins=0, encoding=64, exclude_mobility=False):
         """
         Constructor Method
