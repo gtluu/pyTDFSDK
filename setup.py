@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='pyTDFSDK',
-      version='0.2.1',
+      version='0.3.0',
       description='Python wrapper for Bruker TDF-SDK',
       url='https://github.com/gtluu/pyTDFSDK',
       author='Gordon T. Luu',
