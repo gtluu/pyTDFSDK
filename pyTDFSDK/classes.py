@@ -51,7 +51,11 @@ class TsfData(object):
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
         table_names = cursor.fetchall()
         table_names = [table[0] for table in table_names]
-        self.analysis = {name: pd.read_sql_query("SELECT * FROM " + name, self.conn) for name in table_names}
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='view';")
+        view_names = cursor.fetchall()
+        view_names = [view[0] for view in view_names]
+        names = table_names + view_names
+        self.analysis = {name: pd.read_sql_query("SELECT * FROM " + name, self.conn) for name in names}
         self.analysis['GlobalMetadata'] = {row['Key']: row['Value']
                                            for index, row, in self.analysis['GlobalMetadata'].iterrows()}
         cursor.close()
@@ -114,7 +118,11 @@ class TdfData(object):
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
         table_names = cursor.fetchall()
         table_names = [table[0] for table in table_names]
-        self.analysis = {name: pd.read_sql_query("SELECT * FROM " + name, self.conn) for name in table_names}
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='view';")
+        view_names = cursor.fetchall()
+        view_names = [view[0] for view in view_names]
+        names = table_names + view_names
+        self.analysis = {name: pd.read_sql_query("SELECT * FROM " + name, self.conn) for name in names}
         self.analysis['GlobalMetadata'] = {row['Key']: row['Value']
                                            for index, row, in self.analysis['GlobalMetadata'].iterrows()}
         cursor.close()
@@ -252,6 +260,11 @@ class TsfSpectrum(object):
         self.polarity = frames_dict['Polarity']
         self.centroided = get_centroid_status(self.mode)[0]
         self.retention_time = 0
+        self.mz_array, self.intensity_array = extract_tsf_spectrum(self.tsf_data,
+                                                                   self.frame,
+                                                                   self.mode,
+                                                                   self.profile_bins,
+                                                                   self.encoding)
         if self.mz_array is not None and self.intensity_array is not None and \
                 self.mz_array.size != 0 and self.intensity_array.size != 0 and \
                 self.mz_array.size == self.intensity_array.size:
@@ -486,7 +499,6 @@ class TdfSpectrum(object):
                 self.charge_state = framemsmsinfo_dict['PrecursorCharge']
                 self.activation = 'collision-induced dissociation'
                 self.collision_energy = framemsmsinfo_dict['CollisionEnergy']
-                self.parent_frame = int(framemsmsinfo_dict['Parent'])
                 self.total_ion_current = sum(self.intensity_array)
                 base_peak_index = np.where(self.intensity_array == np.max(self.intensity_array))
                 self.base_peak_mz = self.mz_array[base_peak_index][0].astype(float)

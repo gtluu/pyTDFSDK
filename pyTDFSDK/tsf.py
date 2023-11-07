@@ -300,7 +300,7 @@ def extract_tsf_spectrum(tsf_data, frame, mode, profile_bins=0, encoding=64):
     extrapolate a quasi-profile spectrum from centroid raw data.
 
     :param tsf_data: tsf_data object containing metadata from analysis.tsf database.
-    :type tsf_data: timsconvert.classes.TimsconvertTsfData
+    :type tsf_data: pyTDFSDK.classes.TsfData
     :param frame: Frame ID from the Frames table in analysis.tdf/analysis.tsf database.
     :type frame: int
     :param mode: Mode command line parameter, either "profile", "centroid", or "raw".

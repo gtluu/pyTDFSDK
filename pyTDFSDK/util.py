@@ -79,7 +79,7 @@ def get_maldi_coords(data, maldiframeinfo_dict):
     Get tuple of MALDI coordinates from analysis.tsf/analysis.tdf metadata.
 
     :param data: Object containing metadata from analysis.tsf/analysis.tdf database.
-    :type data: timsconvert.classes.TimsconvertTsfData | timsconvert.classes.TimsconvertTdfData
+    :type data: pyTDFSDK.classes.TsfData | pyTDFSDK.classes.TdfData
     :param maldiframeinfo_dict: A row from the MaldiFrameInfo table in analysis.tsf/analysis.tdf database.
     :type maldiframeinfo_dict: dict
     :return: x-y (or x-y-z if available) coordinates for the current spectrum.

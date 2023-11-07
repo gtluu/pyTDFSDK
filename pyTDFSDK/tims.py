@@ -714,7 +714,7 @@ def extract_2d_tdf_spectrum(tdf_data, frame, scan_begin, scan_end, mode, profile
     pyTDFSDK.tims.tims_extract_profile_for_frame() to extrapolate a quasi-profile spectrum from centroid raw data.
 
     :param tdf_data: tdf_data object containing metadata from analysis.tdf database.
-    :type tdf_data: timsconvert.classes.TimsconvertTdfData
+    :type tdf_data: pyTDFSDK.classes.TdfData
     :param frame: Frame ID from the Frames table in analysis.tdf/analysis.tsf database.
     :type frame: int
     :param scan_begin: Beginning scan number (corresponding to 1/K0 value) within frame.
@@ -780,7 +780,7 @@ def extract_3d_tdf_spectrum(tdf_data, frame, scan_begin, scan_end):
     to the resulting data size.
 
     :param tdf_data: tdf_data object containing metadata from analysis.tdf database.
-    :type tdf_data: timsconvert.classes.TimsconvertTdfData
+    :type tdf_data: pyTDFSDK.classes.TdfData
     :param frame: Frame ID from the Frames table in analysis.tdf/analysis.tsf database.
     :type frame: int
     :param scan_begin: Beginning scan number (corresponding to 1/K0 value) within frame.
@@ -831,7 +831,7 @@ def extract_ddapasef_precursor_spectrum(tdf_data, pasefframemsmsinfo_dicts, mode
     pyTDFSDK.tims.tims_extract_profile_for_frame() to extrapolate a quasi-profile spectrum from centroid raw data.
 
     :param tdf_data: tdf_data object containing metadata from analysis.tdf database.
-    :type tdf_data: timsconvert.classes.TimsconvertTdfData
+    :type tdf_data: pyTDFSDK.classes.TdfData
     :param pasefframemsmsinfo_dicts: A row from the PasefFrameMsmsInfo table in analysis.tdf database.
     :type pasefframemsmsinfo_dicts: dict
     :param mode: Mode command line parameter, either "profile", "centroid", or "raw".
