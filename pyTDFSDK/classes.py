@@ -276,7 +276,7 @@ class TsfSpectrum(object):
             self.low_mz = float(min(self.mz_array))
             # MS1
             if int(frames_dict['MsMsType']) == 0:
-                self.scan_type = 'MS1 specttrum'
+                self.scan_type = 'MS1 spectrum'
                 self.ms_level = 1
             # MS/MS
             elif int(frames_dict['MsMsType']) in [2, 8, 9]:
