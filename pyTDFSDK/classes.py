@@ -220,8 +220,8 @@ class TsfSpectrum(object):
             elif int(frames_dict['MsMsType']) in [2, 8, 9]:
                 framemsmsinfo_dict = self.tsf_data.analysis['FrameMsMsInfo'][self.tsf_data.analysis['FrameMsMsInfo']['Frame'] ==
                                                                              self.frame].to_dict(orient='records')[0]
-                # Auto MS/MS and MRM MS/MS
-                if int(frames_dict['ScanMode']) == 1 or int(frames_dict['ScanMode']) == 2:
+                # Auto MS/MS
+                if int(frames_dict['ScanMode']) == 1:
                     self.scan_type = 'MSn spectrum'
                     self.ms_level = 2
                     self.target_mz = float(framemsmsinfo_dict['TriggerMass'])
@@ -232,6 +232,17 @@ class TsfSpectrum(object):
                     self.activation = 'collision-induced dissociation'
                     self.collision_energy = float(framemsmsinfo_dict['CollisionEnergy'])
                     self.parent_frame = int(framemsmsinfo_dict['Parent'])
+                # MRM
+                elif int(frames_dict['ScanMode']) == 2:
+                    self.scan_type = 'MSn spectrum'
+                    self.ms_level = 2
+                    self.target_mz = float(framemsmsinfo_dict['TriggerMass'])
+                    self.isolation_lower_offset = float(framemsmsinfo_dict['IsolationWidth']) / 2
+                    self.isolation_upper_offset = float(framemsmsinfo_dict['IsolationWidth']) / 2
+                    self.selected_ion_mz = float(framemsmsinfo_dict['TriggerMass'])
+                    self.charge_state = framemsmsinfo_dict['PrecursorCharge']
+                    self.activation = 'collision-induced dissociation'
+                    self.collision_energy = float(framemsmsinfo_dict['CollisionEnergy'])
                 # bbCID
                 elif int(frames_dict['ScanMode']) == 4:
                     self.scan_type = 'MSn spectrum'
@@ -265,7 +276,7 @@ class TsfSpectrum(object):
             self.low_mz = float(min(self.mz_array))
             # MS1
             if int(frames_dict['MsMsType']) == 0:
-                self.scan_type = 'MS1 spectrum'
+                self.scan_type = 'MS1 specttrum'
                 self.ms_level = 1
             # MS/MS
             elif int(frames_dict['MsMsType']) in [2, 8, 9]:
