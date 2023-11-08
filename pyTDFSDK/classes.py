@@ -467,15 +467,15 @@ class TdfSpectrum(object):
                                                                               self.mode,
                                                                               self.profile_bins,
                                                                               self.encoding)
-                if self.mz_array is not None and self.intensity_array is not None and \
-                        self.mz_array.size != 0 and self.intensity_array.size != 0 and \
-                        self.mz_array.size == self.intensity_array.size:
-                    self.total_ion_current = sum(self.intensity_array)
-                    base_peak_index = np.where(self.intensity_array == np.max(self.intensity_array))
-                    self.base_peak_mz = self.mz_array[base_peak_index][0].astype(float)
-                    self.base_peak_intensity = self.intensity_array[base_peak_index][0].astype(float)
-                    self.high_mz = float(max(self.mz_array))
-                    self.low_mz = float(min(self.mz_array))
+            if self.mz_array is not None and self.intensity_array is not None and \
+                    self.mz_array.size != 0 and self.intensity_array.size != 0 and \
+                    self.mz_array.size == self.intensity_array.size:
+                self.total_ion_current = sum(self.intensity_array)
+                base_peak_index = np.where(self.intensity_array == np.max(self.intensity_array))
+                self.base_peak_mz = self.mz_array[base_peak_index][0].astype(float)
+                self.base_peak_intensity = self.intensity_array[base_peak_index][0].astype(float)
+                self.high_mz = float(max(self.mz_array))
+                self.low_mz = float(min(self.mz_array))
         # MRM
         elif int(frames_dict['ScanMode']) == 2 and int(frames_dict['MsMsType']) == 2:
             framemsmsinfo_dict = self.tdf_data.analysis['FrameMsMsInfo'][self.tdf_data.analysis['FrameMsMsInfo']['Frame'] ==
