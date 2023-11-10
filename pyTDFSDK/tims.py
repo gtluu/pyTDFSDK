@@ -136,6 +136,7 @@ def tims_extract_chromatograms(tdf_sdk, handle, jobs, trace_sink):
         function.
     :param trace_sink: Sink callback from TDF-SDK.
     """
+
     @CHROMATOGRAM_JOB_GENERATOR
     def wrap_gen(job, user_data):
         try:
@@ -626,10 +627,10 @@ def tims_read_scans_v2(tdf_sdk, handle, frame_id, scan_begin, scan_end, initial_
     result = []
     d = scan_end - scan_begin
     for i in range(scan_begin, scan_end):
-        npeaks = buf[i-scan_begin]
-        indices = buf[d:d+npeaks]
+        npeaks = buf[i - scan_begin]
+        indices = buf[d:d + npeaks]
         d += npeaks
-        intensities = buf[d:d+npeaks]
+        intensities = buf[d:d + npeaks]
         d += npeaks
         result.append((indices, intensities))
     return result
@@ -753,13 +754,16 @@ def extract_2d_tdf_spectrum(tdf_data, frame, scan_begin, scan_end, mode, profile
         else:
             return None, None
     elif mode == 'profile':
-        index_buf, intensity_array = tims_extract_profile_for_frame(tdf_data.api,
-                                                                    tdf_data.handle,
-                                                                    frame,
-                                                                    scan_begin,
-                                                                    scan_end)
+        intensity_array = tims_extract_profile_for_frame(tdf_data.api,
+                                                         tdf_data.handle,
+                                                         frame,
+                                                         scan_begin,
+                                                         scan_end)
         intensity_array = np.array(intensity_array, dtype=get_encoding_dtype(encoding))
-        mz_array = tims_index_to_mz(tdf_data.api, tdf_data.handle, frame, index_buf)
+        mz_array = np.linspace(float(tdf_data.analysis['GlobalMetadata']['MzAcqRangeLower']),
+                               float(tdf_data.analysis['GlobalMetadata']['MzAcqRangeUpper']),
+                               intensity_array.size,
+                               dtype=get_encoding_dtype(encoding))
         if profile_bins != 0:
             mz_array, intensity_array = bin_profile_spectrum(mz_array, intensity_array, profile_bins, encoding)
     elif mode == 'centroid':
