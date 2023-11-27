@@ -1,14 +1,14 @@
 import numpy as np
 from ctypes import POINTER, c_double, c_float, c_uint32
 from pyTDFSDK.error import throw_last_tsfdata_error
-from pyTDFSDK.util import call_conversion_func
+from pyTDFSDK.util import call_conversion_func, get_encoding_dtype, bin_profile_spectrum
 
 
 def tsf_close(tdf_sdk, handle, conn):
     """
     Close TSF dataset.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TSF dataset initialized using pyTDFSDK.tsf.tsf_open().
     :type handle: int
@@ -32,7 +32,7 @@ def tsf_has_recalibrated_state(tdf_sdk, handle):
     masses and 1/K0 values in the raw data SQLite files are always in the raw calibration state, not the recalibrated
     state.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TSF dataset initialized using pyTDFSDK.tsf.tsf_open().
     :type handle: int
@@ -46,7 +46,7 @@ def tsf_index_to_mz(tdf_sdk, handle, frame_id, indices):
     """
     Convert (possibly non-integer) index values for the mass dimension to m/z values.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TSF dataset initialized using pyTDFSDK.tsf.tsf_open().
     :type handle: int
@@ -65,7 +65,7 @@ def tsf_mz_to_index(tdf_sdk, handle, frame_id, mzs):
     """
     Convert m/z values to (possibly non-integer) index values for the mass dimension.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TSF dataset initialized using pyTDFSDK.tsf.tsf_open().
     :type handle: int
@@ -84,7 +84,7 @@ def tsf_open(tdf_sdk, bruker_d_folder_name, use_recalibrated_state=True):
     """
     Open TSF dataset and return a non-zero instance handle to be passed to subsequent API calls.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param bruker_d_folder_name: Path to a Bruker .d file containing analysis.tsf.
     :type bruker_d_folder_name: str
@@ -101,7 +101,7 @@ def tsf_read_line_spectrum(tdf_sdk, handle, frame_id, profile_buffer_size=1024):
     """
     Read peak picked spectra for a frame from a non-TIMS (TSF) dataset.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TSF dataset initialized using pyTDFSDK.tsf.tsf_open().
     :type handle: int
@@ -109,7 +109,8 @@ def tsf_read_line_spectrum(tdf_sdk, handle, frame_id, profile_buffer_size=1024):
     :type frame_id: int
     :param profile_buffer_size: Initial number of buffer bytes necessary for the output, defaults to 1024.
     :type profile_buffer_size: int
-    :return: Tuple containing an array of m/z values and an array of detector counts or -1 on error.
+    :return: Tuple containing an array of index values for the mass dimension and an array of detector counts or -1 on
+        error.
     :rtype: tuple[numpy.array] | int
     """
     while True:
@@ -134,7 +135,7 @@ def tsf_read_line_spectrum_v2(tdf_sdk, handle, frame_id, profile_buffer_size=102
     """
     Read peak picked spectra for a frame from a non-TIMS (TSF) dataset.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TSF dataset initialized using pyTDFSDK.tsf.tsf_open().
     :type handle: int
@@ -142,7 +143,8 @@ def tsf_read_line_spectrum_v2(tdf_sdk, handle, frame_id, profile_buffer_size=102
     :type frame_id: int
     :param profile_buffer_size: Initial number of buffer bytes necessary for the output, defaults to 1024.
     :type profile_buffer_size: int
-    :return: Tuple containing an array of m/z values and an array of detector counts or -1 on error.
+    :return: Tuple containing an array of index values for the mass dimension and an array of detector counts or -1 on
+        error.
     :rtype: tuple[numpy.array] | int
     """
     while True:
@@ -170,7 +172,7 @@ def tsf_read_line_spectrum_with_width_v2(tdf_sdk, handle, frame_id, profile_buff
     """
     Read peak picked spectra with peak width for a frame from a non-TIMS (TSF) dataset.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TSF dataset initialized using pyTDFSDK.tsf.tsf_open().
     :type handle: int
@@ -178,8 +180,8 @@ def tsf_read_line_spectrum_with_width_v2(tdf_sdk, handle, frame_id, profile_buff
     :type frame_id: int
     :param profile_buffer_size: Initial number of buffer bytes necessary for the output, defaults to 1024.
     :type profile_buffer_size: int
-    :return: Tuple containing an array of m/z values, an array of detector counts, and an array of widths or -1 on
-        error.
+    :return: Tuple containing an array of index values for the mass dimension, an array of detector counts, and an
+        array of widths or -1 on error.
     :rtype: tuple[numpy.array] | int
     """
     while True:
@@ -209,7 +211,7 @@ def tsf_read_profile_spectrum(tdf_sdk, handle, frame_id, profile_buffer_size=102
     """
     Read profile spectra for a frame from a non-TIMS (TSF) dataset.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TSF dataset initialized using pyTDFSDK.tsf.tsf_open().
     :type handle: int
@@ -217,7 +219,8 @@ def tsf_read_profile_spectrum(tdf_sdk, handle, frame_id, profile_buffer_size=102
     :type frame_id: int
     :param profile_buffer_size: Initial number of buffer bytes necessary for the output, defaults to 1024.
     :type profile_buffer_size: int
-    :return: Tuple containing an array of m/z values and an array of detector counts or -1 on error.
+    :return: Tuple containing an array of index values for the mass dimension and an array of detector counts or -1 on
+        error.
     :rtype: tuple[numpy.array] | int
     """
     while True:
@@ -241,7 +244,7 @@ def tsf_read_profile_spectrum_v2(tdf_sdk, handle, frame_id, profile_buffer_size=
     """
     Read profile spectra for a frame from a non-TIMS (TSF) dataset.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TSF dataset initialized using pyTDFSDK.tsf.tsf_open().
     :type handle: int
@@ -249,7 +252,8 @@ def tsf_read_profile_spectrum_v2(tdf_sdk, handle, frame_id, profile_buffer_size=
     :type frame_id: int
     :param profile_buffer_size: Initial number of buffer bytes necessary for the output, defaults to 1024.
     :type profile_buffer_size: int
-    :return: Tuple containing an array of m/z values and an array of detector counts or -1 on error.
+    :return: Tuple containing an array of index values for the mass dimension and an array of detector counts or -1 on
+        error.
     :rtype: tuple[numpy.array] | int
     """
     while True:
@@ -277,12 +281,44 @@ def tsf_read_profile_spectrum_v2(tdf_sdk, handle, frame_id, profile_buffer_size=
 def tsf_set_num_threads(tdf_sdk, num_threads):
     """
     Set the number of threads that this DLL is allowed to use internally. The index <-> m/z transformation is
-    internally parallelized using OpenMP. THis call is simply forwarded to omp_set_num_threads(). This function has no
+    internally parallelized using OpenMP. This call is simply forwarded to omp_set_num_threads(). This function has no
     real effect on Linux.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param num_threads: Number of threads to use (>= 1)
     :type num_threads: int
     """
     tdf_sdk.tsf_set_num_threads(num_threads)
+
+
+def extract_tsf_spectrum(tsf_data, frame, mode, profile_bins=0, encoding=64):
+    """
+    Extract spectrum from TSF data with m/z and intensity arrays. Spectrum can either be centroid or quasi-profile
+    mode. If "raw" mode is chosen, centroid mode will automatically be used. "Centroid" mode uses
+    pyTDFSDK.tsf.tsf_read_line_spectrum_v2() method. "Profile" mode uses pyTDFSDK.tsf.tsf_read_profile_spectrum_v2() to
+    extrapolate a quasi-profile spectrum from centroid raw data.
+
+    :param tsf_data: tsf_data object containing metadata from analysis.tsf database.
+    :type tsf_data: pyTDFSDK.classes.TsfData
+    :param frame: Frame ID from the Frames table in analysis.tdf/analysis.tsf database.
+    :type frame: int
+    :param mode: Mode command line parameter, either "profile", "centroid", or "raw".
+    :type mode: str
+    :param profile_bins: Number of bins to bin spectrum to.
+    :type profile_bins: int
+    :param encoding: Encoding command line parameter, either "64" or "32".
+    :type encoding: int
+    :return: Tuple of mz_array (np.array) and intensity_array (np.array).
+    :rtype: tuple[numpy.array]
+    """
+    if mode == 'raw' or mode == 'centroid':
+        index_buf, intensity_array = tsf_read_line_spectrum_v2(tsf_data.api, tsf_data.handle, frame)
+        mz_array = tsf_index_to_mz(tsf_data.api, tsf_data.handle, frame, index_buf)
+    elif mode == 'profile':
+        index_buf, intensity_array = tsf_read_profile_spectrum_v2(tsf_data.api, tsf_data.handle, frame)
+        intensity_array = np.array(intensity_array, dtype=get_encoding_dtype(encoding))
+        mz_array = tsf_index_to_mz(tsf_data.api, tsf_data.handle, frame, index_buf)
+        if profile_bins != 0:
+            mz_array, intensity_array = bin_profile_spectrum(mz_array, intensity_array, profile_bins, encoding)
+    return mz_array, intensity_array

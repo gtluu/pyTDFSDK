@@ -4,6 +4,14 @@ pyTDFSDK package
 Submodules
 ----------
 
+pyTDFSDK.classes module
+-----------------------
+
+.. automodule:: pyTDFSDK.classes
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pyTDFSDK.ctypes\_data\_structures module
 ----------------------------------------
 

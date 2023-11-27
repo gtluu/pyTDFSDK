@@ -2,14 +2,14 @@ import numpy as np
 from ctypes import POINTER, c_int64
 from pyTDFSDK.ctypes_data_structures import *
 from pyTDFSDK.error import throw_last_timsdata_error
-from pyTDFSDK.util import call_conversion_func
+from pyTDFSDK.util import call_conversion_func, get_encoding_dtype, bin_profile_spectrum
 
 
 def tims_ccs_to_oneoverk0_for_mz(tdf_sdk, ccs, charge, mz):
     """
     Convert collisional cross section (CCS) values to 1/K0 values based on a feature's m/z value and charge.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param ccs: Collisional cross section (CCS) value of the feature.
     :type ccs: float
@@ -27,7 +27,7 @@ def tims_close(tdf_sdk, handle, conn):
     """
     Close TDF dataset.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().
     :type handle: int
@@ -56,7 +56,7 @@ def tims_extract_centroided_spectrum_for_frame_ext(tdf_sdk,
     pyTDFSDK.tims.tims_extract_centroided_spectrum_for_frame_v2() but with a user supplied resolution for the peak
     picker.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().
     :type handle: int
@@ -94,7 +94,7 @@ def tims_extract_centroided_spectrum_for_frame_v2(tdf_sdk, handle, frame_id, sca
     """
     Read peak picked spectra for a frame from a TIMS (TDF) dataset.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().
     :type handle: int
@@ -129,13 +129,14 @@ def tims_extract_chromatograms(tdf_sdk, handle, jobs, trace_sink):
     """
     Extract several (MS1-only) chromatograms from an analysis.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().
     :param jobs: Chromatogram definitions that will be iterated through using the generator function defined in this
         function.
     :param trace_sink: Sink callback from TDF-SDK.
     """
+
     @CHROMATOGRAM_JOB_GENERATOR
     def wrap_gen(job, user_data):
         try:
@@ -169,7 +170,7 @@ def tims_extract_profile_for_frame(tdf_sdk, handle, frame_id, scan_begin, scan_e
     Read quasi profile spectra for a frame from a TIMS (TDF) dataset. This function sums the corresponding scan number
     ranges into a synthetic profile spectrum.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().
     :type handle: int
@@ -201,7 +202,7 @@ def tims_has_recalibrated_state(tdf_sdk, handle):
     masses and 1/K0 values in the raw data SQLite files are always in the raw calibration state, not the recalibrated
     state.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().
     :type handle: int
@@ -215,7 +216,7 @@ def tims_index_to_mz(tdf_sdk, handle, frame_id, indices):
     """
     Convert (possibly non-integer) index values for the mass dimension to m/z values.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().
     :type handle: int
@@ -234,7 +235,7 @@ def tims_mz_to_index(tdf_sdk, handle, frame_id, mzs):
     """
     Convert m/z values to (possibly non-integer) index values for the mass dimension.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().
     :type handle: int
@@ -253,7 +254,7 @@ def tims_oneoverk0_to_ccs_for_mz(tdf_sdk, ook0, charge, mz):
     """
     Convert 1/K0 values to collisional cross section values (in Anstrom^2) using the Mason-Shamp equation.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param ook0: 1/K0 value of the feature to be converted.
     :type ook0: float
@@ -271,7 +272,7 @@ def tims_oneoverk0_to_scannum(tdf_sdk, handle, frame_id, mobilities):
     """
     Convert 1/K0 values to (possibly non-integer) scan numbers for the mobility dimension.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().
     :type handle: int
@@ -290,7 +291,7 @@ def tims_open(tdf_sdk, bruker_d_folder_name, use_recalibrated_state=True):
     """
     Open TDF dataset and return a non-zero instance handle to be passed to subsequent API calls.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param bruker_d_folder_name: Path to a Bruker .d file containing analysis.tdf.
     :type bruker_d_folder_name: str
@@ -308,7 +309,7 @@ def tims_open_v2(tdf_sdk, bruker_d_folder_name, pressure_compensation_strategy, 
     Open TDF dataset while taking into account the pressure compensation strategy and return a non-zero instance handle
     to be passed to subsequent API calls.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param bruker_d_folder_name: Path to a Bruker .d file containing analysis.tdf.
     :type bruker_d_folder_name: str
@@ -335,7 +336,7 @@ def tims_read_pasef_msms(tdf_sdk, handle, precursor_list):
     MS/MS spectra (one for each precursor). The order of the returned MS/MS spectra does not necessarily match the
     order in the specified precursor list.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().
     :type handle: int
@@ -368,7 +369,7 @@ def tims_read_pasef_msms_for_frame(tdf_sdk, handle, frame_id):
     pyTDFSDK.tims.tims_read_pasef_msms(). The order of the returned MS/MS does not necessarily match the order in the
     specified precursor ID list.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().
     :type handle: int
@@ -397,7 +398,7 @@ def tims_read_pasef_msms_for_frame_v2(tdf_sdk, handle, frame_id):
     pyTDFSDK.tims.tims_read_pasef_msms(). The order of the returned MS/MS does not necessarily match the order in the
     specified precursor ID list.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().
     :type handle: int
@@ -428,7 +429,7 @@ def tims_read_pasef_msms_v2(tdf_sdk, handle, precursor_list):
     MS/MS spectra (one for each precursor). The order of the returned MS/MS spectra does not necessarily match the
     order in the specified precursor list.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().
     :type handle: int
@@ -463,7 +464,7 @@ def tims_read_pasef_profile_msms(tdf_sdk, handle, precursor_list):
     precursor and returns the resulting quasi profile MS/MS spectra (one for each precursor). The order of the returned
     MS/MS spectra does not necessarily match the order in the specified precursor ID list.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().
     :type handle: int
@@ -496,7 +497,7 @@ def tims_read_pasef_profile_msms_for_frame(tdf_sdk, handle, frame_id):
     pyTDFSDK.tims.tims_read_pasef_profile_msms(). The order of the returned MS/MS does not necessarily match the order
     in the specified precursor ID list.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().
     :type handle: int
@@ -525,7 +526,7 @@ def tims_read_pasef_profile_msms_for_frame_v2(tdf_sdk, handle, frame_id):
     pyTDFSDK.tims.tims_read_pasef_profile_msms(). The order of the returned MS/MS does not necessarily match the order
     in the specified precursor ID list.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().
     :type handle: int
@@ -555,7 +556,7 @@ def tims_read_pasef_profile_msms_v2(tdf_sdk, handle, precursor_list):
     precursor and returns the resulting quasi profile MS/MS spectra (one for each precursor). The order of the returned
     MS/MS spectra does not necessarily match the order in the specified precursor ID list.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().
     :type handle: int
@@ -587,7 +588,7 @@ def tims_read_scans_v2(tdf_sdk, handle, frame_id, scan_begin, scan_end, initial_
     """
     Read a range of scans from a single frame. The resulting arrays are equivalent to line spectra.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().
     :type handle: int
@@ -626,10 +627,10 @@ def tims_read_scans_v2(tdf_sdk, handle, frame_id, scan_begin, scan_end, initial_
     result = []
     d = scan_end - scan_begin
     for i in range(scan_begin, scan_end):
-        npeaks = buf[i-scan_begin]
-        indices = buf[d:d+npeaks]
+        npeaks = buf[i - scan_begin]
+        indices = buf[d:d + npeaks]
         d += npeaks
-        intensities = buf[d:d+npeaks]
+        intensities = buf[d:d + npeaks]
         d += npeaks
         result.append((indices, intensities))
     return result
@@ -639,7 +640,7 @@ def tims_scannum_to_oneoverk0(tdf_sdk, handle, frame_id, scan_nums):
     """
     Convert (possibly non-integer) scan numbers for the mobility dimension to 1/K0 values.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().
     :type handle: int
@@ -658,7 +659,7 @@ def tims_scannum_to_voltage(tdf_sdk, handle, frame_id, scan_nums):
     """
     Convert (possibly non-integer) scan numbers for the mobility dimension to TIMS voltages.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().
     :type handle: int
@@ -676,10 +677,10 @@ def tims_scannum_to_voltage(tdf_sdk, handle, frame_id, scan_nums):
 def tims_set_num_threads(tdf_sdk, num_threads):
     """
     Set the number of threads that this DLL is allowed to use internally. The index <-> m/z transformation is
-    internally parallelized using OpenMP. THis call is simply forwarded to omp_set_num_threads(). This function has no
+    internally parallelized using OpenMP. This call is simply forwarded to omp_set_num_threads(). This function has no
     real effect on Linux.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param num_threads: Number of threads to use (>= 1)
     :type num_threads: int
@@ -691,7 +692,7 @@ def tims_voltage_to_scannum(tdf_sdk, handle, frame_id, voltages):
     """
     Convert TIMS voltages to (possibly non-integer) scan numbers for the mobility dimension.
 
-    :param tdf_sdk: Instance of TDF-SDK.
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
     :type tdf_sdk: ctypes.CDLL
     :param handle: Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().
     :type handle: int
@@ -704,3 +705,182 @@ def tims_voltage_to_scannum(tdf_sdk, handle, frame_id, voltages):
     """
     func = tdf_sdk.tims_voltage_to_scannum
     return call_conversion_func(tdf_sdk, handle, frame_id, voltages, func)
+
+
+def extract_2d_tdf_spectrum(tdf_data, frame, scan_begin, scan_end, mode, profile_bins=0, encoding=64):
+    """
+    Extract spectrum from TDF data with m/z and intensity arrays. Spectrum can either be centroid or quasi-profile
+    mode. "Raw" mode uses pyTDFSDK.tims.tims_read_scans_v2() method, while "centroid" mode uses
+    pyTDFSDK.tims.tims_extract_centroided_spectrum_for_frame_v2() method. "Profile" mode uses
+    pyTDFSDK.tims.tims_extract_profile_for_frame() to extrapolate a quasi-profile spectrum from centroid raw data.
+
+    :param tdf_data: tdf_data object containing metadata from analysis.tdf database.
+    :type tdf_data: pyTDFSDK.classes.TdfData
+    :param frame: Frame ID from the Frames table in analysis.tdf/analysis.tsf database.
+    :type frame: int
+    :param scan_begin: Beginning scan number (corresponding to 1/K0 value) within frame.
+    :type scan_begin: int
+    :param scan_end: Ending scan number (corresponding to 1/K0 value) within frame (non-inclusive).
+    :type scan_end: int
+    :param mode: Mode command line parameter, either "profile", "centroid", or "raw".
+    :type mode: str
+    :param profile_bins: Number of bins to bin spectrum to.
+    :type profile_bins: int
+    :param encoding: Encoding command line parameter, either "64" or "32".
+    :type encoding: int
+    :return: Tuple of mz_array (np.array) and intensity_array (np.array) or (None, None) if spectra are empty.
+    :rtype: tuple[numpy.array | None]
+    """
+    if mode == 'raw':
+        list_of_scans = tims_read_scans_v2(tdf_data.api, tdf_data.handle, frame, scan_begin, scan_end)
+        frame_mz_arrays = []
+        frame_intensity_arrays = []
+        for scan_num in range(scan_begin, scan_end):
+            if list_of_scans[scan_num][0].size != 0 \
+                    and list_of_scans[scan_num][1].size != 0 \
+                    and list_of_scans[scan_num][0].size == list_of_scans[scan_num][1].size:
+                mz_array = tims_index_to_mz(tdf_data.api, tdf_data.handle, frame, list_of_scans[scan_num][0])
+                intensity_array = list_of_scans[scan_num][1]
+                frame_mz_arrays.append(mz_array)
+                frame_intensity_arrays.append(intensity_array)
+        if frame_mz_arrays and frame_intensity_arrays:
+            frames_array = np.stack((np.concatenate(frame_mz_arrays, axis=None),
+                                     np.concatenate(frame_intensity_arrays, axis=None)),
+                                    axis=-1)
+            frames_array = np.unique(frames_array[np.argsort(frames_array[:, 0])], axis=0)
+            mz_array = frames_array[:, 0]
+            intensity_array = frames_array[:, 1]
+            return mz_array, intensity_array
+        else:
+            return None, None
+    elif mode == 'profile':
+        intensity_array = tims_extract_profile_for_frame(tdf_data.api,
+                                                         tdf_data.handle,
+                                                         frame,
+                                                         scan_begin,
+                                                         scan_end)
+        intensity_array = np.array(intensity_array, dtype=get_encoding_dtype(encoding))
+        mz_array = np.linspace(float(tdf_data.analysis['GlobalMetadata']['MzAcqRangeLower']),
+                               float(tdf_data.analysis['GlobalMetadata']['MzAcqRangeUpper']),
+                               intensity_array.size,
+                               dtype=get_encoding_dtype(encoding))
+        if profile_bins != 0:
+            mz_array, intensity_array = bin_profile_spectrum(mz_array, intensity_array, profile_bins, encoding)
+    elif mode == 'centroid':
+        mz_array, intensity_array = tims_extract_centroided_spectrum_for_frame_v2(tdf_data.api,
+                                                                                  tdf_data.handle,
+                                                                                  frame,
+                                                                                  scan_begin,
+                                                                                  scan_end)
+        mz_array = np.array(mz_array, dtype=get_encoding_dtype(encoding))
+        intensity_array = np.array(intensity_array, dtype=get_encoding_dtype(encoding))
+    return mz_array, intensity_array
+
+
+def extract_3d_tdf_spectrum(tdf_data, frame, scan_begin, scan_end):
+    """
+    Extract spectrum from TDF data with m/z and intensity arrays. Spectrum can either be centroid or quasi-profile
+    mode. "Raw" and "centroid" modes uses pyTDFSDK.tims.tims_read_scans_v2(). "Profile" mode data is not available due
+    to the resulting data size.
+
+    :param tdf_data: tdf_data object containing metadata from analysis.tdf database.
+    :type tdf_data: pyTDFSDK.classes.TdfData
+    :param frame: Frame ID from the Frames table in analysis.tdf/analysis.tsf database.
+    :type frame: int
+    :param scan_begin: Beginning scan number (corresponding to 1/K0 value) within frame.
+    :type scan_begin: int
+    :param scan_end: Ending scan number (corresponding to 1/K0 value) within frame (non-inclusive).
+    :type scan_end: int
+    :return: Tuple of mz_array (np.array), intensity_array (np.array), and mobility_array (np.array) or
+        (None, None, None) if spectra are empty.
+    :rtype: tuple[numpy.array | None]
+    """
+    list_of_scans = tims_read_scans_v2(tdf_data.api, tdf_data.handle, frame, scan_begin, scan_end)
+    frame_mz_arrays = []
+    frame_intensity_arrays = []
+    frame_mobility_arrays = []
+    if scan_begin != 0:
+        scan_end = scan_end - scan_begin
+        scan_begin = 0
+    for scan_num in range(scan_begin, scan_end):
+        if list_of_scans[scan_num][0].size != 0 \
+                and list_of_scans[scan_num][1].size != 0 \
+                and list_of_scans[scan_num][0].size == list_of_scans[scan_num][1].size:
+            mz_array = tims_index_to_mz(tdf_data.api, tdf_data.handle, frame, list_of_scans[scan_num][0])
+            intensity_array = list_of_scans[scan_num][1]
+            mobility = tims_scannum_to_oneoverk0(tdf_data.api, tdf_data.handle, frame, np.array([scan_num]))[0]
+            mobility_array = np.repeat(mobility, mz_array.size)
+            frame_mz_arrays.append(mz_array)
+            frame_intensity_arrays.append(intensity_array)
+            frame_mobility_arrays.append(mobility_array)
+    if frame_mz_arrays and frame_intensity_arrays and frame_mobility_arrays:
+        frames_array = np.stack((np.concatenate(frame_mz_arrays, axis=None),
+                                 np.concatenate(frame_intensity_arrays, axis=None),
+                                 np.concatenate(frame_mobility_arrays, axis=None)),
+                                axis=-1)
+        frames_array = np.unique(frames_array[np.argsort(frames_array[:, 0])], axis=0)
+        mz_array = frames_array[:, 0]
+        intensity_array = frames_array[:, 1]
+        mobility_array = frames_array[:, 2]
+        return mz_array, intensity_array, mobility_array
+    else:
+        return None, None, None
+
+
+def extract_ddapasef_precursor_spectrum(tdf_data, pasefframemsmsinfo_dicts, mode, profile_bins, encoding):
+    """
+    Extract spectrum from TDF data with m/z and intensity arrays. Spectrum can either be centroid or quasi-profile
+    mode. "Raw" mode uses pyTDFSDK.tims.tims_read_scans_v2() method, while "centroid" mode uses
+    pyTDFSDK.tims.tims_extract_centroided_spectrum_for_frame_v2() method. "Profile" mode uses
+    pyTDFSDK.tims.tims_extract_profile_for_frame() to extrapolate a quasi-profile spectrum from centroid raw data.
+
+    :param tdf_data: tdf_data object containing metadata from analysis.tdf database.
+    :type tdf_data: pyTDFSDK.classes.TdfData
+    :param pasefframemsmsinfo_dicts: A row from the PasefFrameMsmsInfo table in analysis.tdf database.
+    :type pasefframemsmsinfo_dicts: dict
+    :param mode: Mode command line parameter, either "profile", "centroid", or "raw".
+    :type mode: str
+    :param profile_bins: Number of bins to bin spectrum to.
+    :type profile_bins: int
+    :param encoding: Encoding command line parameter, either "64" or "32".
+    :type encoding: int
+    :return: Tuple of mz_array (np.array) and intensity_array (np.array) or (None, None) if spectra are empty.
+    :rtype: tuple[numpy.array | None
+    """
+    pasef_mz_arrays = []
+    pasef_intensity_arrays = []
+    for pasef_dict in pasefframemsmsinfo_dicts:
+        scan_begin = int(pasef_dict['ScanNumBegin'])
+        scan_end = int(pasef_dict['ScanNumEnd'])
+        mz_array, intensity_array = extract_2d_tdf_spectrum(tdf_data,
+                                                            int(pasef_dict['Frame']),
+                                                            scan_begin,
+                                                            scan_end,
+                                                            mode,
+                                                            profile_bins,
+                                                            encoding)
+        if mz_array.size != 0 and intensity_array.size != 0 and mz_array.size == intensity_array.size:
+            pasef_mz_arrays.append(mz_array)
+            pasef_intensity_arrays.append(intensity_array)
+    if pasef_mz_arrays and pasef_intensity_arrays:
+        pasef_array = np.stack((np.concatenate(pasef_mz_arrays, axis=None),
+                                np.concatenate(pasef_intensity_arrays, axis=None)),
+                               axis=-1)
+        pasef_array = np.unique(pasef_array[np.argsort(pasef_array[:, 0])], axis=0)
+
+        mz_acq_range_lower = float(tdf_data.analysis['GlobalMetadata']['MzAcqRangeLower'])
+        mz_acq_range_upper = float(tdf_data.analysis['GlobalMetadata']['MzAcqRangeUpper'])
+        bin_size = 0.005
+        bins = np.arange(mz_acq_range_lower, mz_acq_range_upper, bin_size,
+                         dtype=get_encoding_dtype(encoding))
+
+        unique_indices, inverse_indices = np.unique(np.digitize(pasef_array[:, 0], bins),
+                                                    return_inverse=True)
+        bin_counts = np.bincount(inverse_indices)
+        np.place(bin_counts, bin_counts < 1, [1])
+
+        mz_array = np.bincount(inverse_indices, weights=pasef_array[:, 0]) / bin_counts
+        intensity_array = np.bincount(inverse_indices, weights=pasef_array[:, 1])
+        return mz_array, intensity_array
+    else:
+        return None, None

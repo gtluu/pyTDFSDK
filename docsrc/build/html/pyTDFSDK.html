@@ -14,7 +14,6 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
    
@@ -37,6 +36,73 @@
 <h1>pyTDFSDK package<a class="headerlink" href="#pytdfsdk-package" title="Permalink to this heading">¶</a></h1>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-pyTDFSDK.classes">
+<span id="pytdfsdk-classes-module"></span><h2>pyTDFSDK.classes module<a class="headerlink" href="#module-pyTDFSDK.classes" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyTDFSDK.classes.TdfData">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyTDFSDK.classes.</span></span><span class="sig-name descname"><span class="pre">TdfData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bruker_d_folder_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tdf_sdk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_recalibrated_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure_compensation_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PressureCompensationStrategy.NoPressureCompensation</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.classes.TdfData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class containing metadata from TDF files and methods from TDF-SDK library to work with TDF format data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bruker_d_folder_name</strong> (<em>str</em>) – Path to a Bruker .d directory containing analysis.tdf.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
+<li><p><strong>use_recalibrated_state</strong> (<em>bool</em>) – Whether to use recalibrated data (True) or not (False), defaults to True.</p></li>
+<li><p><strong>pressure_compensation_strategy</strong> (<em>enum.Enum</em>) – Pressure compensation when opening TDF data
+(pyTDFSDK.ctypes_data_structures.PressureCompensationStrategy.NoPressureCompensation = None,
+pyTDFSDK.ctypes_data_structures.PressureCompensationStrategy.AnalyisGlobalPressureCompensation = analysis
+global pressure compensation,
+pyTDFSDK.ctypes_data_structures.PressureCompensationStrategy.PerFramePressureCompensation = per frame pressure
+compensation), defaults to No Pressure Compensation.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTDFSDK.classes.TdfData.close_sql_connection">
+<span class="sig-name descname"><span class="pre">close_sql_connection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.classes.TdfData.close_sql_connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the connection to analysis.tdf.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTDFSDK.classes.TdfData.get_db_tables">
+<span class="sig-name descname"><span class="pre">get_db_tables</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.classes.TdfData.get_db_tables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a dictionary of all tables found in the analysis.tsf SQLite database in which the table names act as keys
+and the tables as a pandas.DataFrame of values; this is stored in pyTDFSDK.classes.TsfData.analysis.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyTDFSDK.classes.TsfData">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyTDFSDK.classes.</span></span><span class="sig-name descname"><span class="pre">TsfData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bruker_d_folder_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tdf_sdk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_recalibrated_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.classes.TsfData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class containing metadata from TSF files and methods from TDF-SDK library to work with TSF format data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bruker_d_folder_name</strong> (<em>str</em>) – Path to a Bruker .d directory containing analysis.tsf.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
+<li><p><strong>use_recalibrated_state</strong> (<em>bool</em>) – Whether to use recalibrated data (True) or not (False), defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTDFSDK.classes.TsfData.close_sql_connection">
+<span class="sig-name descname"><span class="pre">close_sql_connection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.classes.TsfData.close_sql_connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the connection to analysis.tsf.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTDFSDK.classes.TsfData.get_db_tables">
+<span class="sig-name descname"><span class="pre">get_db_tables</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.classes.TsfData.get_db_tables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a dictionary of all tables found in the analysis.tsf SQLite database in which the table names act as keys
+and the tables as a pandas.DataFrame of values; this is stored in pyTDFSDK.classes.TsfData.analysis.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-pyTDFSDK.ctypes_data_structures">
 <span id="pytdfsdk-ctypes-data-structures-module"></span><h2>pyTDFSDK.ctypes_data_structures module<a class="headerlink" href="#module-pyTDFSDK.ctypes_data_structures" title="Permalink to this heading">¶</a></h2>
@@ -301,7 +367,20 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api">
 <span class="sig-prename descclassname"><span class="pre">pyTDFSDK.init_tdf_sdk.</span></span><span class="sig-name descname"><span class="pre">init_tdf_sdk_api</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bruker_api_file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Initialize functions from Bruker’s TDF-SDK library using ctypes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>bruker_api_file_name</strong> (<em>str</em>) – Path to TDF-SDK library, defaults to packaged library paths if no custom paths are
+provided.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Handle for TDF-SDK library.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ctypes.CDLL</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 <section id="module-pyTDFSDK.tims">
@@ -313,7 +392,7 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>ccs</strong> (<em>float</em>) – Collisional cross section (CCS) value of the feature.</p></li>
 <li><p><strong>charge</strong> (<em>int</em>) – Charge of the feature.</p></li>
 <li><p><strong>mz</strong> (<em>float</em>) – m/z value of the feature.</p></li>
@@ -335,7 +414,7 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>handle</strong> (<em>int</em>) – Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().</p></li>
 <li><p><strong>conn</strong> (<em>sqlite3.Connection</em>) – SQL database connection to analysis.tdf.</p></li>
 </ul>
@@ -358,7 +437,7 @@ picker.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>handle</strong> (<em>int</em>) – Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().</p></li>
 <li><p><strong>frame_id</strong> (<em>int</em>) – ID of the frame of interest.</p></li>
 <li><p><strong>scan_begin</strong> (<em>int</em>) – Beginning scan number (corresponding to 1/K0 value) within frame.</p></li>
@@ -382,7 +461,7 @@ picker.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>handle</strong> (<em>int</em>) – Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().</p></li>
 <li><p><strong>frame_id</strong> (<em>int</em>) – ID of the frame of interest.</p></li>
 <li><p><strong>scan_begin</strong> (<em>int</em>) – Beginning scan number (corresponding to 1/K0 value) within frame.</p></li>
@@ -405,7 +484,7 @@ picker.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>handle</strong> – Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().</p></li>
 <li><p><strong>jobs</strong> – Chromatogram definitions that will be iterated through using the generator function defined in this
 function.</p></li>
@@ -423,7 +502,7 @@ ranges into a synthetic profile spectrum.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>handle</strong> (<em>int</em>) – Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().</p></li>
 <li><p><strong>frame_id</strong> (<em>int</em>) – ID of the frame of interest.</p></li>
 <li><p><strong>scan_begin</strong> (<em>int</em>) – Beginning scan number (corresponding to 1/K0 value) within frame.</p></li>
@@ -448,7 +527,7 @@ state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>handle</strong> (<em>int</em>) – Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().</p></li>
 </ul>
 </dd>
@@ -468,7 +547,7 @@ state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>handle</strong> (<em>int</em>) – Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().</p></li>
 <li><p><strong>frame_id</strong> (<em>int</em>) – ID of the frame of interest.</p></li>
 <li><p><strong>indices</strong> (<em>numpy.array</em>) – Array of index values to be converted to m/z values.</p></li>
@@ -490,7 +569,7 @@ state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>handle</strong> (<em>int</em>) – Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().</p></li>
 <li><p><strong>frame_id</strong> (<em>int</em>) – ID of the frame of interest.</p></li>
 <li><p><strong>mzs</strong> (<em>numpy.array</em>) – Array of m/z values to be converted to index values.</p></li>
@@ -512,7 +591,7 @@ state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>ook0</strong> (<em>float</em>) – 1/K0 value of the feature to be converted.</p></li>
 <li><p><strong>charge</strong> (<em>int</em>) – Charge of the feature to be converted.</p></li>
 <li><p><strong>mz</strong> (<em>float</em>) – m/z value of the feature to be converted.</p></li>
@@ -534,7 +613,7 @@ state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>handle</strong> (<em>int</em>) – Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().</p></li>
 <li><p><strong>frame_id</strong> (<em>int</em>) – ID of the frame of interest.</p></li>
 <li><p><strong>mobilities</strong> (<em>numpy.array</em>) – Array of 1/K0 values to be converted to scan numbers.</p></li>
@@ -556,7 +635,7 @@ state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>bruker_d_folder_name</strong> (<em>str</em>) – Path to a Bruker .d file containing analysis.tdf.</p></li>
 <li><p><strong>use_recalibrated_state</strong> (<em>bool</em>) – Whether to use recalibrated data (True) or not (False), defaults to True.</p></li>
 </ul>
@@ -578,7 +657,7 @@ to be passed to subsequent API calls.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>bruker_d_folder_name</strong> (<em>str</em>) – Path to a Bruker .d file containing analysis.tdf.</p></li>
 <li><p><strong>pressure_compensation_strategy</strong> (<em>enum.Enum</em>) – Pressure compensation strategy chosen from
 pyTDFSDK.ctypes_data_structures.PressureCompensationStrategy, either NoPressureCompensation,
@@ -606,7 +685,7 @@ order in the specified precursor list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>handle</strong> (<em>int</em>) – Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().</p></li>
 <li><p><strong>precursor_list</strong> (<em>list</em><em>[</em><em>int</em><em>] </em><em>| </em><em>numpy.array</em>) – List of precursor IDs to obtain spectra for.</p></li>
 </ul>
@@ -631,7 +710,7 @@ specified precursor ID list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>handle</strong> (<em>int</em>) – Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().</p></li>
 <li><p><strong>frame_id</strong> (<em>int</em>) – ID of the frame of interest.</p></li>
 </ul>
@@ -656,7 +735,7 @@ specified precursor ID list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>handle</strong> (<em>int</em>) – Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().</p></li>
 <li><p><strong>frame_id</strong> (<em>int</em>) – ID of the frame of interest.</p></li>
 </ul>
@@ -682,7 +761,7 @@ order in the specified precursor list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>handle</strong> (<em>int</em>) – Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().</p></li>
 <li><p><strong>precursor_list</strong> (<em>list</em><em>[</em><em>int</em><em>] </em><em>| </em><em>numpy.array</em>) – List of precursor IDs to obtain spectra for.</p></li>
 </ul>
@@ -707,7 +786,7 @@ MS/MS spectra does not necessarily match the order in the specified precursor ID
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>handle</strong> (<em>int</em>) – Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().</p></li>
 <li><p><strong>precursor_list</strong> (<em>list</em><em>[</em><em>int</em><em>] </em><em>| </em><em>numpy.array</em>) – List of precursor IDs to obtain spectra for.</p></li>
 </ul>
@@ -732,7 +811,7 @@ in the specified precursor ID list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>handle</strong> (<em>int</em>) – Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().</p></li>
 <li><p><strong>frame_id</strong> (<em>int</em>) – ID of the frame of interest.</p></li>
 </ul>
@@ -757,7 +836,7 @@ in the specified precursor ID list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>handle</strong> (<em>int</em>) – Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().</p></li>
 <li><p><strong>frame_id</strong> (<em>int</em>) – ID of the frame of interest.</p></li>
 </ul>
@@ -782,7 +861,7 @@ MS/MS spectra does not necessarily match the order in the specified precursor ID
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>handle</strong> (<em>int</em>) – Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().</p></li>
 <li><p><strong>precursor_list</strong> (<em>list</em><em>[</em><em>int</em><em>] </em><em>| </em><em>numpy.array</em>) – List of precursor IDs to obtain spectra for.</p></li>
 </ul>
@@ -804,7 +883,7 @@ on error.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>handle</strong> (<em>int</em>) – Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().</p></li>
 <li><p><strong>frame_id</strong> (<em>int</em>) – ID of the frame of interest.</p></li>
 <li><p><strong>scan_begin</strong> (<em>int</em>) – Beginning scan number (corresponding to 1/K0 value) within frame.</p></li>
@@ -829,7 +908,7 @@ error.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>handle</strong> (<em>int</em>) – Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().</p></li>
 <li><p><strong>frame_id</strong> (<em>int</em>) – ID of the frame of interest.</p></li>
 <li><p><strong>scan_nums</strong> (<em>numpy.array</em>) – Array of scan numbers to be converted to 1/K0 values.</p></li>
@@ -851,7 +930,7 @@ error.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>handle</strong> (<em>int</em>) – Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().</p></li>
 <li><p><strong>frame_id</strong> (<em>int</em>) – ID of the frame of interest.</p></li>
 <li><p><strong>scan_nums</strong> (<em>numpy.array</em>) – Array of scan numbers to be converted to voltages.</p></li>
@@ -870,12 +949,12 @@ error.</p>
 <dt class="sig sig-object py" id="pyTDFSDK.tims.tims_set_num_threads">
 <span class="sig-prename descclassname"><span class="pre">pyTDFSDK.tims.</span></span><span class="sig-name descname"><span class="pre">tims_set_num_threads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tdf_sdk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.tims.tims_set_num_threads" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the number of threads that this DLL is allowed to use internally. The index &lt;-&gt; m/z transformation is
-internally parallelized using OpenMP. THis call is simply forwarded to omp_set_num_threads(). This function has no
+internally parallelized using OpenMP. This call is simply forwarded to omp_set_num_threads(). This function has no
 real effect on Linux.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>num_threads</strong> (<em>int</em>) – Number of threads to use (&gt;= 1)</p></li>
 </ul>
 </dd>
@@ -889,7 +968,7 @@ real effect on Linux.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>handle</strong> (<em>int</em>) – Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().</p></li>
 <li><p><strong>frame_id</strong> (<em>int</em>) – ID of the frame of interest.</p></li>
 <li><p><strong>voltages</strong> (<em>numpy.array</em>) – Array of voltages to be converted to scan numbers.</p></li>
@@ -914,7 +993,7 @@ real effect on Linux.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>handle</strong> (<em>int</em>) – Handle value for TSF dataset initialized using pyTDFSDK.tsf.tsf_open().</p></li>
 <li><p><strong>conn</strong> (<em>sqlite3.Connection</em>) – SQL database connection to analysis.tsf.</p></li>
 </ul>
@@ -937,7 +1016,7 @@ state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>handle</strong> (<em>int</em>) – Handle value for TSF dataset initialized using pyTDFSDK.tsf.tsf_open().</p></li>
 </ul>
 </dd>
@@ -957,7 +1036,7 @@ state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>handle</strong> (<em>int</em>) – Handle value for TSF dataset initialized using pyTDFSDK.tsf.tsf_open().</p></li>
 <li><p><strong>frame_id</strong> (<em>int</em>) – ID of the frame of interest.</p></li>
 <li><p><strong>indices</strong> (<em>numpy.array</em>) – Array of index values to be converted to m/z values.</p></li>
@@ -979,7 +1058,7 @@ state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>handle</strong> (<em>int</em>) – Handle value for TSF dataset initialized using pyTDFSDK.tsf.tsf_open().</p></li>
 <li><p><strong>frame_id</strong> (<em>int</em>) – ID of the frame of interest.</p></li>
 <li><p><strong>mzs</strong> (<em>numpy.array</em>) – Array of m/z values to be converted to index values.</p></li>
@@ -1001,7 +1080,7 @@ state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>bruker_d_folder_name</strong> (<em>str</em>) – Path to a Bruker .d file containing analysis.tsf.</p></li>
 <li><p><strong>use_recalibrated_state</strong> (<em>bool</em>) – Whether to use recalibrated data (True) or not (False), defaults to True.</p></li>
 </ul>
@@ -1022,14 +1101,15 @@ state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>handle</strong> (<em>int</em>) – Handle value for TSF dataset initialized using pyTDFSDK.tsf.tsf_open().</p></li>
 <li><p><strong>frame_id</strong> (<em>int</em>) – ID of the frame of interest.</p></li>
 <li><p><strong>profile_buffer_size</strong> (<em>int</em>) – Initial number of buffer bytes necessary for the output, defaults to 1024.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Tuple containing an array of m/z values and an array of detector counts or -1 on error.</p>
+<dd class="field-even"><p>Tuple containing an array of index values for the mass dimension and an array of detector counts or -1 on
+error.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>tuple[numpy.array] | int</p>
@@ -1044,14 +1124,15 @@ state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>handle</strong> (<em>int</em>) – Handle value for TSF dataset initialized using pyTDFSDK.tsf.tsf_open().</p></li>
 <li><p><strong>frame_id</strong> (<em>int</em>) – ID of the frame of interest.</p></li>
 <li><p><strong>profile_buffer_size</strong> (<em>int</em>) – Initial number of buffer bytes necessary for the output, defaults to 1024.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Tuple containing an array of m/z values and an array of detector counts or -1 on error.</p>
+<dd class="field-even"><p>Tuple containing an array of index values for the mass dimension and an array of detector counts or -1 on
+error.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>tuple[numpy.array] | int</p>
@@ -1066,15 +1147,15 @@ state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>handle</strong> (<em>int</em>) – Handle value for TSF dataset initialized using pyTDFSDK.tsf.tsf_open().</p></li>
 <li><p><strong>frame_id</strong> (<em>int</em>) – ID of the frame of interest.</p></li>
 <li><p><strong>profile_buffer_size</strong> (<em>int</em>) – Initial number of buffer bytes necessary for the output, defaults to 1024.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Tuple containing an array of m/z values, an array of detector counts, and an array of widths or -1 on
-error.</p>
+<dd class="field-even"><p>Tuple containing an array of index values for the mass dimension, an array of detector counts, and an
+array of widths or -1 on error.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>tuple[numpy.array] | int</p>
@@ -1089,14 +1170,15 @@ error.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>handle</strong> (<em>int</em>) – Handle value for TSF dataset initialized using pyTDFSDK.tsf.tsf_open().</p></li>
 <li><p><strong>frame_id</strong> (<em>int</em>) – ID of the frame of interest.</p></li>
 <li><p><strong>profile_buffer_size</strong> (<em>int</em>) – Initial number of buffer bytes necessary for the output, defaults to 1024.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Tuple containing an array of m/z values and an array of detector counts or -1 on error.</p>
+<dd class="field-even"><p>Tuple containing an array of index values for the mass dimension and an array of detector counts or -1 on
+error.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>tuple[numpy.array] | int</p>
@@ -1111,14 +1193,15 @@ error.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>handle</strong> (<em>int</em>) – Handle value for TSF dataset initialized using pyTDFSDK.tsf.tsf_open().</p></li>
 <li><p><strong>frame_id</strong> (<em>int</em>) – ID of the frame of interest.</p></li>
 <li><p><strong>profile_buffer_size</strong> (<em>int</em>) – Initial number of buffer bytes necessary for the output, defaults to 1024.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Tuple containing an array of m/z values and an array of detector counts or -1 on error.</p>
+<dd class="field-even"><p>Tuple containing an array of index values for the mass dimension and an array of detector counts or -1 on
+error.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>tuple[numpy.array] | int</p>
@@ -1130,12 +1213,12 @@ error.</p>
 <dt class="sig sig-object py" id="pyTDFSDK.tsf.tsf_set_num_threads">
 <span class="sig-prename descclassname"><span class="pre">pyTDFSDK.tsf.</span></span><span class="sig-name descname"><span class="pre">tsf_set_num_threads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tdf_sdk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.tsf.tsf_set_num_threads" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the number of threads that this DLL is allowed to use internally. The index &lt;-&gt; m/z transformation is
-internally parallelized using OpenMP. THis call is simply forwarded to omp_set_num_threads(). This function has no
+internally parallelized using OpenMP. This call is simply forwarded to omp_set_num_threads(). This function has no
 real effect on Linux.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Instance of TDF-SDK.</p></li>
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>num_threads</strong> (<em>int</em>) – Number of threads to use (&gt;= 1)</p></li>
 </ul>
 </dd>
@@ -1226,8 +1309,8 @@ pyTDFSDK.tsf.tsf_open().</p></li>
       &copy;2023, Gordon T. Luu.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
       <a href="_sources/pyTDFSDK.rst.txt"
