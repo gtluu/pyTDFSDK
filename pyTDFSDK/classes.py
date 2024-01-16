@@ -280,8 +280,12 @@ class TsfSpectrum(object):
                 self.ms_level = 1
             # MS/MS
             elif int(frames_dict['MsMsType']) in [2, 8, 9]:
-                msms_mode = self.tsf_data.analysis['Properties'][(self.tsf_data.analysis['Properties']['Frame'] == self.frame) &
-                                                                 (self.tsf_data.analysis['Properties']['Property'] == 41)].to_dict(orient='records')[0]['Value']
+                if self.tsf_data.analysis['GlobalMetadata']['AcquisitionSoftwareVersion'] == '5.0.9':
+                    msms_mode = self.tsf_data.analysis['Properties'][(self.tsf_data.analysis['Properties']['Frame'] == self.frame) &
+                                                                     (self.tsf_data.analysis['Properties']['Property'] == 124)].to_dict(orient='records')[0]['Value']
+                else:
+                    msms_mode = self.tsf_data.analysis['Properties'][(self.tsf_data.analysis['Properties']['Frame'] == self.frame) &
+                                                                     (self.tsf_data.analysis['Properties']['Property'] == 41)].to_dict(orient='records')[0]['Value']
                 framemsmsinfo_dict = self.tsf_data.analysis['FrameMsMsInfo'][self.tsf_data.analysis['FrameMsMsInfo']['Frame'] ==
                                                                              self.frame].to_dict(orient='records')[0]
                 # MALDI MS/MS, coded as MRM in the schema
@@ -626,8 +630,12 @@ class TdfSpectrum(object):
                 self.scan_type = 'MS1 spectrum'
                 self.ms_level = 1
             elif int(frames_dict['MsMsType']) in [2, 8, 9]:
-                msms_mode = self.tdf_data.analysis['Properties'][(self.tdf_data.analysis['Properties']['Frame'] == self.frame) &
-                                                                 (self.tdf_data.analysis['Properties']['Property'] == 41)].to_dict(orient='records')[0]['Value']
+                if self.tdf_data.analysis['GlobalMetadata']['AcquisitionSoftwareVersion'] == '5.0.9':
+                    msms_mode = self.tdf_data.analysis['Properties'][(self.tdf_data.analysis['Properties']['Frame'] == self.frame) &
+                                                                     (self.tdf_data.analysis['Properties']['Property'] == 124)].to_dict(orient='records')[0]['Value']
+                else:
+                    msms_mode = self.tdf_data.analysis['Properties'][(self.tdf_data.analysis['Properties']['Frame'] == self.frame) &
+                                                                     (self.tdf_data.analysis['Properties']['Property'] == 41)].to_dict(orient='records')[0]['Value']
                 framemsmsinfo_dict = self.tdf_data.analysis['FrameMsMsInfo'][self.tdf_data.analysis['FrameMsMsInfo']['Frame'] ==
                                                                              maldiframeinfo_dict['Frame']].to_dict(orient='records')[0]
                 # MALDI MS/MS, coded as MRM in the schema
