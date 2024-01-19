@@ -2,7 +2,7 @@ import numpy as np
 from ctypes import POINTER, c_int64
 from pyTDFSDK.ctypes_data_structures import *
 from pyTDFSDK.error import throw_last_timsdata_error
-from pyTDFSDK.util import call_conversion_func
+from pyTDFSDK.util import call_conversion_func, get_encoding_dtype, bin_profile_spectrum
 
 
 def tims_ccs_to_oneoverk0_for_mz(tdf_sdk, ccs, charge, mz):
@@ -136,6 +136,7 @@ def tims_extract_chromatograms(tdf_sdk, handle, jobs, trace_sink):
         function.
     :param trace_sink: Sink callback from TDF-SDK.
     """
+
     @CHROMATOGRAM_JOB_GENERATOR
     def wrap_gen(job, user_data):
         try:
@@ -626,10 +627,10 @@ def tims_read_scans_v2(tdf_sdk, handle, frame_id, scan_begin, scan_end, initial_
     result = []
     d = scan_end - scan_begin
     for i in range(scan_begin, scan_end):
-        npeaks = buf[i-scan_begin]
-        indices = buf[d:d+npeaks]
+        npeaks = buf[i - scan_begin]
+        indices = buf[d:d + npeaks]
         d += npeaks
-        intensities = buf[d:d+npeaks]
+        intensities = buf[d:d + npeaks]
         d += npeaks
         result.append((indices, intensities))
     return result
@@ -704,3 +705,182 @@ def tims_voltage_to_scannum(tdf_sdk, handle, frame_id, voltages):
     """
     func = tdf_sdk.tims_voltage_to_scannum
     return call_conversion_func(tdf_sdk, handle, frame_id, voltages, func)
+
+
+def extract_2d_tdf_spectrum(tdf_data, frame, scan_begin, scan_end, mode, profile_bins=0, encoding=64):
+    """
+    Extract spectrum from TDF data with m/z and intensity arrays. Spectrum can either be centroid or quasi-profile
+    mode. "Raw" mode uses pyTDFSDK.tims.tims_read_scans_v2() method, while "centroid" mode uses
+    pyTDFSDK.tims.tims_extract_centroided_spectrum_for_frame_v2() method. "Profile" mode uses
+    pyTDFSDK.tims.tims_extract_profile_for_frame() to extrapolate a quasi-profile spectrum from centroid raw data.
+
+    :param tdf_data: tdf_data object containing metadata from analysis.tdf database.
+    :type tdf_data: pyTDFSDK.classes.TdfData
+    :param frame: Frame ID from the Frames table in analysis.tdf/analysis.tsf database.
+    :type frame: int
+    :param scan_begin: Beginning scan number (corresponding to 1/K0 value) within frame.
+    :type scan_begin: int
+    :param scan_end: Ending scan number (corresponding to 1/K0 value) within frame (non-inclusive).
+    :type scan_end: int
+    :param mode: Mode command line parameter, either "profile", "centroid", or "raw".
+    :type mode: str
+    :param profile_bins: Number of bins to bin spectrum to.
+    :type profile_bins: int
+    :param encoding: Encoding command line parameter, either "64" or "32".
+    :type encoding: int
+    :return: Tuple of mz_array (np.array) and intensity_array (np.array) or (None, None) if spectra are empty.
+    :rtype: tuple[numpy.array | None]
+    """
+    if mode == 'raw':
+        list_of_scans = tims_read_scans_v2(tdf_data.api, tdf_data.handle, frame, scan_begin, scan_end)
+        frame_mz_arrays = []
+        frame_intensity_arrays = []
+        for scan_num in range(scan_begin, scan_end):
+            if list_of_scans[scan_num][0].size != 0 \
+                    and list_of_scans[scan_num][1].size != 0 \
+                    and list_of_scans[scan_num][0].size == list_of_scans[scan_num][1].size:
+                mz_array = tims_index_to_mz(tdf_data.api, tdf_data.handle, frame, list_of_scans[scan_num][0])
+                intensity_array = list_of_scans[scan_num][1]
+                frame_mz_arrays.append(mz_array)
+                frame_intensity_arrays.append(intensity_array)
+        if frame_mz_arrays and frame_intensity_arrays:
+            frames_array = np.stack((np.concatenate(frame_mz_arrays, axis=None),
+                                     np.concatenate(frame_intensity_arrays, axis=None)),
+                                    axis=-1)
+            frames_array = np.unique(frames_array[np.argsort(frames_array[:, 0])], axis=0)
+            mz_array = frames_array[:, 0]
+            intensity_array = frames_array[:, 1]
+            return mz_array, intensity_array
+        else:
+            return None, None
+    elif mode == 'profile':
+        intensity_array = tims_extract_profile_for_frame(tdf_data.api,
+                                                         tdf_data.handle,
+                                                         frame,
+                                                         scan_begin,
+                                                         scan_end)
+        intensity_array = np.array(intensity_array, dtype=get_encoding_dtype(encoding))
+        mz_array = np.linspace(float(tdf_data.analysis['GlobalMetadata']['MzAcqRangeLower']),
+                               float(tdf_data.analysis['GlobalMetadata']['MzAcqRangeUpper']),
+                               intensity_array.size,
+                               dtype=get_encoding_dtype(encoding))
+        if profile_bins != 0:
+            mz_array, intensity_array = bin_profile_spectrum(mz_array, intensity_array, profile_bins, encoding)
+    elif mode == 'centroid':
+        mz_array, intensity_array = tims_extract_centroided_spectrum_for_frame_v2(tdf_data.api,
+                                                                                  tdf_data.handle,
+                                                                                  frame,
+                                                                                  scan_begin,
+                                                                                  scan_end)
+        mz_array = np.array(mz_array, dtype=get_encoding_dtype(encoding))
+        intensity_array = np.array(intensity_array, dtype=get_encoding_dtype(encoding))
+    return mz_array, intensity_array
+
+
+def extract_3d_tdf_spectrum(tdf_data, frame, scan_begin, scan_end):
+    """
+    Extract spectrum from TDF data with m/z and intensity arrays. Spectrum can either be centroid or quasi-profile
+    mode. "Raw" and "centroid" modes uses pyTDFSDK.tims.tims_read_scans_v2(). "Profile" mode data is not available due
+    to the resulting data size.
+
+    :param tdf_data: tdf_data object containing metadata from analysis.tdf database.
+    :type tdf_data: pyTDFSDK.classes.TdfData
+    :param frame: Frame ID from the Frames table in analysis.tdf/analysis.tsf database.
+    :type frame: int
+    :param scan_begin: Beginning scan number (corresponding to 1/K0 value) within frame.
+    :type scan_begin: int
+    :param scan_end: Ending scan number (corresponding to 1/K0 value) within frame (non-inclusive).
+    :type scan_end: int
+    :return: Tuple of mz_array (np.array), intensity_array (np.array), and mobility_array (np.array) or
+        (None, None, None) if spectra are empty.
+    :rtype: tuple[numpy.array | None]
+    """
+    list_of_scans = tims_read_scans_v2(tdf_data.api, tdf_data.handle, frame, scan_begin, scan_end)
+    frame_mz_arrays = []
+    frame_intensity_arrays = []
+    frame_mobility_arrays = []
+    if scan_begin != 0:
+        scan_end = scan_end - scan_begin
+        scan_begin = 0
+    for scan_num in range(scan_begin, scan_end):
+        if list_of_scans[scan_num][0].size != 0 \
+                and list_of_scans[scan_num][1].size != 0 \
+                and list_of_scans[scan_num][0].size == list_of_scans[scan_num][1].size:
+            mz_array = tims_index_to_mz(tdf_data.api, tdf_data.handle, frame, list_of_scans[scan_num][0])
+            intensity_array = list_of_scans[scan_num][1]
+            mobility = tims_scannum_to_oneoverk0(tdf_data.api, tdf_data.handle, frame, np.array([scan_num]))[0]
+            mobility_array = np.repeat(mobility, mz_array.size)
+            frame_mz_arrays.append(mz_array)
+            frame_intensity_arrays.append(intensity_array)
+            frame_mobility_arrays.append(mobility_array)
+    if frame_mz_arrays and frame_intensity_arrays and frame_mobility_arrays:
+        frames_array = np.stack((np.concatenate(frame_mz_arrays, axis=None),
+                                 np.concatenate(frame_intensity_arrays, axis=None),
+                                 np.concatenate(frame_mobility_arrays, axis=None)),
+                                axis=-1)
+        frames_array = np.unique(frames_array[np.argsort(frames_array[:, 0])], axis=0)
+        mz_array = frames_array[:, 0]
+        intensity_array = frames_array[:, 1]
+        mobility_array = frames_array[:, 2]
+        return mz_array, intensity_array, mobility_array
+    else:
+        return None, None, None
+
+
+def extract_ddapasef_precursor_spectrum(tdf_data, pasefframemsmsinfo_dicts, mode, profile_bins, encoding):
+    """
+    Extract spectrum from TDF data with m/z and intensity arrays. Spectrum can either be centroid or quasi-profile
+    mode. "Raw" mode uses pyTDFSDK.tims.tims_read_scans_v2() method, while "centroid" mode uses
+    pyTDFSDK.tims.tims_extract_centroided_spectrum_for_frame_v2() method. "Profile" mode uses
+    pyTDFSDK.tims.tims_extract_profile_for_frame() to extrapolate a quasi-profile spectrum from centroid raw data.
+
+    :param tdf_data: tdf_data object containing metadata from analysis.tdf database.
+    :type tdf_data: pyTDFSDK.classes.TdfData
+    :param pasefframemsmsinfo_dicts: A row from the PasefFrameMsmsInfo table in analysis.tdf database.
+    :type pasefframemsmsinfo_dicts: dict
+    :param mode: Mode command line parameter, either "profile", "centroid", or "raw".
+    :type mode: str
+    :param profile_bins: Number of bins to bin spectrum to.
+    :type profile_bins: int
+    :param encoding: Encoding command line parameter, either "64" or "32".
+    :type encoding: int
+    :return: Tuple of mz_array (np.array) and intensity_array (np.array) or (None, None) if spectra are empty.
+    :rtype: tuple[numpy.array | None
+    """
+    pasef_mz_arrays = []
+    pasef_intensity_arrays = []
+    for pasef_dict in pasefframemsmsinfo_dicts:
+        scan_begin = int(pasef_dict['ScanNumBegin'])
+        scan_end = int(pasef_dict['ScanNumEnd'])
+        mz_array, intensity_array = extract_2d_tdf_spectrum(tdf_data,
+                                                            int(pasef_dict['Frame']),
+                                                            scan_begin,
+                                                            scan_end,
+                                                            mode,
+                                                            profile_bins,
+                                                            encoding)
+        if mz_array.size != 0 and intensity_array.size != 0 and mz_array.size == intensity_array.size:
+            pasef_mz_arrays.append(mz_array)
+            pasef_intensity_arrays.append(intensity_array)
+    if pasef_mz_arrays and pasef_intensity_arrays:
+        pasef_array = np.stack((np.concatenate(pasef_mz_arrays, axis=None),
+                                np.concatenate(pasef_intensity_arrays, axis=None)),
+                               axis=-1)
+        pasef_array = np.unique(pasef_array[np.argsort(pasef_array[:, 0])], axis=0)
+
+        mz_acq_range_lower = float(tdf_data.analysis['GlobalMetadata']['MzAcqRangeLower'])
+        mz_acq_range_upper = float(tdf_data.analysis['GlobalMetadata']['MzAcqRangeUpper'])
+        bin_size = 0.005
+        bins = np.arange(mz_acq_range_lower, mz_acq_range_upper, bin_size,
+                         dtype=get_encoding_dtype(encoding))
+
+        unique_indices, inverse_indices = np.unique(np.digitize(pasef_array[:, 0], bins),
+                                                    return_inverse=True)
+        bin_counts = np.bincount(inverse_indices)
+        np.place(bin_counts, bin_counts < 1, [1])
+
+        mz_array = np.bincount(inverse_indices, weights=pasef_array[:, 0]) / bin_counts
+        intensity_array = np.bincount(inverse_indices, weights=pasef_array[:, 1])
+        return mz_array, intensity_array
+    else:
+        return None, None
