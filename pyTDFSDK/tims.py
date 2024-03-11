@@ -884,3 +884,23 @@ def extract_ddapasef_precursor_spectrum(tdf_data, pasefframemsmsinfo_dicts, mode
         return mz_array, intensity_array
     else:
         return None, None
+
+
+def ook0_array_to_ccs_array(tdf_sdk, ook0_array, charge_array, mz_array):
+    """
+    Convert an array of 1/K0 values to an array of collisional cross section values (in Anstrom^2) using the
+    Mason-Shamp equation.
+
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
+    :type tdf_sdk: ctypes.CDLL
+    :param ook0_array: An array of 1/K0 values of the features to be converted.
+    :type ook0_array: numpy.array
+    :param charge_array: An array of charges of the features to be converted.
+    :type charge_array: numpy.array
+    :param mz_array: An array of m/z values of the features to be converted.
+    :type mz_array: numpy.array
+    :return: Collisional cross section value in Angstrom^2.
+    :rtype: float
+    """
+    return [tims_oneoverk0_to_ccs_for_mz(tdf_sdk, ook0, charge, mz)
+            for ook0, charge, mz in zip(ook0_array, charge_array, mz_array)]
