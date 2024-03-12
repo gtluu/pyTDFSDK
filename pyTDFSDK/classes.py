@@ -370,6 +370,8 @@ class TdfSpectrum(object):
         self.profile_bins = profile_bins
         self.encoding = encoding
         self.exclude_mobility = exclude_mobility
+        self.ccs_array = None
+        self.ccs_array_assumed_charge = None
 
         if self.precursor != 0:
             self.frame = 0
@@ -656,3 +658,13 @@ class TdfSpectrum(object):
                     self.activation = 'collision-induced dissociation'
                     self.collision_energy = float(framemsmsinfo_dict['CollisionEnergy'])
                     self.ms2_no_precursor = True
+
+    def get_ccs_array(self, assumed_charge):
+        # Check to ensure m/z and 1/K0 arrays are the same size
+        if self.mz_array.size == self.mobility_array:
+            self.ccs_array_assumed_charge = assumed_charge
+            charge_array = np.full(self.mz_array.size, fill_value=self.ccs_array_assumed_charge)
+            self.ccs_array = ook0_array_to_ccs_array(self.tdf_data.api,
+                                                     self.mobility_array,
+                                                     charge_array,
+                                                     self.mz_array)
