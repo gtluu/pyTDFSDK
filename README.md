@@ -1,7 +1,10 @@
 # pyTDFSDK
 
 ## About
-This package is a Python wrapper for Bruker's TDF-SDK data access library to be used with other Python packages. Functions have been taken and modified from TDF-SDK and TIMSCONVERT.
+This package is a Python wrapper for Bruker's TDF-SDK data access library to be used with other Python packages. 
+Functions have been taken and modified from TDF-SDK and TIMSCONVERT.
+
+Included software components: Copyright © 2022 by Bruker Daltonics GmbH & Co. KG. All rights reserved.
 
 ## Installation
 This package can be installed to a Python virtual environment using `pip`. 
