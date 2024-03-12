@@ -661,7 +661,7 @@ class TdfSpectrum(object):
 
     def get_ccs_array(self, assumed_charge):
         # Check to ensure m/z and 1/K0 arrays are the same size
-        if self.mz_array.size == self.mobility_array:
+        if self.mz_array.size == self.mobility_array.size:
             self.ccs_array_assumed_charge = assumed_charge
             charge_array = np.full(self.mz_array.size, fill_value=self.ccs_array_assumed_charge)
             self.ccs_array = ook0_array_to_ccs_array(self.tdf_data.api,
