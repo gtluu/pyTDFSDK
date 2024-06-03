@@ -292,7 +292,7 @@ def tsf_set_num_threads(tdf_sdk, num_threads):
     tdf_sdk.tsf_set_num_threads(num_threads)
 
 
-def extract_tsf_spectrum(tsf_data, frame, mode, profile_bins=0, encoding=64):
+def extract_tsf_spectrum(tsf_data, frame, mode, profile_bins=0, mz_encoding=64, intensity_encoding=64):
     """
     Extract spectrum from TSF data with m/z and intensity arrays. Spectrum can either be centroid or quasi-profile
     mode. If "raw" mode is chosen, centroid mode will automatically be used. "Centroid" mode uses
@@ -307,8 +307,10 @@ def extract_tsf_spectrum(tsf_data, frame, mode, profile_bins=0, encoding=64):
     :type mode: str
     :param profile_bins: Number of bins to bin spectrum to.
     :type profile_bins: int
-    :param encoding: Encoding command line parameter, either "64" or "32".
-    :type encoding: int
+    :param mz_encoding: m/z encoding command line parameter, either "64" or "32".
+    :type mz_encoding: int
+    :param intensity_encoding: Intensity encoding command line parameter, either "64" or "32".
+    :type intensity_encoding: int
     :return: Tuple of mz_array (np.array) and intensity_array (np.array).
     :rtype: tuple[numpy.array]
     """
@@ -317,8 +319,8 @@ def extract_tsf_spectrum(tsf_data, frame, mode, profile_bins=0, encoding=64):
         mz_array = tsf_index_to_mz(tsf_data.api, tsf_data.handle, frame, index_buf)
     elif mode == 'profile':
         index_buf, intensity_array = tsf_read_profile_spectrum_v2(tsf_data.api, tsf_data.handle, frame)
-        intensity_array = np.array(intensity_array, dtype=get_encoding_dtype(encoding))
+        intensity_array = np.array(intensity_array, dtype=get_encoding_dtype(intensity_encoding))
         mz_array = tsf_index_to_mz(tsf_data.api, tsf_data.handle, frame, index_buf)
         if profile_bins != 0:
-            mz_array, intensity_array = bin_profile_spectrum(mz_array, intensity_array, profile_bins, encoding)
+            mz_array, intensity_array = bin_profile_spectrum(mz_array, intensity_array, profile_bins, mz_encoding)
     return mz_array, intensity_array

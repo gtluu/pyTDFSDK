@@ -95,7 +95,7 @@ def get_maldi_coords(data, maldiframeinfo_dict):
     return coords
 
 
-def bin_profile_spectrum(mz_array, intensity_array, profile_bins, encoding):
+def bin_profile_spectrum(mz_array, intensity_array, profile_bins, mz_encoding):
     """
     Bin profile mode spectrum into N number of bins.
 
@@ -105,14 +105,14 @@ def bin_profile_spectrum(mz_array, intensity_array, profile_bins, encoding):
     :type intensity_array: numpy.array
     :param profile_bins: Number of bins to bin spectrum to.
     :type profile_bins: int
-    :param encoding: Encoding command line parameter, either "64" or "32".
-    :type encoding: int
+    :param mz_encoding: m/z encoding command line parameter, either "64" or "32".
+    :type mz_encoding: int
     :return: Tuple of binned_mz_array (np.array) and binned_intensity_array (np.array).
     :rtype: tuple[numpy.array]
     """
     mz_acq_range_lower = float(mz_array[0])
     mz_acq_range_upper = float(mz_array[-1])
-    bins = np.linspace(mz_acq_range_lower, mz_acq_range_upper, profile_bins, dtype=get_encoding_dtype(encoding))
+    bins = np.linspace(mz_acq_range_lower, mz_acq_range_upper, profile_bins, dtype=get_encoding_dtype(mz_encoding))
     unique_indices, inverse_indices = np.unique(np.digitize(mz_array, bins), return_inverse=True)
     bin_counts = np.bincount(inverse_indices)
     np.place(bin_counts, bin_counts < 1, [1])

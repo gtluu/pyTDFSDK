@@ -146,11 +146,13 @@ class TsfSpectrum(object):
     :type mode: str
     :param profile_bins: Number of bins to bin spectrum to.
     :type profile_bins: int
-    :param encoding: Encoding bit mode, either "64" or "32"
-    :type encoding: int
+    :param mz_encoding: m/z encoding command line parameter, either "64" or "32".
+    :type mz_encoding: int
+    :param intensity_encoding: Intensity encoding command line parameter, either "64" or "32".
+    :type intensity_encoding: int
     """
 
-    def __init__(self, tsf_data, frame: int, mode: str, profile_bins=0, encoding=64):
+    def __init__(self, tsf_data, frame: int, mode: str, profile_bins=0, mz_encoding=64, intensity_encoding=64):
         """
         Constructor Method
         """
@@ -186,7 +188,8 @@ class TsfSpectrum(object):
         self.ms2_no_precursor = False
         self.mode = mode
         self.profile_bins = profile_bins
-        self.encoding = encoding
+        self.mz_encoding = mz_encoding
+        self.intensity_encoding = intensity_encoding
 
         if 'MaldiApplicationType' not in self.tsf_data.analysis['GlobalMetadata'].keys():
             self.get_lcms_tsf_data()
@@ -203,7 +206,8 @@ class TsfSpectrum(object):
                                                                    self.frame,
                                                                    self.mode,
                                                                    self.profile_bins,
-                                                                   self.encoding)
+                                                                   self.mz_encoding,
+                                                                   self.intensity_encoding)
         if self.mz_array is not None and self.intensity_array is not None and \
                 self.mz_array.size != 0 and self.intensity_array.size != 0 and \
                 self.mz_array.size == self.intensity_array.size:
@@ -264,7 +268,8 @@ class TsfSpectrum(object):
                                                                    self.frame,
                                                                    self.mode,
                                                                    self.profile_bins,
-                                                                   self.encoding)
+                                                                   self.mz_encoding,
+                                                                   self.intensity_encoding)
         if self.mz_array is not None and self.intensity_array is not None and \
                 self.mz_array.size != 0 and self.intensity_array.size != 0 and \
                 self.mz_array.size == self.intensity_array.size:
@@ -324,11 +329,16 @@ class TdfSpectrum(object):
     :type diapasef_window: dict
     :param profile_bins: Number of bins to bin spectrum to.
     :type profile_bins: int
-    :param encoding: Encoding bit mode, either "64" or "32"
-    :type encoding: int
+    :param mz_encoding: m/z encoding command line parameter, either "64" or "32".
+    :type mz_encoding: int
+    :param intensity_encoding: Intensity encoding command line parameter, either "64" or "32".
+    :type intensity_encoding: int
+    :param mobility_encoding: Mobility encoding command line parameter, either "64" or "32".
+    :type mobility_encoding: int
     """
 
-    def __init__(self, tdf_data, frame: int, mode: str, precursor=0, diapasef_window=None, profile_bins=0, encoding=64, exclude_mobility=False):
+    def __init__(self, tdf_data, frame: int, mode: str, precursor=0, diapasef_window=None, profile_bins=0,
+                 mz_encoding=64, intensity_encoding=64, mobility_encoding=64, exclude_mobility=False):
         """
         Constructor Method
         """
@@ -366,7 +376,9 @@ class TdfSpectrum(object):
         self.diapasef_window = diapasef_window  # Should be a row from TdfData.analysis['DiaFrameMsMsWindows'] table.
         self.mode = mode
         self.profile_bins = profile_bins
-        self.encoding = encoding
+        self.mz_encoding = mz_encoding
+        self.intensity_encoding = intensity_encoding
+        self.mobility_encoding = mobility_encoding
         self.exclude_mobility = exclude_mobility
 
         if self.precursor != 0:
@@ -402,7 +414,8 @@ class TdfSpectrum(object):
                                                                               int(frames_dict['NumScans']),
                                                                               self.mode,
                                                                               self.profile_bins,
-                                                                              self.encoding)
+                                                                              self.mz_encoding,
+                                                                              self.intensity_encoding)
             if self.mz_array is not None and self.intensity_array is not None and \
                     self.mz_array.size != 0 and self.intensity_array.size != 0 and \
                     self.mz_array.size == self.intensity_array.size:
@@ -427,7 +440,8 @@ class TdfSpectrum(object):
                                                                                   int(self.diapasef_window['ScanNumEnd']),
                                                                                   self.mode,
                                                                                   self.profile_bins,
-                                                                                  self.encoding)
+                                                                                  self.mz_encoding,
+                                                                                  self.intensity_encoding)
                 if self.mz_array is not None and self.intensity_array is not None and \
                         self.mz_array.size != 0 and self.intensity_array.size != 0 and \
                         self.mz_array.size == self.intensity_array.size:
@@ -468,7 +482,8 @@ class TdfSpectrum(object):
                                                                               int(frames_dict['NumScans']),
                                                                               self.mode,
                                                                               self.profile_bins,
-                                                                              self.encoding)
+                                                                              self.mz_encoding,
+                                                                              self.intensity_encoding)
             if self.mz_array is not None and self.intensity_array is not None and \
                     self.mz_array.size != 0 and self.intensity_array.size != 0 and \
                     self.mz_array.size == self.intensity_array.size:
@@ -488,7 +503,8 @@ class TdfSpectrum(object):
                                                                           int(frames_dict['NumScans']),
                                                                           self.mode,
                                                                           self.profile_bins,
-                                                                          self.encoding)
+                                                                          self.mz_encoding,
+                                                                          self.intensity_encoding)
             if self.mz_array is not None and self.intensity_array is not None and \
                     self.mz_array.size != 0 and self.intensity_array.size != 0 and \
                     self.mz_array.size == self.intensity_array.size:
@@ -519,7 +535,8 @@ class TdfSpectrum(object):
                                                                           int(prmframemsmsinfo_dict['ScanNumEnd']),
                                                                           self.mode,
                                                                           self.profile_bins,
-                                                                          self.encoding)
+                                                                          self.mz_encoding,
+                                                                          self.intensity_encoding)
             if self.mz_array is not None and self.intensity_array is not None and \
                     self.mz_array.size != 0 and self.intensity_array.size != 0 and \
                     self.mz_array.size == self.intensity_array.size:
@@ -559,7 +576,8 @@ class TdfSpectrum(object):
                                                                                   pasefframemsmsinfo_dicts,
                                                                                   self.mode,
                                                                                   self.profile_bins,
-                                                                                  self.encoding)
+                                                                                  self.mz_encoding,
+                                                                                  self.intensity_encoding)
         if self.mz_array is not None and self.intensity_array is not None and \
                 self.mz_array.size != 0 and self.intensity_array.size != 0 and \
                 self.mz_array.size == self.intensity_array.size:
@@ -613,7 +631,8 @@ class TdfSpectrum(object):
                                                                           int(frames_dict['NumScans']),
                                                                           self.mode,
                                                                           self.profile_bins,
-                                                                          self.encoding)
+                                                                          self.mz_encoding,
+                                                                          self.intensity_encoding)
         if self.mz_array is not None and self.intensity_array is not None and \
                 self.mz_array.size != 0 and self.intensity_array.size != 0 and \
                 self.mz_array.size == self.intensity_array.size:
@@ -631,8 +650,7 @@ class TdfSpectrum(object):
                 msms_mode_id = self.tdf_data.analysis['PropertyDefinitions'][self.tdf_data.analysis['PropertyDefinitions']['PermanentName'] ==
                                                                              'Mode_ScanMode'].to_dict(orient='records')[0]['Id']
                 msms_mode = self.tdf_data.analysis['Properties'][(self.tdf_data.analysis['Properties']['Frame'] == self.frame) &
-                                                                 (self.tdf_data.analysis['Properties']['Property'] == msms_mode_id)].to_dict(orient='records')[0][
-                    'Value']
+                                                                 (self.tdf_data.analysis['Properties']['Property'] == msms_mode_id)].to_dict(orient='records')[0]['Value']
                 framemsmsinfo_dict = self.tdf_data.analysis['FrameMsMsInfo'][self.tdf_data.analysis['FrameMsMsInfo']['Frame'] ==
                                                                              maldiframeinfo_dict['Frame']].to_dict(orient='records')[0]
                 # MALDI MS/MS, coded as MRM in the schema
