@@ -82,11 +82,11 @@ class TdfData(object):
         pyTDFSDK.ctypes_data_structures.PressureCompensationStrategy.AnalyisGlobalPressureCompensation = analysis
         global pressure compensation,
         pyTDFSDK.ctypes_data_structures.PressureCompensationStrategy.PerFramePressureCompensation = per frame pressure
-        compensation), defaults to No Pressure Compensation.
+        compensation), defaults to Global Pressure Compensation.
     :type pressure_compensation_strategy: enum.Enum
     """
     def __init__(self, bruker_d_folder_name: str, tdf_sdk, use_recalibrated_state=True,
-                 pressure_compensation_strategy=PressureCompensationStrategy.NoPressureCompensation):
+                 pressure_compensation_strategy=PressureCompensationStrategy.AnalyisGlobalPressureCompensation):
         """
         Constructor Method
         """
