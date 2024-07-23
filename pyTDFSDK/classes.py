@@ -465,11 +465,6 @@ class TdfSpectrum(object):
         elif int(frames_dict['ScanMode']) == 4 and int(frames_dict['MsMsType']) == 2:
             framemsmsinfo_dict = self.tdf_data.analysis['FrameMsMsInfo'][self.tdf_data.analysis['FrameMsMsInfo']['Frame'] ==
                                                                          self.frame].to_dict(orient='records')[0]
-            self.scan_type = 'MSn spectrum'
-            self.ms_level = 2
-            self.activation = 'collision-induced dissociation'
-            self.collision_energy = float(framemsmsinfo_dict['CollisionEnergy'])
-            self.ms2_no_precursor = True
             if not self.exclude_mobility:
                 self.mz_array, self.intensity_array, self.mobility_array = extract_3d_tdf_spectrum(self.tdf_data,
                                                                                                    self.frame,
@@ -487,6 +482,11 @@ class TdfSpectrum(object):
             if self.mz_array is not None and self.intensity_array is not None and \
                     self.mz_array.size != 0 and self.intensity_array.size != 0 and \
                     self.mz_array.size == self.intensity_array.size:
+                self.scan_type = 'MSn spectrum'
+                self.ms_level = 2
+                self.activation = 'collision-induced dissociation'
+                self.collision_energy = float(framemsmsinfo_dict['CollisionEnergy'])
+                self.ms2_no_precursor = True
                 self.total_ion_current = sum(self.intensity_array)
                 base_peak_index = np.where(self.intensity_array == np.max(self.intensity_array))
                 self.base_peak_mz = self.mz_array[base_peak_index][0].astype(float)
@@ -618,43 +618,59 @@ class TdfSpectrum(object):
         self.polarity = frames_dict['Polarity']
         self.centroided = get_centroid_status(self.mode)[0]
         self.retention_time = 0
-        if not self.exclude_mobility:
-            self.mz_array, self.intensity_array, self.mobility_array = extract_3d_tdf_spectrum(self.tdf_data,
-                                                                                               self.frame,
-                                                                                               0,
-                                                                                               int(frames_dict[
-                                                                                                       'NumScans']))
-        elif self.exclude_mobility:
-            self.mz_array, self.intensity_array = extract_2d_tdf_spectrum(self.tdf_data,
-                                                                          self.frame,
-                                                                          0,
-                                                                          int(frames_dict['NumScans']),
-                                                                          self.mode,
-                                                                          self.profile_bins,
-                                                                          self.mz_encoding,
-                                                                          self.intensity_encoding)
-        if self.mz_array is not None and self.intensity_array is not None and \
-                self.mz_array.size != 0 and self.intensity_array.size != 0 and \
-                self.mz_array.size == self.intensity_array.size:
-            self.total_ion_current = sum(self.intensity_array)
-            base_peak_index = np.where(self.intensity_array == np.max(self.intensity_array))
-            self.base_peak_mz = self.mz_array[base_peak_index][0].astype(float)
-            self.base_peak_intensity = self.intensity_array[base_peak_index][0].astype(float)
-            self.high_mz = float(max(self.mz_array))
-            self.low_mz = float(min(self.mz_array))
-            # MS1
-            if int(frames_dict['MsMsType']) == 0:
-                self.scan_type = 'MS1 spectrum'
-                self.ms_level = 1
-            elif int(frames_dict['MsMsType']) in [2, 8, 9]:
-                msms_mode_id = self.tdf_data.analysis['PropertyDefinitions'][self.tdf_data.analysis['PropertyDefinitions']['PermanentName'] ==
-                                                                             'Mode_ScanMode'].to_dict(orient='records')[0]['Id']
-                msms_mode = self.tdf_data.analysis['Properties'][(self.tdf_data.analysis['Properties']['Frame'] == self.frame) &
-                                                                 (self.tdf_data.analysis['Properties']['Property'] == msms_mode_id)].to_dict(orient='records')[0]['Value']
+        # MS1
+        if int(frames_dict['MsMsType']) == 0:
+            self.scan_type = 'MS1 spectrum'
+            self.ms_level = 1
+            if not self.exclude_mobility:
+                self.mz_array, self.intensity_array, self.mobility_array = extract_3d_tdf_spectrum(self.tdf_data,
+                                                                                                   self.frame,
+                                                                                                   0,
+                                                                                                   int(frames_dict['NumScans']))
+            elif self.exclude_mobility:
+                self.mz_array, self.intensity_array = extract_2d_tdf_spectrum(self.tdf_data,
+                                                                              self.frame,
+                                                                              0,
+                                                                              int(frames_dict['NumScans']),
+                                                                              self.mode,
+                                                                              self.profile_bins,
+                                                                              self.mz_encoding,
+                                                                              self.intensity_encoding)
+            if self.mz_array is not None and self.intensity_array is not None and \
+                    self.mz_array.size != 0 and self.intensity_array.size != 0 and \
+                    self.mz_array.size == self.intensity_array.size:
+                self.total_ion_current = sum(self.intensity_array)
+                base_peak_index = np.where(self.intensity_array == np.max(self.intensity_array))
+                self.base_peak_mz = self.mz_array[base_peak_index][0].astype(float)
+                self.base_peak_intensity = self.intensity_array[base_peak_index][0].astype(float)
+                self.high_mz = float(max(self.mz_array))
+                self.low_mz = float(min(self.mz_array))
+        elif int(frames_dict['MsMsType']) in [2, 8, 9]:
+            msms_mode_id = self.tdf_data.analysis['PropertyDefinitions'][self.tdf_data.analysis['PropertyDefinitions']['PermanentName'] ==
+                                                                         'Mode_ScanMode'].to_dict(orient='records')[0]['Id']
+            msms_mode = self.tdf_data.analysis['Properties'][(self.tdf_data.analysis['Properties']['Frame'] == self.frame) &
+                                                             (self.tdf_data.analysis['Properties']['Property'] == msms_mode_id)].to_dict(orient='records')[0]['Value']
+            # MALDI MS/MS, coded as MRM in the schema
+            if msms_mode == 3:
                 framemsmsinfo_dict = self.tdf_data.analysis['FrameMsMsInfo'][self.tdf_data.analysis['FrameMsMsInfo']['Frame'] ==
                                                                              maldiframeinfo_dict['Frame']].to_dict(orient='records')[0]
-                # MALDI MS/MS, coded as MRM in the schema
-                if msms_mode == 3:
+                if not self.exclude_mobility:
+                    self.mz_array, self.intensity_array, self.mobility_array = extract_3d_tdf_spectrum(self.tdf_data,
+                                                                                                       self.frame,
+                                                                                                       0,
+                                                                                                       int(frames_dict['NumScans']))
+                elif self.exclude_mobility:
+                    self.mz_array, self.intensity_array = extract_2d_tdf_spectrum(self.tdf_data,
+                                                                                  self.frame,
+                                                                                  0,
+                                                                                  int(frames_dict['NumScans']),
+                                                                                  self.mode,
+                                                                                  self.profile_bins,
+                                                                                  self.mz_encoding,
+                                                                                  self.intensity_encoding)
+                if self.mz_array is not None and self.intensity_array is not None and \
+                        self.mz_array.size != 0 and self.intensity_array.size != 0 and \
+                        self.mz_array.size == self.intensity_array.size:
                     self.scan_type = 'MSn spectrum'
                     self.ms_level = 2
                     self.target_mz = float(framemsmsinfo_dict['TriggerMass'])
@@ -664,10 +680,77 @@ class TdfSpectrum(object):
                     self.charge_state = framemsmsinfo_dict['PrecursorCharge']
                     self.activation = 'collision-induced dissociation'
                     self.collision_energy = float(framemsmsinfo_dict['CollisionEnergy'])
-                # MALDI bbCID
-                elif msms_mode == 5:
+                    self.total_ion_current = sum(self.intensity_array)
+                    base_peak_index = np.where(self.intensity_array == np.max(self.intensity_array))
+                    self.base_peak_mz = self.mz_array[base_peak_index][0].astype(float)
+                    self.base_peak_intensity = self.intensity_array[base_peak_index][0].astype(float)
+                    self.high_mz = float(max(self.mz_array))
+                    self.low_mz = float(min(self.mz_array))
+            # MALDI bbCID
+            elif msms_mode == 5:
+                framemsmsinfo_dict = self.tdf_data.analysis['FrameMsMsInfo'][self.tdf_data.analysis['FrameMsMsInfo']['Frame'] ==
+                                                                             maldiframeinfo_dict['Frame']].to_dict(orient='records')[0]
+                if not self.exclude_mobility:
+                    self.mz_array, self.intensity_array, self.mobility_array = extract_3d_tdf_spectrum(self.tdf_data,
+                                                                                                       self.frame,
+                                                                                                       0,
+                                                                                                       int(frames_dict['NumScans']))
+                elif self.exclude_mobility:
+                    self.mz_array, self.intensity_array = extract_2d_tdf_spectrum(self.tdf_data,
+                                                                                  self.frame,
+                                                                                  0,
+                                                                                  int(frames_dict['NumScans']),
+                                                                                  self.mode,
+                                                                                  self.profile_bins,
+                                                                                  self.mz_encoding,
+                                                                                  self.intensity_encoding)
+                if self.mz_array is not None and self.intensity_array is not None and \
+                        self.mz_array.size != 0 and self.intensity_array.size != 0 and \
+                        self.mz_array.size == self.intensity_array.size:
                     self.scan_type = 'MSn spectrum'
                     self.ms_level = 2
                     self.activation = 'collision-induced dissociation'
                     self.collision_energy = float(framemsmsinfo_dict['CollisionEnergy'])
                     self.ms2_no_precursor = True
+                    self.total_ion_current = sum(self.intensity_array)
+                    base_peak_index = np.where(self.intensity_array == np.max(self.intensity_array))
+                    self.base_peak_mz = self.mz_array[base_peak_index][0].astype(float)
+                    self.base_peak_intensity = self.intensity_array[base_peak_index][0].astype(float)
+                    self.high_mz = float(max(self.mz_array))
+                    self.low_mz = float(min(self.mz_array))
+            # MALDI prmPASEF
+            elif msms_mode == 12:
+                if self.diapasef_window is not None:
+                    if not self.exclude_mobility:
+                        self.mz_array, self.intensity_array, self.mobility_array = extract_3d_tdf_spectrum(self.tdf_data,
+                                                                                                           self.frame,
+                                                                                                           int(self.diapasef_window['ScanNumBegin']),
+                                                                                                           int(self.diapasef_window['ScanNumEnd']))
+                    elif self.exclude_mobility:
+                        self.mz_array, self.intensity_array = extract_2d_tdf_spectrum(self.tdf_data,
+                                                                                      self.frame,
+                                                                                      int(self.diapasef_window['ScanNumBegin']),
+                                                                                      int(self.diapasef_window['ScanNumEnd']),
+                                                                                      self.mode,
+                                                                                      self.profile_bins,
+                                                                                      self.mz_encoding,
+                                                                                      self.intensity_encoding)
+                    if self.mz_array is not None and self.intensity_array is not None and \
+                            self.mz_array.size != 0 and self.intensity_array.size != 0 and \
+                            self.mz_array.size == self.intensity_array.size:
+                        self.scan_type = 'MSn spectrum'
+                        self.ms_level = 2
+                        self.target_mz = float(self.diapasef_window['IsolationMz'])
+                        self.isolation_lower_offset = float(self.diapasef_window['IsolationWidth']) / 2
+                        self.isolation_upper_offset = float(self.diapasef_window['IsolationWidth']) / 2
+                        self.selected_ion_mz = float(self.diapasef_window['IsolationMz'])
+                        self.collision_energy = self.diapasef_window['CollisionEnergy']
+                        self.total_ion_current = sum(self.intensity_array)
+                        base_peak_index = np.where(self.intensity_array == np.max(self.intensity_array))
+                        self.base_peak_mz = self.mz_array[base_peak_index][0].astype(float)
+                        self.base_peak_intensity = self.intensity_array[base_peak_index][0].astype(float)
+                        self.high_mz = float(max(self.mz_array))
+                        self.low_mz = float(min(self.mz_array))
+                else:
+                    raise Exception("diapasef_window from TdfData.analysis['DiaFrameMsMsWindows'] table required to "
+                                    "parse diaPASEF data.")

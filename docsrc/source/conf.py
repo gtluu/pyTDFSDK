@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..',
 project = 'pyTDFSDK'
 copyright = '2024, Gordon T. Luu'
 author = 'Gordon T. Luu'
-release = '0.3.7'
+release = '0.4.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
