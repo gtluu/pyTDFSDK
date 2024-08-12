@@ -39,7 +39,7 @@
 <span id="pytdfsdk-classes-module"></span><h2>pyTDFSDK.classes module<a class="headerlink" href="#module-pyTDFSDK.classes" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="pyTDFSDK.classes.TdfData">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyTDFSDK.classes.</span></span><span class="sig-name descname"><span class="pre">TdfData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bruker_d_folder_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tdf_sdk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_recalibrated_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure_compensation_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PressureCompensationStrategy.AnalyisGlobalPressureCompensation</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.classes.TdfData" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyTDFSDK.classes.</span></span><span class="sig-name descname"><span class="pre">TdfData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bruker_d_folder_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tdf_sdk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_recalibrated_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure_compensation_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PressureCompensationStrategy.AnalyisGlobalPressureCompensation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sql_chunksize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.classes.TdfData" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class containing metadata from TDF files and methods from TDF-SDK library to work with TDF format data.</p>
 <dl class="field-list simple">
@@ -54,6 +54,8 @@ pyTDFSDK.ctypes_data_structures.PressureCompensationStrategy.AnalyisGlobalPressu
 global pressure compensation,
 pyTDFSDK.ctypes_data_structures.PressureCompensationStrategy.PerFramePressureCompensation = per frame pressure
 compensation), defaults to Global Pressure Compensation.</p></li>
+<li><p><strong>sql_chunksize</strong> (<em>int</em>) – Number of rows to read from SQL database query at once when reading tables/views from
+analysis.tdf.</p></li>
 </ul>
 </dd>
 </dl>
@@ -119,7 +121,7 @@ pyTDFSDK.classesTdfData.analysis[‘DiaFrameMsMsWindows’] table required for p
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pyTDFSDK.classes.TsfData">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyTDFSDK.classes.</span></span><span class="sig-name descname"><span class="pre">TsfData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bruker_d_folder_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tdf_sdk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_recalibrated_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.classes.TsfData" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyTDFSDK.classes.</span></span><span class="sig-name descname"><span class="pre">TsfData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bruker_d_folder_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tdf_sdk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_recalibrated_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sql_chunksize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.classes.TsfData" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class containing metadata from TSF files and methods from TDF-SDK library to work with TSF format data.</p>
 <dl class="field-list simple">
@@ -128,6 +130,8 @@ pyTDFSDK.classesTdfData.analysis[‘DiaFrameMsMsWindows’] table required for p
 <li><p><strong>bruker_d_folder_name</strong> (<em>str</em>) – Path to a Bruker .d directory containing analysis.tsf.</p></li>
 <li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
 <li><p><strong>use_recalibrated_state</strong> (<em>bool</em>) – Whether to use recalibrated data (True) or not (False), defaults to True.</p></li>
+<li><p><strong>sql_chunksize</strong> (<em>int</em>) – Number of rows to read from SQL database query at once when reading tables/views from
+analysis.tsf.</p></li>
 </ul>
 </dd>
 </dl>

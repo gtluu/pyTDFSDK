@@ -18,8 +18,11 @@ class TsfData(object):
     :type tdf_sdk: ctypes.CDLL
     :param use_recalibrated_state: Whether to use recalibrated data (True) or not (False), defaults to True.
     :type use_recalibrated_state: bool
+    :param sql_chunksize: Number of rows to read from SQL database query at once when reading tables/views from
+            analysis.tsf.
+    :type sql_chunksize: int
     """
-    def __init__(self, bruker_d_folder_name: str, tdf_sdk, use_recalibrated_state=True):
+    def __init__(self, bruker_d_folder_name: str, tdf_sdk, use_recalibrated_state=True, sql_chunksize=1000):
         """
         Constructor Method
         """
@@ -32,7 +35,7 @@ class TsfData(object):
 
         self.analysis = None
 
-        self.get_db_tables()
+        self.get_db_tables(sql_chunksize=sql_chunksize)
         self.close_sql_connection()
 
     def __del__(self):
@@ -92,9 +95,13 @@ class TdfData(object):
         pyTDFSDK.ctypes_data_structures.PressureCompensationStrategy.PerFramePressureCompensation = per frame pressure
         compensation), defaults to Global Pressure Compensation.
     :type pressure_compensation_strategy: enum.Enum
+    :param sql_chunksize: Number of rows to read from SQL database query at once when reading tables/views from
+            analysis.tdf.
+    :type sql_chunksize: int
     """
     def __init__(self, bruker_d_folder_name: str, tdf_sdk, use_recalibrated_state=True,
-                 pressure_compensation_strategy=PressureCompensationStrategy.AnalyisGlobalPressureCompensation):
+                 pressure_compensation_strategy=PressureCompensationStrategy.AnalyisGlobalPressureCompensation,
+                 sql_chunksize=1000):
         """
         Constructor Method
         """
@@ -107,7 +114,7 @@ class TdfData(object):
 
         self.analysis = None
 
-        self.get_db_tables()
+        self.get_db_tables(sql_chunksize=sql_chunksize)
         self.close_sql_connection()
 
     def __del__(self):
