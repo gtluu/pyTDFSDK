@@ -42,10 +42,14 @@ class TsfData(object):
         if hasattr(self, 'handle'):
             tsf_close(self.api, self.handle, self.conn)
 
-    def get_db_tables(self):
+    def get_db_tables(self, sql_chunksize=1000):
         """
-         Get a dictionary of all tables found in the analysis.tsf SQLite database in which the table names act as keys
-         and the tables as a pandas.DataFrame of values; this is stored in pyTDFSDK.classes.TsfData.analysis.
+        Get a dictionary of all tables found in the analysis.tsf SQLite database in which the table names act as keys
+        and the tables as a pandas.DataFrame of values; this is stored in pyTDFSDK.classes.TsfData.analysis.
+
+        :param sql_chunksize: Number of rows to read from SQL database query at once when reading tables/views from
+            analysis.tsf.
+        :type sql_chunksize: int
         """
         cursor = self.conn.cursor()
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
@@ -55,7 +59,11 @@ class TsfData(object):
         view_names = cursor.fetchall()
         view_names = [view[0] for view in view_names]
         names = table_names + view_names
-        self.analysis = {name: pd.read_sql_query("SELECT * FROM " + name, self.conn) for name in names}
+        self.analysis = {name: pd.concat([i for i in pd.read_sql_query("SELECT * FROM " + name,
+                                                                       self.conn,
+                                                                       chunksize=sql_chunksize)],
+                                         ignore_index=True)
+                         for name in names}
         self.analysis['GlobalMetadata'] = {row['Key']: row['Value']
                                            for index, row, in self.analysis['GlobalMetadata'].iterrows()}
         cursor.close()
@@ -109,10 +117,14 @@ class TdfData(object):
         if hasattr(self, 'handle'):
             tims_close(self.api, self.handle, self.conn)
 
-    def get_db_tables(self):
+    def get_db_tables(self, sql_chunksize=1000):
         """
-         Get a dictionary of all tables found in the analysis.tsf SQLite database in which the table names act as keys
-         and the tables as a pandas.DataFrame of values; this is stored in pyTDFSDK.classes.TsfData.analysis.
+        Get a dictionary of all tables found in the analysis.tdf SQLite database in which the table names act as keys
+        and the tables as a pandas.DataFrame of values; this is stored in pyTDFSDK.classes.TdfData.analysis.
+
+        :param sql_chunksize: Number of rows to read from SQL database query at once when reading tables/views from
+            analysis.tdf.
+        :type sql_chunksize: int
         """
         cursor = self.conn.cursor()
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
@@ -122,7 +134,11 @@ class TdfData(object):
         view_names = cursor.fetchall()
         view_names = [view[0] for view in view_names]
         names = table_names + view_names
-        self.analysis = {name: pd.read_sql_query("SELECT * FROM " + name, self.conn) for name in names}
+        self.analysis = {name: pd.concat([i for i in pd.read_sql_query("SELECT * FROM " + name,
+                                                                       self.conn,
+                                                                       chunksize=sql_chunksize)],
+                                         ignore_index=True)
+                         for name in names}
         self.analysis['GlobalMetadata'] = {row['Key']: row['Value']
                                            for index, row, in self.analysis['GlobalMetadata'].iterrows()}
         cursor.close()
@@ -136,7 +152,7 @@ class TdfData(object):
 
 class TsfSpectrum(object):
     """
-    Class for parsing and storing spectrum metadata and data arrays from BAF format data.
+    Class for parsing and storing spectrum metadata and data arrays from TSF format data.
 
     :param tsf_data: TsfData object containing metadata from analysis.tsf database.
     :type tsf_data: pyTDFSDK.classes.TsfData
@@ -313,7 +329,7 @@ class TsfSpectrum(object):
 
 class TdfSpectrum(object):
     """
-    Class for parsing and storing spectrum metadata and data arrays from BAF format data.
+    Class for parsing and storing spectrum metadata and data arrays from TDF format data.
 
     :param tdf_data: TdfData object containing metadata from analysis.tdf database.
     :type tdf_data: pyTDFSDK.classes.TdfData
