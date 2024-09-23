@@ -1,3 +1,7 @@
+# The following code has been modified from TIMSCONVERT 1.0.0.
+# For more information see: https://github.com/gtluu/timsconvert/tree/manuscript_v1.0.0
+
+
 import numpy as np
 from ctypes import POINTER, c_double
 from pyTDFSDK.error import *

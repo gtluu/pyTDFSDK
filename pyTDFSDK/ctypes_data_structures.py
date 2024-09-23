@@ -1,3 +1,7 @@
+# The following code has been modified from TIMSCONVERT 1.0.0.
+# For more information see: https://github.com/gtluu/timsconvert/tree/manuscript_v1.0.0
+
+
 from ctypes import CFUNCTYPE, POINTER, Structure, c_int64, c_uint32, c_double, c_float, c_int32, c_void_p, c_uint64
 from enum import Enum
 
