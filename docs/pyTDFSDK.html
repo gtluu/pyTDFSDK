@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>pyTDFSDK package &#8212; pyTDFSDK 0.4.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
-    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=c058f7c8" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
     <script src="_static/documentation_options.js?v=c87aa342"></script>
-    <script src="_static/doctools.js?v=9a2dae69"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
    
@@ -39,8 +39,24 @@
 <section id="module-pyTDFSDK.classes">
 <span id="pytdfsdk-classes-module"></span><h2>pyTDFSDK.classes module<a class="headerlink" href="#module-pyTDFSDK.classes" title="Link to this heading">¶</a></h2>
 <dl class="py class">
+<dt class="sig sig-object py" id="pyTDFSDK.classes.LazyAnalysis">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyTDFSDK.classes.</span></span><span class="sig-name descname"><span class="pre">LazyAnalysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sql_chunksize</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.classes.LazyAnalysis" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTDFSDK.classes.LazyAnalysis.join_frame">
+<span class="sig-name descname"><span class="pre">join_frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.classes.LazyAnalysis.join_frame" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTDFSDK.classes.LazyAnalysis.range">
+<span class="sig-name descname"><span class="pre">range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyTDFSDK.classes.LazyAnalysis.range" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="pyTDFSDK.classes.TdfData">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyTDFSDK.classes.</span></span><span class="sig-name descname"><span class="pre">TdfData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bruker_d_folder_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tdf_sdk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_recalibrated_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure_compensation_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PressureCompensationStrategy.AnalyisGlobalPressureCompensation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sql_chunksize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.classes.TdfData" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyTDFSDK.classes.</span></span><span class="sig-name descname"><span class="pre">TdfData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bruker_d_folder_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tdf_sdk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_recalibrated_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure_compensation_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PressureCompensationStrategy.AnalyisGlobalPressureCompensation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sql_chunksize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.classes.TdfData" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class containing metadata from TDF files and methods from TDF-SDK library to work with TDF format data.</p>
 <dl class="field-list simple">
@@ -66,24 +82,11 @@ analysis.tdf.</p></li>
 <dd><p>Close the connection to analysis.tdf.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="pyTDFSDK.classes.TdfData.get_db_tables">
-<span class="sig-name descname"><span class="pre">get_db_tables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sql_chunksize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.classes.TdfData.get_db_tables" title="Link to this definition">¶</a></dt>
-<dd><p>Get a dictionary of all tables found in the analysis.tdf SQLite database in which the table names act as keys
-and the tables as a pandas.DataFrame of values; this is stored in pyTDFSDK.classes.TdfData.analysis.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>sql_chunksize</strong> (<em>int</em>) – Number of rows to read from SQL database query at once when reading tables/views from
-analysis.tdf.</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pyTDFSDK.classes.TdfSpectrum">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyTDFSDK.classes.</span></span><span class="sig-name descname"><span class="pre">TdfSpectrum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tdf_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precursor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diapasef_window</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">profile_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mz_encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensity_encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mobility_encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_mobility</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.classes.TdfSpectrum" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyTDFSDK.classes.</span></span><span class="sig-name descname"><span class="pre">TdfSpectrum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tdf_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precursor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diapasef_window</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">profile_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mz_encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensity_encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mobility_encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_mobility</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.classes.TdfSpectrum" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class for parsing and storing spectrum metadata and data arrays from TDF format data.</p>
 <dl class="field-list simple">
@@ -122,7 +125,7 @@ pyTDFSDK.classesTdfData.analysis[‘DiaFrameMsMsWindows’] table required for p
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pyTDFSDK.classes.TsfData">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyTDFSDK.classes.</span></span><span class="sig-name descname"><span class="pre">TsfData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bruker_d_folder_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tdf_sdk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_recalibrated_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sql_chunksize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.classes.TsfData" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyTDFSDK.classes.</span></span><span class="sig-name descname"><span class="pre">TsfData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bruker_d_folder_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tdf_sdk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_recalibrated_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sql_chunksize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.classes.TsfData" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class containing metadata from TSF files and methods from TDF-SDK library to work with TSF format data.</p>
 <dl class="field-list simple">
@@ -142,24 +145,11 @@ analysis.tsf.</p></li>
 <dd><p>Close the connection to analysis.tsf.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="pyTDFSDK.classes.TsfData.get_db_tables">
-<span class="sig-name descname"><span class="pre">get_db_tables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sql_chunksize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.classes.TsfData.get_db_tables" title="Link to this definition">¶</a></dt>
-<dd><p>Get a dictionary of all tables found in the analysis.tsf SQLite database in which the table names act as keys
-and the tables as a pandas.DataFrame of values; this is stored in pyTDFSDK.classes.TsfData.analysis.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>sql_chunksize</strong> (<em>int</em>) – Number of rows to read from SQL database query at once when reading tables/views from
-analysis.tsf.</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pyTDFSDK.classes.TsfSpectrum">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyTDFSDK.classes.</span></span><span class="sig-name descname"><span class="pre">TsfSpectrum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tsf_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">profile_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mz_encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensity_encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.classes.TsfSpectrum" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyTDFSDK.classes.</span></span><span class="sig-name descname"><span class="pre">TsfSpectrum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tsf_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">profile_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mz_encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensity_encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.classes.TsfSpectrum" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class for parsing and storing spectrum metadata and data arrays from TSF format data.</p>
 <dl class="field-list simple">
@@ -191,7 +181,7 @@ analysis.tsf.</p>
 <span id="pytdfsdk-ctypes-data-structures-module"></span><h2>pyTDFSDK.ctypes_data_structures module<a class="headerlink" href="#module-pyTDFSDK.ctypes_data_structures" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="pyTDFSDK.ctypes_data_structures.ChromatogramJob">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyTDFSDK.ctypes_data_structures.</span></span><span class="sig-name descname"><span class="pre">ChromatogramJob</span></span><a class="headerlink" href="#pyTDFSDK.ctypes_data_structures.ChromatogramJob" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyTDFSDK.ctypes_data_structures.</span></span><span class="sig-name descname"><span class="pre">ChromatogramJob</span></span><a class="headerlink" href="#pyTDFSDK.ctypes_data_structures.ChromatogramJob" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Structure</span></code></p>
 <p>ctypes.Structure to hold chromatogram job information.</p>
 <dl class="py attribute">
@@ -240,29 +230,29 @@ analysis.tsf.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pyTDFSDK.ctypes_data_structures.PressureCompensationStrategy">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyTDFSDK.ctypes_data_structures.</span></span><span class="sig-name descname"><span class="pre">PressureCompensationStrategy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.ctypes_data_structures.PressureCompensationStrategy" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyTDFSDK.ctypes_data_structures.</span></span><span class="sig-name descname"><span class="pre">PressureCompensationStrategy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.ctypes_data_structures.PressureCompensationStrategy" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
 <p>enum.Enum to determine pressure compensation strategy.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pyTDFSDK.ctypes_data_structures.PressureCompensationStrategy.AnalyisGlobalPressureCompensation">
-<span class="sig-name descname"><span class="pre">AnalyisGlobalPressureCompensation</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#pyTDFSDK.ctypes_data_structures.PressureCompensationStrategy.AnalyisGlobalPressureCompensation" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">AnalyisGlobalPressureCompensation</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></span><a class="headerlink" href="#pyTDFSDK.ctypes_data_structures.PressureCompensationStrategy.AnalyisGlobalPressureCompensation" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pyTDFSDK.ctypes_data_structures.PressureCompensationStrategy.NoPressureCompensation">
-<span class="sig-name descname"><span class="pre">NoPressureCompensation</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#pyTDFSDK.ctypes_data_structures.PressureCompensationStrategy.NoPressureCompensation" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">NoPressureCompensation</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></span><a class="headerlink" href="#pyTDFSDK.ctypes_data_structures.PressureCompensationStrategy.NoPressureCompensation" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pyTDFSDK.ctypes_data_structures.PressureCompensationStrategy.PerFramePressureCompensation">
-<span class="sig-name descname"><span class="pre">PerFramePressureCompensation</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#pyTDFSDK.ctypes_data_structures.PressureCompensationStrategy.PerFramePressureCompensation" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">PerFramePressureCompensation</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></span><a class="headerlink" href="#pyTDFSDK.ctypes_data_structures.PressureCompensationStrategy.PerFramePressureCompensation" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pyTDFSDK.ctypes_data_structures.TimsVisExtractionFilter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyTDFSDK.ctypes_data_structures.</span></span><span class="sig-name descname"><span class="pre">TimsVisExtractionFilter</span></span><a class="headerlink" href="#pyTDFSDK.ctypes_data_structures.TimsVisExtractionFilter" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyTDFSDK.ctypes_data_structures.</span></span><span class="sig-name descname"><span class="pre">TimsVisExtractionFilter</span></span><a class="headerlink" href="#pyTDFSDK.ctypes_data_structures.TimsVisExtractionFilter" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Structure</span></code></p>
 <p>ctypes.Structure to hold visualization extraction filter information.</p>
 <dl class="py attribute">
@@ -305,7 +295,7 @@ analysis.tsf.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pyTDFSDK.ctypes_data_structures.TimsVisHeatmapSizes">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyTDFSDK.ctypes_data_structures.</span></span><span class="sig-name descname"><span class="pre">TimsVisHeatmapSizes</span></span><a class="headerlink" href="#pyTDFSDK.ctypes_data_structures.TimsVisHeatmapSizes" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyTDFSDK.ctypes_data_structures.</span></span><span class="sig-name descname"><span class="pre">TimsVisHeatmapSizes</span></span><a class="headerlink" href="#pyTDFSDK.ctypes_data_structures.TimsVisHeatmapSizes" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Structure</span></code></p>
 <p>ctypes.Structure to hold heatmap size information.</p>
 <dl class="py attribute">
@@ -348,7 +338,7 @@ analysis.tsf.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pyTDFSDK.ctypes_data_structures.TimsVisLine">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyTDFSDK.ctypes_data_structures.</span></span><span class="sig-name descname"><span class="pre">TimsVisLine</span></span><a class="headerlink" href="#pyTDFSDK.ctypes_data_structures.TimsVisLine" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyTDFSDK.ctypes_data_structures.</span></span><span class="sig-name descname"><span class="pre">TimsVisLine</span></span><a class="headerlink" href="#pyTDFSDK.ctypes_data_structures.TimsVisLine" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Structure</span></code></p>
 <p>ctypes.Structure to hold visualization x-y coordinates.</p>
 <dl class="py attribute">
@@ -379,22 +369,22 @@ analysis.tsf.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pyTDFSDK.ctypes_data_structures.TimsVisTransformation">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyTDFSDK.ctypes_data_structures.</span></span><span class="sig-name descname"><span class="pre">TimsVisTransformation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.ctypes_data_structures.TimsVisTransformation" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyTDFSDK.ctypes_data_structures.</span></span><span class="sig-name descname"><span class="pre">TimsVisTransformation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.ctypes_data_structures.TimsVisTransformation" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
 <p>enum.Enum to determine MSI visualization intensity transformation method.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pyTDFSDK.ctypes_data_structures.TimsVisTransformation.LIMITED_LOG">
-<span class="sig-name descname"><span class="pre">LIMITED_LOG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#pyTDFSDK.ctypes_data_structures.TimsVisTransformation.LIMITED_LOG" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">LIMITED_LOG</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></span><a class="headerlink" href="#pyTDFSDK.ctypes_data_structures.TimsVisTransformation.LIMITED_LOG" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pyTDFSDK.ctypes_data_structures.TimsVisTransformation.NONE">
-<span class="sig-name descname"><span class="pre">NONE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#pyTDFSDK.ctypes_data_structures.TimsVisTransformation.NONE" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">NONE</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></span><a class="headerlink" href="#pyTDFSDK.ctypes_data_structures.TimsVisTransformation.NONE" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pyTDFSDK.ctypes_data_structures.TimsVisTransformation.SQRT">
-<span class="sig-name descname"><span class="pre">SQRT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#pyTDFSDK.ctypes_data_structures.TimsVisTransformation.SQRT" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">SQRT</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></span><a class="headerlink" href="#pyTDFSDK.ctypes_data_structures.TimsVisTransformation.SQRT" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1066,6 +1056,32 @@ error.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="pyTDFSDK.tims.tims_read_scans_v2_as_array">
+<span class="sig-prename descclassname"><span class="pre">pyTDFSDK.tims.</span></span><span class="sig-name descname"><span class="pre">tims_read_scans_v2_as_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tdf_sdk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scan_begin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scan_end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_frame_buffer_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">128</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peak_buffer_count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.tims.tims_read_scans_v2_as_array" title="Link to this definition">¶</a></dt>
+<dd><p>Read a range of scans from a single frame. The resulting array contains the indices and peaks, where appropriate, or nan.
+The final array has dimensions (num_scans, peak_count, 0: index, 1: intensity)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tdf_sdk</strong> (<em>ctypes.CDLL</em>) – Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().</p></li>
+<li><p><strong>handle</strong> (<em>int</em>) – Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().</p></li>
+<li><p><strong>frame_id</strong> (<em>int</em>) – ID of the frame of interest.</p></li>
+<li><p><strong>scan_begin</strong> (<em>int</em>) – Beginning scan number (corresponding to 1/K0 value) within frame.</p></li>
+<li><p><strong>scan_end</strong> (<em>int</em>) – Ending scan number (corresponding to 1/K0 value) within frame (non-inclusive).</p></li>
+<li><p><strong>initial_frame_buffer_size</strong> (<em>int</em>) – Initial number of buffer bytes necessary for the output, defaults to 128.</p></li>
+<li><p><strong>peak_buffer_count</strong> (<em>int</em>) – The maximum number of peaks expected per scan. If -1 then uses the maximum for this frame. If less than the maximum for this frame raises a Value Error</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An array with the indices and peaks.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.array[tuple[int, int, int]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="pyTDFSDK.tims.tims_scannum_to_oneoverk0">
 <span class="sig-prename descclassname"><span class="pre">pyTDFSDK.tims.</span></span><span class="sig-name descname"><span class="pre">tims_scannum_to_oneoverk0</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tdf_sdk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scan_nums</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyTDFSDK.tims.tims_scannum_to_oneoverk0" title="Link to this definition">¶</a></dt>
 <dd><p>Convert (possibly non-integer) scan numbers for the mobility dimension to 1/K0 values.</p>
@@ -1581,7 +1597,7 @@ pyTDFSDK.tsf.tsf_open().</p></li>
       &#169;2024, Gordon T. Luu.
       
       |
-      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.0.2</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
       &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2023 Gordon T. Luu <gtluu912@gmail.com>
+# SPDX-License-Identifier: Apache-2.0
+
 /venv
 /.idea
 /__pychache__/*
