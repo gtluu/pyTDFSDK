@@ -97,7 +97,9 @@ def tsf_open(tdf_sdk, bruker_d_folder_name, use_recalibrated_state=True):
     :return: Non-zero instance handle.
     :rtype: int
     """
-    handle = tdf_sdk.tsf_open(bruker_d_folder_name.encode('utf-8'), 1 if use_recalibrated_state else 0)
+    handle = tdf_sdk.tsf_open(
+        bruker_d_folder_name.encode("utf-8"), 1 if use_recalibrated_state else 0
+    )
     return handle
 
 
@@ -121,14 +123,16 @@ def tsf_read_line_spectrum(tdf_sdk, handle, frame_id, profile_buffer_size=1024):
         cnt = int(profile_buffer_size)
         index_buf = np.empty(shape=cnt, dtype=np.float64)
         intensity_buf = np.empty(shape=cnt, dtype=np.float32)
-        required_len = tdf_sdk.tsf_read_line_spectrum(handle,
-                                                      frame_id,
-                                                      index_buf.ctypes.data_as(POINTER(c_double)),
-                                                      intensity_buf.ctypes.data_as(POINTER(c_float)),
-                                                      profile_buffer_size)
+        required_len = tdf_sdk.tsf_read_line_spectrum(
+            handle,
+            frame_id,
+            index_buf.ctypes.data_as(POINTER(c_double)),
+            intensity_buf.ctypes.data_as(POINTER(c_float)),
+            profile_buffer_size,
+        )
         if required_len > profile_buffer_size:
             if required_len > 16777216:
-                raise RuntimeError('Maximum expected frame size exceeded.')
+                raise RuntimeError("Maximum expected frame size exceeded.")
             profile_buffer_size = required_len
         else:
             break
@@ -155,24 +159,28 @@ def tsf_read_line_spectrum_v2(tdf_sdk, handle, frame_id, profile_buffer_size=102
         cnt = int(profile_buffer_size)
         index_buf = np.empty(shape=cnt, dtype=np.float64)
         intensity_buf = np.empty(shape=cnt, dtype=np.float32)
-        required_len = tdf_sdk.tsf_read_line_spectrum_v2(handle,
-                                                         frame_id,
-                                                         index_buf.ctypes.data_as(POINTER(c_double)),
-                                                         intensity_buf.ctypes.data_as(POINTER(c_float)),
-                                                         profile_buffer_size)
+        required_len = tdf_sdk.tsf_read_line_spectrum_v2(
+            handle,
+            frame_id,
+            index_buf.ctypes.data_as(POINTER(c_double)),
+            intensity_buf.ctypes.data_as(POINTER(c_float)),
+            profile_buffer_size,
+        )
         if required_len < 0:
             throw_last_tsfdata_error(tdf_sdk)
         if required_len > profile_buffer_size:
             if required_len > 16777216:
                 # arbitrary limit for now...
-                raise RuntimeError('Maximum expected frame size exceeded.')
+                raise RuntimeError("Maximum expected frame size exceeded.")
             profile_buffer_size = required_len  # grow buffer
         else:
             break
     return index_buf[0:required_len], intensity_buf[0:required_len]
 
 
-def tsf_read_line_spectrum_with_width_v2(tdf_sdk, handle, frame_id, profile_buffer_size=1024):
+def tsf_read_line_spectrum_with_width_v2(
+    tdf_sdk, handle, frame_id, profile_buffer_size=1024
+):
     """
     Read peak picked spectra with peak width for a frame from a non-TIMS (TSF) dataset.
 
@@ -193,22 +201,28 @@ def tsf_read_line_spectrum_with_width_v2(tdf_sdk, handle, frame_id, profile_buff
         index_buf = np.empty(shape=cnt, dtype=np.float64)
         intensity_buf = np.empty(shape=cnt, dtype=np.float32)
         width_buf = np.empty(shape=cnt, dtype=np.float32)
-        required_len = tdf_sdk.tsf_read_line_spectrum_with_width_v2(handle,
-                                                                    frame_id,
-                                                                    index_buf.ctypes.data_as(POINTER(c_double)),
-                                                                    intensity_buf.ctypes.data_as(POINTER(c_float)),
-                                                                    width_buf.ctypes.data_as(POINTER(c_float)),
-                                                                    profile_buffer_size)
+        required_len = tdf_sdk.tsf_read_line_spectrum_with_width_v2(
+            handle,
+            frame_id,
+            index_buf.ctypes.data_as(POINTER(c_double)),
+            intensity_buf.ctypes.data_as(POINTER(c_float)),
+            width_buf.ctypes.data_as(POINTER(c_float)),
+            profile_buffer_size,
+        )
         if required_len < 0:
             throw_last_tsfdata_error(tdf_sdk)
         if required_len > profile_buffer_size:
             if required_len > 16777216:
                 # arbitrary limit for now...
-                raise RuntimeError('Maximum expected frame size exceeded.')
+                raise RuntimeError("Maximum expected frame size exceeded.")
             profile_buffer_size = required_len
         else:
             break
-    return index_buf[0:required_len], intensity_buf[0:required_len], width_buf[0:required_len]
+    return (
+        index_buf[0:required_len],
+        intensity_buf[0:required_len],
+        width_buf[0:required_len],
+    )
 
 
 def tsf_read_profile_spectrum(tdf_sdk, handle, frame_id, profile_buffer_size=1024):
@@ -230,13 +244,15 @@ def tsf_read_profile_spectrum(tdf_sdk, handle, frame_id, profile_buffer_size=102
     while True:
         cnt = int(profile_buffer_size)
         intensity_buf = np.empty(shape=cnt, dtype=np.uint32)
-        required_len = tdf_sdk.tsf_read_profile_spectrum(handle,
-                                                         frame_id,
-                                                         intensity_buf.ctypes.data_as(POINTER(c_uint32)),
-                                                         profile_buffer_size)
+        required_len = tdf_sdk.tsf_read_profile_spectrum(
+            handle,
+            frame_id,
+            intensity_buf.ctypes.data_as(POINTER(c_uint32)),
+            profile_buffer_size,
+        )
         if required_len > profile_buffer_size:
             if required_len > 16777216:
-                raise RuntimeError('Maximum expected frame size exceeded.')
+                raise RuntimeError("Maximum expected frame size exceeded.")
             profile_buffer_size = required_len
         else:
             break
@@ -264,17 +280,19 @@ def tsf_read_profile_spectrum_v2(tdf_sdk, handle, frame_id, profile_buffer_size=
         cnt = int(profile_buffer_size)
         intensity_buf = np.empty(shape=cnt, dtype=np.uint32)
 
-        required_len = tdf_sdk.tsf_read_profile_spectrum_v2(handle,
-                                                            frame_id,
-                                                            intensity_buf.ctypes.data_as(POINTER(c_uint32)),
-                                                            profile_buffer_size)
+        required_len = tdf_sdk.tsf_read_profile_spectrum_v2(
+            handle,
+            frame_id,
+            intensity_buf.ctypes.data_as(POINTER(c_uint32)),
+            profile_buffer_size,
+        )
         if required_len < 0:
             throw_last_tsfdata_error(tdf_sdk)
 
         if required_len > profile_buffer_size:
             if required_len > 16777216:
                 # arbitrary limit for now...
-                raise RuntimeError('Maximum expected frame size exceeded.')
+                raise RuntimeError("Maximum expected frame size exceeded.")
             profile_buffer_size = required_len
         else:
             break
@@ -296,7 +314,9 @@ def tsf_set_num_threads(tdf_sdk, num_threads):
     tdf_sdk.tsf_set_num_threads(num_threads)
 
 
-def extract_tsf_spectrum(tsf_data, frame, mode, profile_bins=0, mz_encoding=64, intensity_encoding=64):
+def extract_tsf_spectrum(
+    tsf_data, frame, mode, profile_bins=0, mz_encoding=64, intensity_encoding=64
+):
     """
     Extract spectrum from TSF data with m/z and intensity arrays. Spectrum can either be centroid or quasi-profile
     mode. If "raw" mode is chosen, centroid mode will automatically be used. "Centroid" mode uses
@@ -318,13 +338,21 @@ def extract_tsf_spectrum(tsf_data, frame, mode, profile_bins=0, mz_encoding=64, 
     :return: Tuple of mz_array (np.array) and intensity_array (np.array).
     :rtype: tuple[numpy.array]
     """
-    if mode == 'raw' or mode == 'centroid':
-        index_buf, intensity_array = tsf_read_line_spectrum_v2(tsf_data.api, tsf_data.handle, frame)
+    if mode == "raw" or mode == "centroid":
+        index_buf, intensity_array = tsf_read_line_spectrum_v2(
+            tsf_data.api, tsf_data.handle, frame
+        )
         mz_array = tsf_index_to_mz(tsf_data.api, tsf_data.handle, frame, index_buf)
-    elif mode == 'profile':
-        index_buf, intensity_array = tsf_read_profile_spectrum_v2(tsf_data.api, tsf_data.handle, frame)
-        intensity_array = np.array(intensity_array, dtype=get_encoding_dtype(intensity_encoding))
+    elif mode == "profile":
+        index_buf, intensity_array = tsf_read_profile_spectrum_v2(
+            tsf_data.api, tsf_data.handle, frame
+        )
+        intensity_array = np.array(
+            intensity_array, dtype=get_encoding_dtype(intensity_encoding)
+        )
         mz_array = tsf_index_to_mz(tsf_data.api, tsf_data.handle, frame, index_buf)
         if profile_bins != 0:
-            mz_array, intensity_array = bin_profile_spectrum(mz_array, intensity_array, profile_bins, mz_encoding)
+            mz_array, intensity_array = bin_profile_spectrum(
+                mz_array, intensity_array, profile_bins, mz_encoding
+            )
     return mz_array, intensity_array

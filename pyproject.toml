@@ -1,0 +1,31 @@
+# SPDX-FileCopyrightText: 2026 Duncan McDougall <duncan.mcdougall@rfi.ac.uk>
+# SPDX-License-Identifier: Apache-2.0
+
+[project]
+name = "pyTDFSDK"
+version = "0.4.1"
+description='Python wrapper for Bruker TDF-SDK'
+authors=[
+    {name='Gordon T. Luu', email='gtluu912@gmail.com'},
+    {name='Duncan McDougall', email='duncan.mcdougall@rfi.ac.uk'},
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=2.4.6",
+    "pandas>=3.0.3",
+]
+license = "Apache-2.0 AND LicenseRef-eula-tdf-sdk"
+license-files = ["LICENSES/*"]
+
+[project.urls]
+Original='https://github.com/gtluu/pyTDFSDK'
+Homepage='https://github.com/rosalindfranklininstitute/pyTDFSDK'
+
+[tool.uv.build-backend]
+data = { data = "TDF-SDK" }
+
+[dependency-groups]
+dev = [
+    "sphinx>=9.1.0",
+]

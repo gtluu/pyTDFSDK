@@ -1,0 +1,812 @@
+Timer unit: 1e-06 s
+
+Total time: 0.0009291 s
+File: C:\Workspace\pyTDFSDK\pyTDFSDK\tsf.py
+Function: tsf_index_to_mz at line 49
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    49                                           def tsf_index_to_mz(tdf_sdk, handle, frame_id, indices):
+    50                                               """
+    51                                               Convert (possibly non-integer) index values for the mass dimension to m/z values.
+    52                                           
+    53                                               :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
+    54                                               :type tdf_sdk: ctypes.CDLL
+    55                                               :param handle: Handle value for TSF dataset initialized using pyTDFSDK.tsf.tsf_open().
+    56                                               :type handle: int
+    57                                               :param frame_id: ID of the frame of interest.
+    58                                               :type frame_id: int
+    59                                               :param indices: Array of index values to be converted to m/z values.
+    60                                               :type indices: numpy.array
+    61                                               :return: Array of m/z values.
+    62                                               :rtype: numpy.array
+    63                                               """
+    64         1          6.1      6.1      0.7      func = tdf_sdk.tsf_index_to_mz
+    65         1        923.0    923.0     99.3      return call_conversion_func(tdf_sdk, handle, frame_id, indices, func)
+
+Total time: 0.001007 s
+File: C:\Workspace\pyTDFSDK\pyTDFSDK\classes.py
+Function: LazyAnalysis.__init__ at line 17
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    17                                               def __init__(self, conn, sql_chunksize):
+    18         1          1.5      1.5      0.1          self.conn = conn
+    19         1          0.8      0.8      0.1          self.sql_chunksize = sql_chunksize
+    20                                           
+    21         1          1.2      1.2      0.1          self._data = {}
+    22         1          1.2      1.2      0.1          self._joined_data = {}
+    23                                           
+    24         1          5.2      5.2      0.5          cursor = self.conn.cursor()
+    25         1        873.2    873.2     86.7          cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    26         1         26.5     26.5      2.6          table_names = cursor.fetchall()
+    27         1          5.3      5.3      0.5          table_names = [table[0] for table in table_names]
+    28         1         77.4     77.4      7.7          cursor.execute("SELECT name FROM sqlite_master WHERE type='view';")
+    29         1          9.5      9.5      0.9          view_names = cursor.fetchall()
+    30         1          1.3      1.3      0.1          view_names = [view[0] for view in view_names]
+    31         1          2.5      2.5      0.2          self.names = table_names + view_names
+    32         1          1.4      1.4      0.1          cursor.close()
+
+Total time: 0.0068807 s
+File: C:\Workspace\pyTDFSDK\pyTDFSDK\tims.py
+Function: tims_mz_to_index at line 243
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   243                                           def tims_mz_to_index(tdf_sdk, handle, frame_id, mzs):
+   244                                               """
+   245                                               Convert m/z values to (possibly non-integer) index values for the mass dimension.
+   246                                           
+   247                                               :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
+   248                                               :type tdf_sdk: ctypes.CDLL
+   249                                               :param handle: Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().
+   250                                               :type handle: int
+   251                                               :param frame_id: ID of the frame of interest.
+   252                                               :type frame_id: int
+   253                                               :param mzs: Array of m/z values to be converted to index values.
+   254                                               :type mzs: numpy.array
+   255                                               :return: Array of index values.
+   256                                               :rtype: numpy.array
+   257                                               """
+   258         1          1.9      1.9      0.0      func = tdf_sdk.tims_mz_to_index
+   259         1       6878.8   6878.8    100.0      return call_conversion_func(tdf_sdk, handle, frame_id, mzs, func)
+
+Total time: 0.0077673 s
+File: C:\Workspace\pyTDFSDK\pyTDFSDK\util.py
+Function: call_conversion_func at line 10
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    10                                           def call_conversion_func(tdf_sdk, handle, frame_id, input_data, func):
+    11                                               """
+    12                                               Decorator for other conversion related functions.
+    13                                           
+    14                                               :param tdf_sdk: Instance of TDF-SDK.
+    15                                               :type tdf_sdk: ctypes.CDLL
+    16                                               :param handle: Handle value for TDF/TSF dataset initialized using pyTDFSDK.tims.tims_open() or
+    17                                                   pyTDFSDK.tsf.tsf_open().
+    18                                               :type handle: int
+    19                                               :param frame_id: ID of the frame of interest.
+    20                                               :type frame_id: int
+    21                                               :param input_data: Array to be converted.
+    22                                               :type input_data: numpy.array
+    23                                               :param func: Conversion function from TDF-SDK to pass through decorator.
+    24                                               :type func: function
+    25                                               :return: Array of converted values equal in size to the input_data array.
+    26                                               :rtype: numpy.array
+    27                                               """
+    28         2         11.8      5.9      0.2      if type(input_data) is np.ndarray and input_data.dtype == np.float64:
+    29                                                   # already "native" format understood by DLL -> avoid extra copy
+    30         1          0.4      0.4      0.0          in_array = input_data
+    31                                               else:
+    32                                                   # convert data to format understood by DLL
+    33         1         15.6     15.6      0.2          in_array = np.array(input_data, dtype=np.float64)
+    34         2          2.4      1.2      0.0      cnt = len(in_array)
+    35         2         19.9     10.0      0.3      out = np.empty(shape=cnt, dtype=np.float64)
+    36         4       7597.1   1899.3     97.8      success = func(
+    37         2          1.0      0.5      0.0          handle,
+    38         2          1.4      0.7      0.0          frame_id,
+    39         2         81.4     40.7      1.0          in_array.ctypes.data_as(POINTER(c_double)),
+    40         2         20.9     10.5      0.3          out.ctypes.data_as(POINTER(c_double)),
+    41         2          0.8      0.4      0.0          cnt,
+    42                                               )
+    43         2          8.3      4.2      0.1      if success == 0:
+    44                                                   if func.__name__.startswith("tsf"):
+    45                                                       throw_last_tsfdata_error(tdf_sdk)
+    46                                                   else:
+    47                                                       throw_last_timsdata_error(tdf_sdk)
+    48         2          6.3      3.2      0.1      return out
+
+Total time: 0.0115547 s
+File: C:\Workspace\bruker_tmp\src\bruker_tmp\__init__.py
+Function: get_path at line 60
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    60                                           def get_path(name: str) -> Path:
+    61         2      11030.3   5515.2     95.5      with open("./config.toml", "rb") as fle:
+    62         1        506.5    506.5      4.4          config_dict = tomllib.load(fle)
+    63         1         17.9     17.9      0.2      return Path(config_dict["Paths"][name])
+
+Total time: 0.0168725 s
+File: C:\Workspace\pyTDFSDK\pyTDFSDK\init_tdf_sdk.py
+Function: init_tdf_sdk_api at line 25
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    25                                           def init_tdf_sdk_api(bruker_api_file_name=""):
+    26                                               """
+    27                                               Initialize functions from Bruker's TDF-SDK library using ctypes.
+    28                                           
+    29                                               :param bruker_api_file_name: Path to TDF-SDK library, defaults to packaged library paths if no custom paths are
+    30                                                   provided.
+    31                                               :type bruker_api_file_name: str
+    32                                               :return: Handle for TDF-SDK library.
+    33                                               :rtype: ctypes.CDLL
+    34                                               """
+    35         1          1.0      1.0      0.0      if bruker_api_file_name == "":
+    36         1         30.3     30.3      0.2          if platform.system() == "Windows":
+    37         2         12.5      6.2      0.1              bruker_api_file_name = os.path.join(
+    38         1         24.1     24.1      0.1                  os.path.split(os.path.dirname(__file__))[0], "TDF-SDK", "timsdata.dll"
+    39                                                       )
+    40                                                   elif platform.system() == "Linux":
+    41                                                       bruker_api_file_name = os.path.join(
+    42                                                           os.path.split(os.path.dirname(__file__))[0], "TDF-SDK", "libtimsdata.so"
+    43                                                       )
+    44                                           
+    45         1      15806.7  15806.7     93.7      tdf_sdk = cdll.LoadLibrary(bruker_api_file_name)
+    46                                           
+    47         1          2.0      2.0      0.0      convfunc_argtypes = [
+    48         1          1.9      1.9      0.0          c_uint64,
+    49         1          1.5      1.5      0.0          c_int64,
+    50         1          3.8      3.8      0.0          POINTER(c_double),
+    51         1          1.1      1.1      0.0          POINTER(c_double),
+    52         1          0.8      0.8      0.0          c_uint32,
+    53                                               ]
+    54                                           
+    55         1         77.8     77.8      0.5      tdf_sdk.tims_ccs_to_oneoverk0_for_mz.argtypes = [c_double, c_int32, c_double]
+    56         1          3.2      3.2      0.0      tdf_sdk.tims_ccs_to_oneoverk0_for_mz.restype = c_double
+    57                                           
+    58         1         15.5     15.5      0.1      tdf_sdk.tims_close.argtypes = [c_uint64]
+    59         1          3.5      3.5      0.0      tdf_sdk.tims_close.restype = None
+    60                                           
+    61         1         16.5     16.5      0.1      tdf_sdk.tims_extract_centroided_spectrum_for_frame_ext.argtypes = [
+    62         1          1.1      1.1      0.0          c_uint64,
+    63         1          0.9      0.9      0.0          c_int64,
+    64         1          0.7      0.7      0.0          c_uint32,
+    65         1          0.7      0.7      0.0          c_uint32,
+    66         1          0.9      0.9      0.0          c_double,
+    67         1          1.1      1.1      0.0          MSMS_SPECTRUM_FUNCTOR,
+    68         1          0.8      0.8      0.0          c_void_p,
+    69                                               ]
+    70         1          2.4      2.4      0.0      tdf_sdk.tims_extract_centroided_spectrum_for_frame_ext.restype = c_uint32
+    71                                           
+    72         1         13.2     13.2      0.1      tdf_sdk.tims_extract_centroided_spectrum_for_frame_v2.argtypes = [
+    73         1          1.0      1.0      0.0          c_uint64,
+    74         1          1.0      1.0      0.0          c_int64,
+    75         1          0.7      0.7      0.0          c_uint32,
+    76         1          0.6      0.6      0.0          c_uint32,
+    77         1          0.8      0.8      0.0          MSMS_SPECTRUM_FUNCTOR,
+    78         1          0.8      0.8      0.0          c_void_p,
+    79                                               ]
+    80         1          1.3      1.3      0.0      tdf_sdk.tims_extract_centroided_spectrum_for_frame_v2.restype = c_uint32
+    81                                           
+    82         1         12.7     12.7      0.1      tdf_sdk.tims_extract_chromatograms.argtypes = [
+    83         1          0.8      0.8      0.0          c_uint64,
+    84         1          0.9      0.9      0.0          CHROMATOGRAM_JOB_GENERATOR,
+    85         1          1.0      1.0      0.0          CHROMATOGRAM_TRACE_SINK,
+    86         1          0.7      0.7      0.0          c_void_p,
+    87                                               ]
+    88         1          1.3      1.3      0.0      tdf_sdk.tims_extract_chromatograms.restype = c_uint32
+    89                                           
+    90         1         17.2     17.2      0.1      tdf_sdk.tims_extract_profile_for_frame.argtypes = [
+    91         1          0.7      0.7      0.0          c_uint64,
+    92         1          0.8      0.8      0.0          c_int64,
+    93         1          0.8      0.8      0.0          c_uint32,
+    94         1          0.5      0.5      0.0          c_uint32,
+    95         1          0.9      0.9      0.0          MSMS_PROFILE_SPECTRUM_FUNCTOR,
+    96         1          0.8      0.8      0.0          c_void_p,
+    97                                               ]
+    98         1          1.2      1.2      0.0      tdf_sdk.tims_extract_profile_for_frame.restype = c_uint32
+    99                                           
+   100         1         11.9     11.9      0.1      tdf_sdk.tims_get_last_error_string.argtypes = [c_char_p, c_uint32]
+   101         1          1.3      1.3      0.0      tdf_sdk.tims_get_last_error_string.restype = c_uint32
+   102                                           
+   103         1          9.9      9.9      0.1      tdf_sdk.tims_has_recalibrated_state.argtypes = [c_uint64]
+   104         1          1.2      1.2      0.0      tdf_sdk.tims_has_recalibrated_state.restype = c_uint32
+   105                                           
+   106         1         12.5     12.5      0.1      tdf_sdk.tims_index_to_mz.argtypes = convfunc_argtypes
+   107         1          1.2      1.2      0.0      tdf_sdk.tims_index_to_mz.restype = c_uint32
+   108                                           
+   109         1         10.4     10.4      0.1      tdf_sdk.tims_mz_to_index.argtypes = convfunc_argtypes
+   110         1          1.1      1.1      0.0      tdf_sdk.tims_mz_to_index.restype = c_uint32
+   111                                           
+   112         1         11.6     11.6      0.1      tdf_sdk.tims_oneoverk0_to_ccs_for_mz.argtypes = [c_double, c_int32, c_double]
+   113         1          1.4      1.4      0.0      tdf_sdk.tims_oneoverk0_to_ccs_for_mz.restype = c_double
+   114                                           
+   115         1         11.2     11.2      0.1      tdf_sdk.tims_oneoverk0_to_scannum.argtypes = convfunc_argtypes
+   116         1          1.3      1.3      0.0      tdf_sdk.tims_oneoverk0_to_scannum.restype = c_uint32
+   117                                           
+   118         1         12.1     12.1      0.1      tdf_sdk.tims_open.argtypes = [c_char_p, c_uint32]
+   119         1          2.2      2.2      0.0      tdf_sdk.tims_open.restype = c_uint64
+   120                                           
+   121         1         11.6     11.6      0.1      tdf_sdk.tims_open_v2.argtypes = [c_char_p, c_uint32, c_uint32]
+   122         1          1.3      1.3      0.0      tdf_sdk.tims_open_v2.restype = c_uint64
+   123                                           
+   124         1         12.5     12.5      0.1      tdf_sdk.tims_read_pasef_msms.argtypes = [
+   125         1          1.0      1.0      0.0          c_uint64,
+   126         1          1.7      1.7      0.0          POINTER(c_int64),
+   127         1          0.8      0.8      0.0          c_uint32,
+   128         1          0.8      0.8      0.0          MSMS_SPECTRUM_FUNCTOR,
+   129                                               ]
+   130         1          1.5      1.5      0.0      tdf_sdk.tims_read_pasef_msms.restype = c_uint32
+   131                                           
+   132         1         11.5     11.5      0.1      tdf_sdk.tims_read_pasef_msms_for_frame.argtypes = [
+   133         1          0.9      0.9      0.0          c_uint64,
+   134         1          1.4      1.4      0.0          c_int64,
+   135         1          0.8      0.8      0.0          MSMS_SPECTRUM_FUNCTOR,
+   136                                               ]
+   137         1          1.2      1.2      0.0      tdf_sdk.tims_read_pasef_msms_for_frame.restype = c_uint32
+   138                                           
+   139         1         12.4     12.4      0.1      tdf_sdk.tims_read_pasef_msms_for_frame_v2.argtypes = [
+   140         1          0.7      0.7      0.0          c_uint64,
+   141         1          0.8      0.8      0.0          c_int64,
+   142         1          1.1      1.1      0.0          MSMS_SPECTRUM_FUNCTION,
+   143         1          1.4      1.4      0.0          POINTER(c_void_p),
+   144                                               ]
+   145         1          1.5      1.5      0.0      tdf_sdk.tims_read_pasef_msms_for_frame_v2.restype = c_uint32
+   146                                           
+   147         1         11.0     11.0      0.1      tdf_sdk.tims_read_pasef_msms_v2.argtypes = [
+   148         1          0.9      0.9      0.0          c_uint64,
+   149         1          1.0      1.0      0.0          POINTER(c_int64),
+   150         1          0.8      0.8      0.0          c_uint32,
+   151         1          0.6      0.6      0.0          MSMS_SPECTRUM_FUNCTION,
+   152         1          0.8      0.8      0.0          POINTER(c_void_p),
+   153                                               ]
+   154         1          1.1      1.1      0.0      tdf_sdk.tims_read_pasef_msms_v2.restype = c_uint32
+   155                                           
+   156         1         11.4     11.4      0.1      tdf_sdk.tims_read_pasef_profile_msms.argtypes = [
+   157         1          0.7      0.7      0.0          c_uint64,
+   158         1          1.1      1.1      0.0          POINTER(c_int64),
+   159         1          0.7      0.7      0.0          c_uint32,
+   160         1          0.7      0.7      0.0          MSMS_PROFILE_SPECTRUM_FUNCTOR,
+   161                                               ]
+   162         1          1.1      1.1      0.0      tdf_sdk.tims_read_pasef_profile_msms.restype = c_uint32
+   163                                           
+   164         1         11.2     11.2      0.1      tdf_sdk.tims_read_pasef_profile_msms_for_frame.argtypes = [
+   165         1          0.6      0.6      0.0          c_uint64,
+   166         1          0.7      0.7      0.0          c_int64,
+   167         1          0.7      0.7      0.0          MSMS_PROFILE_SPECTRUM_FUNCTOR,
+   168                                               ]
+   169         1          1.5      1.5      0.0      tdf_sdk.tims_read_pasef_profile_msms_for_frame.restype = c_uint32
+   170                                           
+   171         1         11.8     11.8      0.1      tdf_sdk.tims_read_pasef_profile_msms_for_frame_v2.argtypes = [
+   172         1          0.6      0.6      0.0          c_uint64,
+   173         1          0.8      0.8      0.0          c_int64,
+   174         1          0.8      0.8      0.0          MSMS_PROFILE_SPECTRUM_FUNCTION,
+   175         1          0.9      0.9      0.0          POINTER(c_void_p),
+   176                                               ]
+   177         1          1.1      1.1      0.0      tdf_sdk.tims_read_pasef_profile_msms_for_frame_v2.restype = c_uint32
+   178                                           
+   179         1         12.3     12.3      0.1      tdf_sdk.tims_read_pasef_profile_msms_v2.argtypes = [
+   180         1          0.7      0.7      0.0          c_uint64,
+   181         1          1.0      1.0      0.0          POINTER(c_int64),
+   182         1          0.6      0.6      0.0          c_uint32,
+   183         1          0.8      0.8      0.0          MSMS_PROFILE_SPECTRUM_FUNCTION,
+   184         1          1.0      1.0      0.0          POINTER(c_void_p),
+   185                                               ]
+   186         1          1.2      1.2      0.0      tdf_sdk.tims_read_pasef_profile_msms_v2.restype = c_uint32
+   187                                           
+   188         1         11.4     11.4      0.1      tdf_sdk.tims_read_scans_v2.argtypes = [
+   189         1          0.7      0.7      0.0          c_uint64,
+   190         1          0.9      0.9      0.0          c_int64,
+   191         1          0.8      0.8      0.0          c_uint32,
+   192         1          0.6      0.6      0.0          c_uint32,
+   193         1          0.8      0.8      0.0          c_void_p,
+   194         1          0.7      0.7      0.0          c_uint32,
+   195                                               ]
+   196         1          1.4      1.4      0.0      tdf_sdk.tims_read_scans_v2.restype = c_uint32
+   197                                           
+   198         1         11.2     11.2      0.1      tdf_sdk.tims_scannum_to_oneoverk0.argtypes = convfunc_argtypes
+   199         1          1.2      1.2      0.0      tdf_sdk.tims_scannum_to_oneoverk0.restype = c_uint32
+   200                                           
+   201         1         10.7     10.7      0.1      tdf_sdk.tims_scannum_to_voltage.argtypes = convfunc_argtypes
+   202         1          1.3      1.3      0.0      tdf_sdk.tims_scannum_to_voltage.restype = c_uint32
+   203                                           
+   204                                               # Function 27
+   205         1         10.7     10.7      0.1      tdf_sdk.tims_set_num_threads.argtypes = [c_uint32]
+   206         1          2.0      2.0      0.0      tdf_sdk.tims_set_num_threads.restype = None
+   207                                           
+   208         1         16.3     16.3      0.1      tdf_sdk.tims_vis_calculate_async.argtypes = [
+   209         1          0.9      0.9      0.0          c_uint64,
+   210         1         61.6     61.6      0.4          POINTER(TimsVisExtractionFilter),
+   211         1         32.0     32.0      0.2          POINTER(TimsVisHeatmapSizes),
+   212                                               ]
+   213         1          1.5      1.5      0.0      tdf_sdk.tims_vis_calculate_async.restype = c_uint64
+   214                                           
+   215         1         12.5     12.5      0.1      tdf_sdk.tims_vis_cancel.argtypes = [c_uint64]
+   216         1          1.3      1.3      0.0      tdf_sdk.tims_vis_cancel.restype = c_uint64
+   217                                           
+   218         1         11.2     11.2      0.1      tdf_sdk.tims_vis_close.argtypes = [c_uint64]
+   219         1          1.4      1.4      0.0      tdf_sdk.tims_vis_close.restype = None
+   220                                           
+   221         1         12.8     12.8      0.1      tdf_sdk.tims_vis_get_chromatogram_line_plot.argtypes = [
+   222         1          0.6      0.6      0.0          c_uint64,
+   223         1          1.2      1.2      0.0          c_int32,
+   224         1          0.8      0.8      0.0          c_int32,
+   225         1          0.5      0.5      0.0          c_uint32,
+   226         1         23.9     23.9      0.1          POINTER(TimsVisLine),
+   227         1          0.7      0.7      0.0          c_uint32,
+   228                                               ]
+   229         1          1.3      1.3      0.0      tdf_sdk.tims_vis_get_chromatogram_line_plot.restype = c_uint32
+   230                                           
+   231         1         11.1     11.1      0.1      tdf_sdk.tims_vis_get_image_mob_mz.argtypes = [
+   232         1          0.6      0.6      0.0          c_uint64,
+   233         1          0.6      0.6      0.0          c_uint32,
+   234         1          1.1      1.1      0.0          POINTER(c_float),
+   235         1          0.9      0.9      0.0          c_uint32,
+   236                                               ]
+   237         1          1.2      1.2      0.0      tdf_sdk.tims_vis_get_image_mob_mz.restype = c_uint32
+   238                                           
+   239         1         11.6     11.6      0.1      tdf_sdk.tims_vis_get_image_rt_mob.argtypes = [
+   240         1          0.8      0.8      0.0          c_uint64,
+   241         1          0.7      0.7      0.0          c_uint32,
+   242         1          0.7      0.7      0.0          POINTER(c_float),
+   243         1          0.7      0.7      0.0          c_uint32,
+   244                                               ]
+   245         1          1.0      1.0      0.0      tdf_sdk.tims_vis_get_image_rt_mob.restype = c_uint32
+   246                                           
+   247         1         10.3     10.3      0.1      tdf_sdk.tims_vis_get_image_rt_mz.argtypes = [
+   248         1          0.8      0.8      0.0          c_uint64,
+   249         1          0.7      0.7      0.0          c_uint32,
+   250         1          0.8      0.8      0.0          POINTER(c_float),
+   251         1          0.6      0.6      0.0          c_uint32,
+   252                                               ]
+   253         1          0.9      0.9      0.0      tdf_sdk.tims_vis_get_image_rt_mz.restype = c_uint32
+   254                                           
+   255         1         10.7     10.7      0.1      tdf_sdk.tims_vis_get_last_error_string.argtypes = [c_char_p, c_uint32]
+   256         1          1.3      1.3      0.0      tdf_sdk.tims_vis_get_last_error_string.restype = c_uint32
+   257                                           
+   258         1         12.7     12.7      0.1      tdf_sdk.tims_vis_get_mobilogram_line_plot.argtypes = [
+   259         1          1.0      1.0      0.0          c_uint64,
+   260         1          0.9      0.9      0.0          c_int32,
+   261         1          0.6      0.6      0.0          c_int32,
+   262         1          0.8      0.8      0.0          c_uint32,
+   263         1          1.0      1.0      0.0          POINTER(TimsVisLine),
+   264         1          0.8      0.8      0.0          c_uint32,
+   265                                               ]
+   266         1          1.8      1.8      0.0      tdf_sdk.tims_vis_get_mobilogram_line_plot.restype = c_uint32
+   267                                           
+   268         1         12.2     12.2      0.1      tdf_sdk.tims_vis_get_spectrum_line_plot.argtypes = [
+   269         1          0.9      0.9      0.0          c_uint64,
+   270         1          0.8      0.8      0.0          c_int32,
+   271         1          0.8      0.8      0.0          c_int32,
+   272         1          0.7      0.7      0.0          c_uint32,
+   273         1          1.0      1.0      0.0          POINTER(TimsVisLine),
+   274         1          0.7      0.7      0.0          c_uint32,
+   275                                               ]
+   276         1          1.6      1.6      0.0      tdf_sdk.tims_vis_get_spectrum_line_plot.restype = c_uint32
+   277                                           
+   278         1         12.5     12.5      0.1      tdf_sdk.tims_vis_get_state.argtypes = [c_uint64, c_uint64, c_float, c_bool]
+   279         1          1.6      1.6      0.0      tdf_sdk.tims_vis_get_state_restype = c_uint32
+   280                                           
+   281         1         10.8     10.8      0.1      tdf_sdk.tims_vis_open.argtypes = [c_char_p, c_uint32]
+   282         1          1.4      1.4      0.0      tdf_sdk.tims_vis_open.restype = c_uint64
+   283                                           
+   284         1         11.0     11.0      0.1      tdf_sdk.tims_vis_wait.argtypes = [c_uint64, c_uint32]
+   285         1          1.3      1.3      0.0      tdf_sdk.tims_vis_wait.restype = c_uint32
+   286                                           
+   287         1         10.5     10.5      0.1      tdf_sdk.tims_vis_wait_complete.argtypes = [c_uint64]
+   288         1          1.2      1.2      0.0      tdf_sdk.tims_vis_wait_complete.restype = c_uint32
+   289                                           
+   290         1         11.2     11.2      0.1      tdf_sdk.tims_voltage_to_scannum.argtypes = convfunc_argtypes
+   291         1          1.2      1.2      0.0      tdf_sdk.tims_voltage_to_scannum.restype = c_uint32
+   292                                           
+   293         1         10.6     10.6      0.1      tdf_sdk.tsf_close.argtypes = [c_uint64]
+   294         1          1.6      1.6      0.0      tdf_sdk.tsf_close.restype = None
+   295                                           
+   296         1         11.4     11.4      0.1      tdf_sdk.tsf_get_last_error_string.argtypes = [c_char_p, c_uint32]
+   297         1          1.6      1.6      0.0      tdf_sdk.tsf_get_last_error_string.restype = c_uint32
+   298                                           
+   299         1         12.0     12.0      0.1      tdf_sdk.tsf_has_recalibrated_state.argtypes = [c_uint64]
+   300         1          1.5      1.5      0.0      tdf_sdk.tsf_has_recalibrated_state.restype = c_uint32
+   301                                           
+   302         1         11.3     11.3      0.1      tdf_sdk.tsf_index_to_mz.argtypes = convfunc_argtypes
+   303         1          1.6      1.6      0.0      tdf_sdk.tsf_index_to_mz.restype = c_uint32
+   304                                           
+   305         1         10.8     10.8      0.1      tdf_sdk.tsf_mz_to_index.argtypes = convfunc_argtypes
+   306         1          1.2      1.2      0.0      tdf_sdk.tsf_mz_to_index.restype = c_uint32
+   307                                           
+   308         1         11.3     11.3      0.1      tdf_sdk.tsf_open.argtypes = [c_char_p, c_uint32]
+   309         1          1.2      1.2      0.0      tdf_sdk.tsf_open.restype = c_uint64
+   310                                           
+   311         1         11.8     11.8      0.1      tdf_sdk.tsf_read_line_spectrum.argtypes = [
+   312         1          0.9      0.9      0.0          c_uint64,
+   313         1          0.7      0.7      0.0          c_int64,
+   314         1          1.1      1.1      0.0          POINTER(c_double),
+   315         1          0.9      0.9      0.0          POINTER(c_float),
+   316         1          0.8      0.8      0.0          c_uint32,
+   317                                               ]
+   318         1          1.3      1.3      0.0      tdf_sdk.tsf_read_line_spectrum.restype = c_uint32
+   319                                           
+   320         1         10.9     10.9      0.1      tdf_sdk.tsf_read_line_spectrum_v2.argtypes = [
+   321         1          0.7      0.7      0.0          c_uint64,
+   322         1          0.8      0.8      0.0          c_int64,
+   323         1          0.8      0.8      0.0          POINTER(c_double),
+   324         1          0.9      0.9      0.0          POINTER(c_float),
+   325         1          0.8      0.8      0.0          c_int32,
+   326                                               ]
+   327         1          1.6      1.6      0.0      tdf_sdk.tsf_read_line_spectrum_v2.restype = c_int32
+   328                                           
+   329         1         12.0     12.0      0.1      tdf_sdk.tsf_read_line_spectrum_with_width_v2.argtypes = [
+   330         1          0.9      0.9      0.0          c_uint64,
+   331         1          0.7      0.7      0.0          c_int64,
+   332         1          0.9      0.9      0.0          POINTER(c_double),
+   333         1          0.8      0.8      0.0          POINTER(c_float),
+   334         1          0.7      0.7      0.0          POINTER(c_float),
+   335         1          0.8      0.8      0.0          c_int32,
+   336                                               ]
+   337         1          1.4      1.4      0.0      tdf_sdk.tsf_read_line_spectrum_with_width_v2.restype = c_int32
+   338                                           
+   339         1         12.5     12.5      0.1      tdf_sdk.tsf_read_profile_spectrum.argtypes = [
+   340         1          1.0      1.0      0.0          c_uint64,
+   341         1          0.8      0.8      0.0          c_int64,
+   342         1          0.8      0.8      0.0          POINTER(c_uint32),
+   343         1          0.7      0.7      0.0          c_uint32,
+   344                                               ]
+   345         1          1.1      1.1      0.0      tdf_sdk.tsf_read_profile_spectrum.restype = c_uint32
+   346                                           
+   347         1         10.9     10.9      0.1      tdf_sdk.tsf_read_profile_spectrum_v2.argtypes = [
+   348         1          1.0      1.0      0.0          c_uint64,
+   349         1          0.9      0.9      0.0          c_int64,
+   350         1          0.8      0.8      0.0          POINTER(c_uint32),
+   351         1          0.9      0.9      0.0          c_int32,
+   352                                               ]
+   353         1          1.3      1.3      0.0      tdf_sdk.tsf_read_profile_spectrum_v2.restype = c_int32
+   354                                           
+   355         1         10.8     10.8      0.1      tdf_sdk.tsf_set_num_threads.argtypes = [c_uint32]
+   356         1          1.8      1.8      0.0      tdf_sdk.tsf_set_num_threads.restype = None
+   357                                           
+   358         1          1.0      1.0      0.0      return tdf_sdk
+
+Total time: 0.0255431 s
+File: C:\Workspace\pyTDFSDK\pyTDFSDK\tims.py
+Function: tims_open_v2 at line 318
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   318                                           def tims_open_v2(
+   319                                               tdf_sdk,
+   320                                               bruker_d_folder_name,
+   321                                               pressure_compensation_strategy,
+   322                                               use_recalibrated_state=True,
+   323                                           ):
+   324                                               """
+   325                                               Open TDF dataset while taking into account the pressure compensation strategy and return a non-zero instance handle
+   326                                               to be passed to subsequent API calls.
+   327                                           
+   328                                               :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
+   329                                               :type tdf_sdk: ctypes.CDLL
+   330                                               :param bruker_d_folder_name: Path to a Bruker .d file containing analysis.tdf.
+   331                                               :type bruker_d_folder_name: str
+   332                                               :param pressure_compensation_strategy: Pressure compensation strategy chosen from
+   333                                                   pyTDFSDK.ctypes_data_structures.PressureCompensationStrategy, either NoPressureCompensation,
+   334                                                   AnalysisGlobalPressureCompensation, or PerFramePressureCompensation.
+   335                                               :type pressure_compensation_strategy: enum.Enum
+   336                                               :param use_recalibrated_state: Whether to use recalibrated data (True) or not (False), defaults to True.
+   337                                               :type use_recalibrated_state: bool
+   338                                               :return: Non-zero instance handle.
+   339                                               :rtype: int
+   340                                               """
+   341         2      25523.1  12761.6     99.9      handle = tdf_sdk.tims_open_v2(
+   342         1          3.7      3.7      0.0          bruker_d_folder_name.encode("utf-8"),
+   343         1          1.6      1.6      0.0          1 if use_recalibrated_state else 0,
+   344         1         10.8     10.8      0.0          pressure_compensation_strategy.value,
+   345                                               )
+   346         1          3.9      3.9      0.0      return handle
+
+Total time: 0.0412172 s
+File: C:\Workspace\pyTDFSDK\pyTDFSDK\classes.py
+Function: TdfData.__init__ at line 165
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   165                                               def __init__(
+   166                                                   self,
+   167                                                   bruker_d_folder_name: str,
+   168                                                   tdf_sdk,
+   169                                                   use_recalibrated_state=True,
+   170                                                   pressure_compensation_strategy=PressureCompensationStrategy.AnalyisGlobalPressureCompensation,
+   171                                                   sql_chunksize=1000,
+   172                                               ):
+   173                                                   """
+   174                                                   Constructor Method
+   175                                                   """
+   176         1          2.1      2.1      0.0          self.api = tdf_sdk
+   177         1          1.4      1.4      0.0          self.source_file = bruker_d_folder_name
+   178         2      25562.2  12781.1     62.0          self.handle = tims_open_v2(
+   179         1          1.1      1.1      0.0              self.api,
+   180         1          0.8      0.8      0.0              self.source_file,
+   181         1          0.9      0.9      0.0              pressure_compensation_strategy,
+   182         1          0.6      0.6      0.0              use_recalibrated_state,
+   183                                                   )
+   184         1          1.6      1.6      0.0          if self.handle == 0:
+   185                                                       throw_last_timsdata_error(self.api)
+   186         1       6726.7   6726.7     16.3          self.conn = sqlite3.connect(os.path.join(bruker_d_folder_name, "analysis.tdf"))
+   187                                           
+   188         1       1030.9   1030.9      2.5          self.analysis = LazyAnalysis(self.conn, sql_chunksize)
+   189                                           
+   190         1          1.7      1.7      0.0          self.GlobalMetadata = {}
+   191         3       1967.2    655.7      4.8          for i in pd.read_sql_query(
+   192         1          0.7      0.7      0.0              "SELECT * FROM GlobalMetadata", self.conn, chunksize=sql_chunksize
+   193                                                   ):
+   194         3          4.9      1.6      0.0              self.GlobalMetadata |= {
+   195         2       5773.0   2886.5     14.0                  row["Key"]: row["Value"] for index, row in i.iterrows()
+   196                                                       }
+   197                                           
+   198        44         10.9      0.2      0.0          for key, value in self.GlobalMetadata.items():
+   199        43          8.1      0.2      0.0              try:
+   200        43         57.5      1.3      0.1                  self.GlobalMetadata[key] = int(value)
+   201        27          6.5      0.2      0.0              except ValueError:
+   202        27          5.1      0.2      0.0                  try:
+   203        27         42.9      1.6      0.1                      self.GlobalMetadata[key] = float(value)
+   204        21          4.7      0.2      0.0                  except:
+   205        21          5.7      0.3      0.0                      pass
+
+Total time: 0.0820429 s
+File: C:\Workspace\bruker_tmp\src\bruker_tmp\__init__.py
+Function: MaldiAxis.__init__ at line 39
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    39                                               def __init__(self, maldi_frame_info):
+    40         1        693.3    693.3      0.8          frame_id = maldi_frame_info["Frame"]
+    41         1        139.2    139.2      0.2          self.frame_x = maldi_frame_info["XIndexPos"]
+    42         1        136.8    136.8      0.2          self.frame_y = maldi_frame_info["YIndexPos"]
+    43                                           
+    44         1       1752.5   1752.5      2.1          x_values = np.unique(self.frame_x)
+    45         1        901.9    901.9      1.1          y_values = np.unique(self.frame_y)
+    46                                           
+    47         1          2.4      2.4      0.0          self.shape = (len(x_values), len(y_values))
+    48                                           
+    49         1        154.1    154.1      0.2          self.frame_x_to_axis = {fx: ii for ii, fx in enumerate(x_values)}
+    50         1         55.7     55.7      0.1          self.frame_y_to_axis = {fy: ii for ii, fy in enumerate(y_values)}
+    51                                           
+    52         1        499.8    499.8      0.6          self.frame_inx = np.full(self.shape, -1)
+    53     53327      20685.8      0.4     25.2          for ii, x, y in zip(frame_id, self.frame_x, self.frame_y):
+    54     53326      13047.2      0.2     15.9              ii_x = self.frame_x_to_axis[x]
+    55     53326      12783.4      0.2     15.6              ii_y = self.frame_y_to_axis[y]
+    56     53326      16442.4      0.3     20.0              assert self.frame_inx[ii_x, ii_y] == -1
+    57     53326      14748.4      0.3     18.0              self.frame_inx[ii_x, ii_y] = ii
+
+Total time: 0.524137 s
+File: C:\Workspace\pyTDFSDK\pyTDFSDK\classes.py
+Function: LazyAnalysis.join_frame at line 48
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    48                                               def join_frame(self, other: str):
+    49         1          3.8      3.8      0.0          if other not in self._joined_data:
+    50         2      26732.8  13366.4      5.1              result = pd.concat(
+    51         2          1.8      0.9      0.0                  [
+    52        54         24.2      0.4      0.0                      i
+    53        57     497362.5   8725.7     94.9                      for i in pd.read_sql_query(
+    54         1          3.3      3.3      0.0                          f"SELECT * FROM Frames INNER JOIN {other} ON Frames.Id = {other}.Frame",
+    55         1          1.7      1.7      0.0                          self.conn,
+    56         1          1.2      1.2      0.0                          chunksize=self.sql_chunksize,
+    57                                                               )
+    58                                                           ]
+    59                                                       )
+    60                                           
+    61         1          3.4      3.4      0.0              self._joined_data[other] = result
+    62         1          2.4      2.4      0.0          return self._joined_data[other]
+
+Total time: 288.687 s
+File: C:\Workspace\pyTDFSDK\pyTDFSDK\tims.py
+Function: tims_read_scans_v2_as_array at line 675
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   675                                           def tims_read_scans_v2_as_array(
+   676                                               tdf_sdk,
+   677                                               handle,
+   678                                               frame_id,
+   679                                               scan_begin,
+   680                                               scan_end,
+   681                                               initial_frame_buffer_size=128,
+   682                                               peak_buffer_count=-1,
+   683                                           ):
+   684                                               """
+   685                                               Read a range of scans from a single frame. The resulting arrays are equivalent to line spectra.
+   686                                           
+   687                                               :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
+   688                                               :type tdf_sdk: ctypes.CDLL
+   689                                               :param handle: Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().
+   690                                               :type handle: int
+   691                                               :param frame_id: ID of the frame of interest.
+   692                                               :type frame_id: int
+   693                                               :param scan_begin: Beginning scan number (corresponding to 1/K0 value) within frame.
+   694                                               :type scan_begin: int
+   695                                               :param scan_end: Ending scan number (corresponding to 1/K0 value) within frame (non-inclusive).
+   696                                               :type scan_end: int
+   697                                               :param initial_frame_buffer_size: Initial number of buffer bytes necessary for the output, defaults to 128.
+   698                                               :type initial_frame_buffer_size: int
+   699                                               :return: List of tuples where each tuple contains an array of mass indices and array of detector counts or 0 on
+   700                                                   error.
+   701                                               :rtype: list[tuple[numpy.array]] | int
+   702                                               """
+   703                                               # buffer-growing loop
+   704     53326      53702.0      1.0      0.0      while True:
+   705     53326      48698.1      0.9      0.0          cnt = int(initial_frame_buffer_size)
+   706     53326     243524.7      4.6      0.1          buf = np.empty(shape=cnt, dtype=np.uint32)
+   707     53326      32045.9      0.6      0.0          length = 4 * cnt
+   708    106652   65189913.6    611.2     22.6          required_len = tdf_sdk.tims_read_scans_v2(
+   709     53326      17149.6      0.3      0.0              handle,
+   710     53326      26461.7      0.5      0.0              frame_id,
+   711     53326      21348.9      0.4      0.0              scan_begin,
+   712     53326      26884.4      0.5      0.0              scan_end,
+   713     53326    1707815.1     32.0      0.6              buf.ctypes.data_as(POINTER(c_uint32)),
+   714     53326      14254.0      0.3      0.0              length,
+   715                                                   )
+   716     53326      69768.4      1.3      0.0          if required_len == 0:
+   717                                                       throw_last_timsdata_error(tdf_sdk)
+   718     53326      30866.5      0.6      0.0          if required_len > length:
+   719                                                       if required_len > 16777216:
+   720                                                           # arbitrary limit for now...
+   721                                                           raise RuntimeError("Maximum expected frame size exceeded.")
+   722                                                       initial_frame_buffer_size = required_len / 4 + 1  # grow buffer
+   723                                                   else:
+   724     53326      26716.1      0.5      0.0              break
+   725                                           
+   726     53326      33907.8      0.6      0.0      result = []
+   727     53326      43513.7      0.8      0.0      d = scan_end - scan_begin
+   728     53326     147642.0      2.8      0.1      peak_count = buf[:d]
+   729     53326    1780712.4     33.4      0.6      max_peak_count = np.max(peak_count)
+   730     53326      31559.8      0.6      0.0      if peak_buffer_count > 0:
+   731                                                   if max_peak_count > peak_buffer_count:
+   732                                                       raise ValueError(
+   733                                                           f"There were more than {peak_buffer_count} peaks. Stopping."
+   734                                                       )
+   735                                               else:
+   736     53326      23294.4      0.4      0.0          peak_buffer_count = max_peak_count
+   737     53326    1402648.7     26.3      0.5      total_peaks = np.sum(peak_count)
+   738     53326    2593293.6     48.6      0.9      peak_end_2 = np.cumsum(peak_count, dtype=np.int64) * 2
+   739     53326     606579.7     11.4      0.2      peak_start_2 = np.concatenate([[0], peak_end_2])
+   740     53326    1556669.9     29.2      0.5      indices = np.arange(total_peaks * 2, dtype=np.int64)
+   741                                           
+   742     53326  137778201.0   2583.7     47.7      scan_index = np.searchsorted(peak_end_2, indices, side="right")
+   743     53326    4784482.6     89.7      1.7      peaks_total = np.take_along_axis(peak_start_2, scan_index)
+   744     53326    2882490.0     54.1      1.0      peaks_count = np.take_along_axis(peak_count, scan_index)
+   745     53326    2644000.1     49.6      0.9      next = indices - peaks_total
+   746     53326   10588492.8    198.6      3.7      div, mod = np.divmod(next, peaks_count)
+   747     53326   39201709.8    735.1     13.6      result = np.full((d, max_peak_count, 2), np.nan)
+   748     53326   15038034.8    282.0      5.2      result[scan_index, mod, div] = buf[d : d + total_peaks * 2]
+   749                                           
+   750     53326      40407.4      0.8      0.0      return result
+
+Total time: 715.709 s
+File: C:\Workspace\bruker_tmp\src\bruker_tmp\__init__.py
+Function: tims_tof at line 142
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   142                                           def tims_tof() -> None:
+   143         1      11566.7  11566.7      0.0      tims_path = get_path("tims_tof")
+   144                                           
+   145         1      17026.8  17026.8      0.0      dll = init_tdf_sdk_api()
+   146         1      41393.1  41393.1      0.0      tims_data = TdfData(bruker_d_folder_name=str(tims_path), tdf_sdk=dll)
+   147                                           
+   148         1          0.9      0.9      0.0      min_x = tims_data.GlobalMetadata["ImagingAreaMinXIndexPos"]
+   149         1          0.4      0.4      0.0      max_x = tims_data.GlobalMetadata["ImagingAreaMaxXIndexPos"]
+   150         1          0.4      0.4      0.0      min_y = tims_data.GlobalMetadata["ImagingAreaMinYIndexPos"]
+   151         1          0.4      0.4      0.0      max_y = tims_data.GlobalMetadata["ImagingAreaMaxYIndexPos"]
+   152                                           
+   153         1          0.5      0.5      0.0      min_iim = tims_data.GlobalMetadata["OneOverK0AcqRangeLower"]
+   154         1          0.5      0.5      0.0      max_iim = tims_data.GlobalMetadata["OneOverK0AcqRangeUpper"]
+   155                                           
+   156         1          0.5      0.5      0.0      min_mz = tims_data.GlobalMetadata["MzAcqRangeLower"]
+   157         1          0.4      0.4      0.0      max_mz = tims_data.GlobalMetadata["MzAcqRangeUpper"]
+   158                                           
+   159         1          0.4      0.4      0.0      mass_count = tims_data.GlobalMetadata["DigitizerNumSamples"]
+   160         1         73.8     73.8      0.0      mz_edges = np.linspace(min_mz, max_mz, endpoint=True, num=(mass_count // 100) + 1)
+   161         2       6888.7   3444.4      0.0      index_edges = tims_mz_to_index(
+   162         1          0.2      0.2      0.0          tdf_sdk=dll,
+   163         1          0.5      0.5      0.0          handle=tims_data.handle,
+   164         1          0.5      0.5      0.0          frame_id=1,
+   165         1          0.3      0.3      0.0          mzs=mz_edges,
+   166                                               )
+   167                                           
+   168         1     524282.4 524282.4      0.1      frame_info = tims_data.analysis.join_frame("MaldiFrameInfo")
+   169                                           
+   170         1     290404.6 290404.6      0.0      ic(min_x, max_x)
+   171         1       2882.6   2882.6      0.0      ic(min_y, max_y)
+   172         1       1795.6   1795.6      0.0      ic(min_mz, max_mz)
+   173         1       2544.6   2544.6      0.0      ic(min_iim, max_iim)
+   174         1      98964.8  98964.8      0.0      maldi_axis = MaldiAxis(frame_info)
+   175                                           
+   176         1         31.1     31.1      0.0      mz_spectrum = np.zeros(mz_edges[1:].shape, dtype=np.float64)
+   177         1        232.3    232.3      0.0      mz_image = np.zeros(maldi_axis.shape)
+   178                                           
+   179         2        306.4    153.2      0.0      print(
+   180         1          3.7      3.7      0.0          f"Reading an image of {maldi_axis.shape[0]}x{maldi_axis.shape[1]} pixels with {mass_count} masses."
+   181                                               )
+   182         1        288.2    288.2      0.0      print(f"(Down sampling to {len(mz_edges)} masses for the total spectrum)")
+   183         1        114.5    114.5      0.0      print(f"Image has a mass range of {min_mz}-{max_mz}")
+   184         1         93.5     93.5      0.0      print(f"with a maximum spectrum length of {mass_count} ")
+   185         1        267.3    267.3      0.0      print(f"Resulting in {frame_info.shape[0]} frames to process.")
+   186                                           
+   187         1          0.8      0.8      0.0      frames_so_far = 0
+   188     53327   18601758.6    348.8      2.6      for index, row in tqdm(frame_info.iterrows(), total=frame_info.shape[0]):
+   189     53326    2286611.1     42.9      0.3          frame_id = int(row["Id"])
+   190     53326     617294.5     11.6      0.1          x = row["XIndexPos"]
+   191     53326     561994.7     10.5      0.1          y = row["YIndexPos"]
+   192     53326     536629.0     10.1      0.1          num_scans = row["NumScans"]
+   193     53326     613109.1     11.5      0.1          num_peaks = row["NumPeaks"]
+   194    106652  298521033.4   2799.0     41.7          result_array = tims_read_scans_v2_as_array(
+   195     53326      32934.5      0.6      0.0              tdf_sdk=dll,
+   196     53326      35873.6      0.7      0.0              handle=tims_data.handle,
+   197     53326      36847.3      0.7      0.0              frame_id=frame_id,
+   198     53326      21700.8      0.4      0.0              scan_begin=0,
+   199     53326      19859.0      0.4      0.0              scan_end=num_scans,
+   200     53326      35451.4      0.7      0.0              initial_frame_buffer_size=2 * num_peaks + num_scans + 1,
+   201                                                   )
+   202                                                   # result = tims_read_scans_v2(
+   203                                                   #     tdf_sdk=dll,
+   204                                                   #     handle=tims_data.handle,
+   205                                                   #     frame_id=frame_id,
+   206                                                   #     scan_begin=0,
+   207                                                   #     scan_end=num_scans,
+   208                                                   #     initial_frame_buffer_size=2 * num_peaks + num_scans + 1,
+   209                                                   # )
+   210                                                   #
+   211    106652  333183192.9   3124.0     46.6          mz_v, _ = np.histogram(
+   212     53326     175544.2      3.3      0.0              result_array[:, :, 0],
+   213     53326      33991.7      0.6      0.0              bins=index_edges,
+   214     53326      38804.6      0.7      0.0              weights=result_array[:, :, 1],
+   215                                                   )
+   216     53326     295303.9      5.5      0.0          mz_spectrum += mz_v
+   217     53326   49642013.4    930.9      6.9          sm = np.nansum(result_array[:, :, 1])
+   218     53326     355821.8      6.7      0.0          mz_image[maldi_axis.frame_x_to_axis[x], maldi_axis.frame_y_to_axis[y]] = sm
+   219                                                   # spectrum = np.zeros(mz_edges[1:].shape, dtype=np.float64)
+   220                                                   # for res in tqdm(result, desc="Frame", leave=False):
+   221                                                   #     mz_v, _ = np.histogram(res[0], bins=index_edges, weights=res[1])
+   222                                                   #     spectrum += mz_v
+   223                                                   #
+   224                                                   #     sm = np.sum(res[1])
+   225                                                   #     mz_image[maldi_axis.frame_x_to_axis[x], maldi_axis.frame_y_to_axis[y]] += sm
+   226                                                   # assert np.all(spectrum_array == spectrum)
+   227                                                   # mz_spectrum += spectrum
+   228                                           
+   229         2        945.1    472.6      0.0      mz_array = tsf_index_to_mz(
+   230         1          0.9      0.9      0.0          tdf_sdk=dll,
+   231         1          2.0      2.0      0.0          handle=tims_data.handle,
+   232         1          1.7      1.7      0.0          frame_id=1,
+   233         1         25.6     25.6      0.0          indices=np.arange(0, mass_count, 100),
+   234                                               )
+   235                                           
+   236         1    1453129.8 1.45e+06      0.2      fig, axs = plt.subplots()
+   237         1        263.5    263.5      0.0      fig.suptitle("Mz")
+   238         1       1827.0   1827.0      0.0      axs.semilogy(mz_edges, mz_array)
+   239                                           
+   240         1     250730.1 250730.1      0.0      fig, axs = plt.subplots()
+   241         1        217.4    217.4      0.0      fig.suptitle("intensity")
+   242         1       1539.1   1539.1      0.0      axs.semilogy(mz_edges[1:], mz_spectrum, linewidth=0.1, markersize="1", marker=".")
+   243                                           
+   244         1     239586.8 239586.8      0.0      fig, axs = plt.subplots()
+   245         1        220.9    220.9      0.0      fig.suptitle("image")
+   246         1       2063.3   2063.3      0.0      axs.imshow(mz_image)
+   247                                               # plt.semilogy(mz_edges_full[1:], mz_spectrum_profile, label="profile")
+   248         1    7113658.6 7.11e+06      1.0      plt.show()
+
+  0.00 seconds - C:\Workspace\pyTDFSDK\pyTDFSDK\tsf.py:49 - tsf_index_to_mz
+  0.00 seconds - C:\Workspace\pyTDFSDK\pyTDFSDK\classes.py:17 - LazyAnalysis.__init__
+  0.01 seconds - C:\Workspace\pyTDFSDK\pyTDFSDK\tims.py:243 - tims_mz_to_index
+  0.01 seconds - C:\Workspace\pyTDFSDK\pyTDFSDK\util.py:10 - call_conversion_func
+  0.01 seconds - C:\Workspace\bruker_tmp\src\bruker_tmp\__init__.py:60 - get_path
+  0.02 seconds - C:\Workspace\pyTDFSDK\pyTDFSDK\init_tdf_sdk.py:25 - init_tdf_sdk_api
+  0.03 seconds - C:\Workspace\pyTDFSDK\pyTDFSDK\tims.py:318 - tims_open_v2
+  0.04 seconds - C:\Workspace\pyTDFSDK\pyTDFSDK\classes.py:165 - TdfData.__init__
+  0.08 seconds - C:\Workspace\bruker_tmp\src\bruker_tmp\__init__.py:39 - MaldiAxis.__init__
+  0.52 seconds - C:\Workspace\pyTDFSDK\pyTDFSDK\classes.py:48 - LazyAnalysis.join_frame
+288.69 seconds - C:\Workspace\pyTDFSDK\pyTDFSDK\tims.py:675 - tims_read_scans_v2_as_array
+715.71 seconds - C:\Workspace\bruker_tmp\src\bruker_tmp\__init__.py:142 - tims_tof

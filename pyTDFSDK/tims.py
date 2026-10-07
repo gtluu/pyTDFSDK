@@ -48,12 +48,9 @@ def tims_close(tdf_sdk, handle, conn):
     return handle, conn
 
 
-def tims_extract_centroided_spectrum_for_frame_ext(tdf_sdk,
-                                                   handle,
-                                                   frame_id,
-                                                   scan_begin,
-                                                   scan_end,
-                                                   peak_picker_resolution):
+def tims_extract_centroided_spectrum_for_frame_ext(
+    tdf_sdk, handle, frame_id, scan_begin, scan_end, peak_picker_resolution
+):
     """
     Read peak picked spectra for a frame from a TIMS (TDF) dataset with a custom peak picker resolution. Same as
     pyTDFSDK.tims.tims_extract_centroided_spectrum_for_frame_v2() but with a user supplied resolution for the peak
@@ -81,19 +78,23 @@ def tims_extract_centroided_spectrum_for_frame_ext(tdf_sdk,
         nonlocal result
         result = (mz_values[0:num_peaks], area_values[0:num_peaks])
 
-    rc = tdf_sdk.tims_extract_centroided_spectrum_for_frame_ext(handle,
-                                                                frame_id,
-                                                                scan_begin,
-                                                                scan_end,
-                                                                peak_picker_resolution,
-                                                                callback_for_dll,
-                                                                None)
+    rc = tdf_sdk.tims_extract_centroided_spectrum_for_frame_ext(
+        handle,
+        frame_id,
+        scan_begin,
+        scan_end,
+        peak_picker_resolution,
+        callback_for_dll,
+        None,
+    )
     if rc == 0:
         throw_last_timsdata_error(tdf_sdk)
     return result
 
 
-def tims_extract_centroided_spectrum_for_frame_v2(tdf_sdk, handle, frame_id, scan_begin, scan_end):
+def tims_extract_centroided_spectrum_for_frame_v2(
+    tdf_sdk, handle, frame_id, scan_begin, scan_end
+):
     """
     Read peak picked spectra for a frame from a TIMS (TDF) dataset.
 
@@ -117,12 +118,9 @@ def tims_extract_centroided_spectrum_for_frame_v2(tdf_sdk, handle, frame_id, sca
         nonlocal result
         result = (mz_values[0:num_peaks], area_values[0:num_peaks])
 
-    rc = tdf_sdk.tims_extract_centroided_spectrum_for_frame_v2(handle,
-                                                               frame_id,
-                                                               scan_begin,
-                                                               scan_end,
-                                                               callback_for_dll,
-                                                               None)
+    rc = tdf_sdk.tims_extract_centroided_spectrum_for_frame_v2(
+        handle, frame_id, scan_begin, scan_end, callback_for_dll, None
+    )
     if rc == 0:
         throw_last_timsdata_error(tdf_sdk)
     return result
@@ -148,22 +146,26 @@ def tims_extract_chromatograms(tdf_sdk, handle, jobs, trace_sink):
         except StopIteration:
             return 2
         except Exception as e:
-            print('extract_chromatograms: generator produced exception ', e)
+            print("extract_chromatograms: generator produced exception ", e)
             return 0
 
     @CHROMATOGRAM_TRACE_SINK
     def wrap_sink(job_id, num_points, frame_ids, values, user_data):
         try:
-            trace_sink(job_id,
-                       np.array(frame_ids[0:num_points], dtype=np.int64),
-                       np.array(values[0:num_points], dtype=np.uint64))
+            trace_sink(
+                job_id,
+                np.array(frame_ids[0:num_points], dtype=np.int64),
+                np.array(values[0:num_points], dtype=np.uint64),
+            )
             return 1
         except Exception as e:
-            print('extract_chromatograms: sink produced exception ', e)
+            print("extract_chromatograms: sink produced exception ", e)
             return 0
 
     unused_user_data = 0
-    rc = tdf_sdk.tims_extract_chromatogram(handle, wrap_gen, wrap_sink, unused_user_data)
+    rc = tdf_sdk.tims_extract_chromatogram(
+        handle, wrap_gen, wrap_sink, unused_user_data
+    )
     if rc == 0:
         throw_last_timsdata_error(tdf_sdk)
 
@@ -193,7 +195,9 @@ def tims_extract_profile_for_frame(tdf_sdk, handle, frame_id, scan_begin, scan_e
         nonlocal result
         result = intensity_values[0:num_points]
 
-    rc = tdf_sdk.tims_extract_profile_for_frame(handle, frame_id, scan_begin, scan_end, callback_for_dll, None)
+    rc = tdf_sdk.tims_extract_profile_for_frame(
+        handle, frame_id, scan_begin, scan_end, callback_for_dll, None
+    )
     if rc == 0:
         throw_last_timsdata_error(tdf_sdk)
     return result
@@ -303,11 +307,18 @@ def tims_open(tdf_sdk, bruker_d_folder_name, use_recalibrated_state=True):
     :return: Non-zero instance handle.
     :rtype: int
     """
-    handle = tdf_sdk.tims_open(bruker_d_folder_name.encode('utf-8'), 1 if use_recalibrated_state else 0)
+    handle = tdf_sdk.tims_open(
+        bruker_d_folder_name.encode("utf-8"), 1 if use_recalibrated_state else 0
+    )
     return handle
 
 
-def tims_open_v2(tdf_sdk, bruker_d_folder_name, pressure_compensation_strategy, use_recalibrated_state=True):
+def tims_open_v2(
+    tdf_sdk,
+    bruker_d_folder_name,
+    pressure_compensation_strategy,
+    use_recalibrated_state=True,
+):
     """
     Open TDF dataset while taking into account the pressure compensation strategy and return a non-zero instance handle
     to be passed to subsequent API calls.
@@ -325,9 +336,11 @@ def tims_open_v2(tdf_sdk, bruker_d_folder_name, pressure_compensation_strategy, 
     :return: Non-zero instance handle.
     :rtype: int
     """
-    handle = tdf_sdk.tims_open_v2(bruker_d_folder_name.encode('utf-8'),
-                                  1 if use_recalibrated_state else 0,
-                                  pressure_compensation_strategy.value)
+    handle = tdf_sdk.tims_open_v2(
+        bruker_d_folder_name.encode("utf-8"),
+        1 if use_recalibrated_state else 0,
+        pressure_compensation_strategy.value,
+    )
     return handle
 
 
@@ -356,10 +369,12 @@ def tims_read_pasef_msms(tdf_sdk, handle, precursor_list):
     def callback_for_dll(precursor_id, num_peaks, mz_values, area_values):
         result[precursor_id] = (mz_values[0:num_peaks], area_values[0:num_peaks])
 
-    rc = tdf_sdk.tims_read_pasef_msms(handle,
-                                      precursors_for_dll.ctypes.data_as(POINTER(c_int64)),
-                                      len(precursor_list),
-                                      callback_for_dll)
+    rc = tdf_sdk.tims_read_pasef_msms(
+        handle,
+        precursors_for_dll.ctypes.data_as(POINTER(c_int64)),
+        len(precursor_list),
+        callback_for_dll,
+    )
     if rc == 0:
         throw_last_timsdata_error(tdf_sdk)
     return result
@@ -418,7 +433,9 @@ def tims_read_pasef_msms_for_frame_v2(tdf_sdk, handle, frame_id):
         nonlocal result
         result[precursor_id] = (mz_values[0:num_peaks], area_values[0:num_peaks])
 
-    rc = tdf_sdk.tims_read_pasef_msms_for_frame_v2(handle, frame_id, callback_for_dll, None)
+    rc = tdf_sdk.tims_read_pasef_msms_for_frame_v2(
+        handle, frame_id, callback_for_dll, None
+    )
     if rc == 0:
         throw_last_timsdata_error(tdf_sdk)
     return result
@@ -450,11 +467,13 @@ def tims_read_pasef_msms_v2(tdf_sdk, handle, precursor_list):
         nonlocal result
         result[precursor_id] = (mz_values[0:num_peaks], area_values[0:num_peaks])
 
-    rc = tdf_sdk.tims_read_pasef_msms_v2(handle,
-                                         precursors_for_dll.ctypes.data_as(POINTER(c_int64)),
-                                         len(precursor_list),
-                                         callback_for_dll,
-                                         None)
+    rc = tdf_sdk.tims_read_pasef_msms_v2(
+        handle,
+        precursors_for_dll.ctypes.data_as(POINTER(c_int64)),
+        len(precursor_list),
+        callback_for_dll,
+        None,
+    )
     if rc == 0:
         throw_last_timsdata_error(tdf_sdk)
     return result
@@ -484,10 +503,12 @@ def tims_read_pasef_profile_msms(tdf_sdk, handle, precursor_list):
     def callback_for_dll(precursor_id, num_points, intensity_values):
         result[precursor_id] = intensity_values[0:num_points]
 
-    rc = tdf_sdk.tims_read_pasef_profile_msms(handle,
-                                              precursors_for_dll.ctypes.data_as(POINTER(c_int64)),
-                                              len(precursor_list),
-                                              callback_for_dll)
+    rc = tdf_sdk.tims_read_pasef_profile_msms(
+        handle,
+        precursors_for_dll.ctypes.data_as(POINTER(c_int64)),
+        len(precursor_list),
+        callback_for_dll,
+    )
     if rc == 0:
         throw_last_timsdata_error(tdf_sdk)
     return result
@@ -516,7 +537,9 @@ def tims_read_pasef_profile_msms_for_frame(tdf_sdk, handle, frame_id):
     def callback_for_dll(precursor_id, num_points, intensity_values):
         result[precursor_id] = intensity_values[0:num_points]
 
-    rc = tdf_sdk.tims_read_pasef_profile_msms_for_frame(handle, frame_id, callback_for_dll)
+    rc = tdf_sdk.tims_read_pasef_profile_msms_for_frame(
+        handle, frame_id, callback_for_dll
+    )
     if rc == 0:
         throw_last_timsdata_error(tdf_sdk)
     return result
@@ -546,7 +569,9 @@ def tims_read_pasef_profile_msms_for_frame_v2(tdf_sdk, handle, frame_id):
         nonlocal result
         result[precursor_id] = intensity_values[0:num_points]
 
-    rc = tdf_sdk.tims_read_pasef_profile_msms_for_frame_v2(handle, frame_id, callback_for_dll, None)
+    rc = tdf_sdk.tims_read_pasef_profile_msms_for_frame_v2(
+        handle, frame_id, callback_for_dll, None
+    )
     if rc == 0:
         throw_last_timsdata_error(tdf_sdk)
     return result
@@ -577,17 +602,21 @@ def tims_read_pasef_profile_msms_v2(tdf_sdk, handle, precursor_list):
         nonlocal result
         result[precursor_id] = intensity_values[0:num_points]
 
-    rc = tdf_sdk.tims_read_pasef_profile_msms_v2(handle,
-                                                 precursors_for_dll.ctypes.data_as(POINTER(c_int64)),
-                                                 len(precursor_list),
-                                                 callback_for_dll,
-                                                 None)
+    rc = tdf_sdk.tims_read_pasef_profile_msms_v2(
+        handle,
+        precursors_for_dll.ctypes.data_as(POINTER(c_int64)),
+        len(precursor_list),
+        callback_for_dll,
+        None,
+    )
     if rc == 0:
         throw_last_timsdata_error(tdf_sdk)
     return result
 
 
-def tims_read_scans_v2(tdf_sdk, handle, frame_id, scan_begin, scan_end, initial_frame_buffer_size=128):
+def tims_read_scans_v2(
+    tdf_sdk, handle, frame_id, scan_begin, scan_end, initial_frame_buffer_size=128
+):
     """
     Read a range of scans from a single frame. The resulting arrays are equivalent to line spectra.
 
@@ -612,18 +641,20 @@ def tims_read_scans_v2(tdf_sdk, handle, frame_id, scan_begin, scan_end, initial_
         cnt = int(initial_frame_buffer_size)
         buf = np.empty(shape=cnt, dtype=np.uint32)
         length = 4 * cnt
-        required_len = tdf_sdk.tims_read_scans_v2(handle,
-                                                  frame_id,
-                                                  scan_begin,
-                                                  scan_end,
-                                                  buf.ctypes.data_as(POINTER(c_uint32)),
-                                                  length)
+        required_len = tdf_sdk.tims_read_scans_v2(
+            handle,
+            frame_id,
+            scan_begin,
+            scan_end,
+            buf.ctypes.data_as(POINTER(c_uint32)),
+            length,
+        )
         if required_len == 0:
             throw_last_timsdata_error(tdf_sdk)
         if required_len > length:
             if required_len > 16777216:
                 # arbitrary limit for now...
-                raise RuntimeError('Maximum expected frame size exceeded.')
+                raise RuntimeError("Maximum expected frame size exceeded.")
             initial_frame_buffer_size = required_len / 4 + 1  # grow buffer
         else:
             break
@@ -631,11 +662,90 @@ def tims_read_scans_v2(tdf_sdk, handle, frame_id, scan_begin, scan_end, initial_
     d = scan_end - scan_begin
     for i in range(scan_begin, scan_end):
         npeaks = buf[i - scan_begin]
-        indices = buf[d:d + npeaks]
+        indices = buf[d : d + npeaks]
         d += npeaks
-        intensities = buf[d:d + npeaks]
+        intensities = buf[d : d + npeaks]
         d += npeaks
         result.append((indices, intensities))
+    return result
+
+
+def tims_read_scans_v2_as_array(
+    tdf_sdk,
+    handle,
+    frame_id,
+    scan_begin,
+    scan_end,
+    initial_frame_buffer_size=128,
+    peak_buffer_count=-1,
+):
+    """
+    Read a range of scans from a single frame. The resulting array contains the indices and peaks, where appropriate, or nan.
+    The final array has dimensions (num_scans, peak_count, 0: index, 1: intensity)
+
+    :param tdf_sdk: Library initialized by pyTDFSDK.init_tdf_sdk.init_tdf_sdk_api().
+    :type tdf_sdk: ctypes.CDLL
+    :param handle: Handle value for TDF dataset initialized using pyTDFSDK.tims.tims_open().
+    :type handle: int
+    :param frame_id: ID of the frame of interest.
+    :type frame_id: int
+    :param scan_begin: Beginning scan number (corresponding to 1/K0 value) within frame.
+    :type scan_begin: int
+    :param scan_end: Ending scan number (corresponding to 1/K0 value) within frame (non-inclusive).
+    :type scan_end: int
+    :param initial_frame_buffer_size: Initial number of buffer bytes necessary for the output, defaults to 128.
+    :type initial_frame_buffer_size: int
+    :param peak_buffer_count: The maximum number of peaks expected per scan. If -1 then uses the maximum for this frame. If less than the maximum for this frame raises a Value Error
+    :type peak_buffer_count: int
+    :return: An array with the indices and peaks.
+    :rtype: numpy.array[tuple[int, int, int]]
+    """
+    # buffer-growing loop
+    while True:
+        cnt = int(initial_frame_buffer_size)
+        buf = np.empty(shape=cnt, dtype=np.uint32)
+        length = 4 * cnt
+        required_len = tdf_sdk.tims_read_scans_v2(
+            handle,
+            frame_id,
+            scan_begin,
+            scan_end,
+            buf.ctypes.data_as(POINTER(c_uint32)),
+            length,
+        )
+        if required_len == 0:
+            throw_last_timsdata_error(tdf_sdk)
+        if required_len > length:
+            if required_len > 16777216:
+                # arbitrary limit for now...
+                raise RuntimeError("Maximum expected frame size exceeded.")
+            initial_frame_buffer_size = required_len / 4 + 1  # grow buffer
+        else:
+            break
+
+    d = scan_end - scan_begin
+    peak_count = buf[:d]
+    max_peak_count = np.max(peak_count)
+    if peak_buffer_count > 0:
+        if max_peak_count > peak_buffer_count:
+            raise ValueError(
+                f"There were more than {peak_buffer_count} peaks. Stopping."
+            )
+    else:
+        peak_buffer_count = max_peak_count
+    total_peaks = np.sum(peak_count)
+    peak_end_2 = np.cumsum(peak_count, dtype=np.int64) * 2
+    peak_start_2 = np.concatenate([[0], peak_end_2])
+    indices = np.arange(total_peaks * 2, dtype=np.int64)
+
+    scan_index = np.searchsorted(peak_end_2, indices, side="right")
+    peaks_total = np.take_along_axis(peak_start_2, scan_index)
+    peaks_count = np.take_along_axis(peak_count, scan_index)
+    next = indices - peaks_total
+    data_type, peak_index = np.divmod(next, peaks_count)
+    result = np.full((d, max_peak_count, 2), np.nan)
+    result[scan_index, peak_index, data_type] = buf[d : d + total_peaks * 2]
+
     return result
 
 
@@ -710,8 +820,16 @@ def tims_voltage_to_scannum(tdf_sdk, handle, frame_id, voltages):
     return call_conversion_func(tdf_sdk, handle, frame_id, voltages, func)
 
 
-def extract_2d_tdf_spectrum(tdf_data, frame, scan_begin, scan_end, mode, profile_bins=0, mz_encoding=64,
-                            intensity_encoding=64):
+def extract_2d_tdf_spectrum(
+    tdf_data,
+    frame,
+    scan_begin,
+    scan_end,
+    mode,
+    profile_bins=0,
+    mz_encoding=64,
+    intensity_encoding=64,
+):
     """
     Extract spectrum from TDF data with m/z and intensity arrays. Spectrum can either be centroid or quasi-profile
     mode. "Raw" mode uses pyTDFSDK.tims.tims_read_scans_v2() method, while "centroid" mode uses
@@ -737,49 +855,65 @@ def extract_2d_tdf_spectrum(tdf_data, frame, scan_begin, scan_end, mode, profile
     :return: Tuple of mz_array (np.array) and intensity_array (np.array) or (None, None) if spectra are empty.
     :rtype: tuple[numpy.array | None]
     """
-    if mode == 'raw':
-        list_of_scans = tims_read_scans_v2(tdf_data.api, tdf_data.handle, frame, scan_begin, scan_end)
+    if mode == "raw":
+        list_of_scans = tims_read_scans_v2(
+            tdf_data.api, tdf_data.handle, frame, scan_begin, scan_end
+        )
         frame_mz_arrays = []
         frame_intensity_arrays = []
         for scan_num in range(scan_begin, scan_end):
-            if list_of_scans[scan_num][0].size != 0 \
-                    and list_of_scans[scan_num][1].size != 0 \
-                    and list_of_scans[scan_num][0].size == list_of_scans[scan_num][1].size:
-                mz_array = tims_index_to_mz(tdf_data.api, tdf_data.handle, frame, list_of_scans[scan_num][0])
+            if (
+                list_of_scans[scan_num][0].size != 0
+                and list_of_scans[scan_num][1].size != 0
+                and list_of_scans[scan_num][0].size == list_of_scans[scan_num][1].size
+            ):
+                mz_array = tims_index_to_mz(
+                    tdf_data.api, tdf_data.handle, frame, list_of_scans[scan_num][0]
+                )
                 intensity_array = list_of_scans[scan_num][1]
                 frame_mz_arrays.append(mz_array)
                 frame_intensity_arrays.append(intensity_array)
         if frame_mz_arrays and frame_intensity_arrays:
-            frames_array = np.stack((np.concatenate(frame_mz_arrays, axis=None),
-                                     np.concatenate(frame_intensity_arrays, axis=None)),
-                                    axis=-1)
-            frames_array = np.unique(frames_array[np.argsort(frames_array[:, 0])], axis=0)
+            frames_array = np.stack(
+                (
+                    np.concatenate(frame_mz_arrays, axis=None),
+                    np.concatenate(frame_intensity_arrays, axis=None),
+                ),
+                axis=-1,
+            )
+            frames_array = np.unique(
+                frames_array[np.argsort(frames_array[:, 0])], axis=0
+            )
             mz_array = frames_array[:, 0]
             intensity_array = frames_array[:, 1]
             return mz_array, intensity_array
         else:
             return None, None
-    elif mode == 'profile':
-        intensity_array = tims_extract_profile_for_frame(tdf_data.api,
-                                                         tdf_data.handle,
-                                                         frame,
-                                                         scan_begin,
-                                                         scan_end)
-        intensity_array = np.array(intensity_array, dtype=get_encoding_dtype(intensity_encoding))
-        mz_array = np.linspace(float(tdf_data.analysis['GlobalMetadata']['MzAcqRangeLower']),
-                               float(tdf_data.analysis['GlobalMetadata']['MzAcqRangeUpper']),
-                               intensity_array.size,
-                               dtype=get_encoding_dtype(mz_encoding))
+    elif mode == "profile":
+        intensity_array = tims_extract_profile_for_frame(
+            tdf_data.api, tdf_data.handle, frame, scan_begin, scan_end
+        )
+        intensity_array = np.array(
+            intensity_array, dtype=get_encoding_dtype(intensity_encoding)
+        )
+        mz_array = np.linspace(
+            float(tdf_data.analysis["GlobalMetadata"]["MzAcqRangeLower"]),
+            float(tdf_data.analysis["GlobalMetadata"]["MzAcqRangeUpper"]),
+            intensity_array.size,
+            dtype=get_encoding_dtype(mz_encoding),
+        )
         if profile_bins != 0:
-            mz_array, intensity_array = bin_profile_spectrum(mz_array, intensity_array, profile_bins, mz_encoding)
-    elif mode == 'centroid':
-        mz_array, intensity_array = tims_extract_centroided_spectrum_for_frame_v2(tdf_data.api,
-                                                                                  tdf_data.handle,
-                                                                                  frame,
-                                                                                  scan_begin,
-                                                                                  scan_end)
+            mz_array, intensity_array = bin_profile_spectrum(
+                mz_array, intensity_array, profile_bins, mz_encoding
+            )
+    elif mode == "centroid":
+        mz_array, intensity_array = tims_extract_centroided_spectrum_for_frame_v2(
+            tdf_data.api, tdf_data.handle, frame, scan_begin, scan_end
+        )
         mz_array = np.array(mz_array, dtype=get_encoding_dtype(mz_encoding))
-        intensity_array = np.array(intensity_array, dtype=get_encoding_dtype(intensity_encoding))
+        intensity_array = np.array(
+            intensity_array, dtype=get_encoding_dtype(intensity_encoding)
+        )
     return mz_array, intensity_array
 
 
@@ -801,7 +935,9 @@ def extract_3d_tdf_spectrum(tdf_data, frame, scan_begin, scan_end):
         (None, None, None) if spectra are empty.
     :rtype: tuple[numpy.array | None]
     """
-    list_of_scans = tims_read_scans_v2(tdf_data.api, tdf_data.handle, frame, scan_begin, scan_end)
+    list_of_scans = tims_read_scans_v2(
+        tdf_data.api, tdf_data.handle, frame, scan_begin, scan_end
+    )
     frame_mz_arrays = []
     frame_intensity_arrays = []
     frame_mobility_arrays = []
@@ -809,21 +945,31 @@ def extract_3d_tdf_spectrum(tdf_data, frame, scan_begin, scan_end):
         scan_end = scan_end - scan_begin
         scan_begin = 0
     for scan_num in range(scan_begin, scan_end):
-        if list_of_scans[scan_num][0].size != 0 \
-                and list_of_scans[scan_num][1].size != 0 \
-                and list_of_scans[scan_num][0].size == list_of_scans[scan_num][1].size:
-            mz_array = tims_index_to_mz(tdf_data.api, tdf_data.handle, frame, list_of_scans[scan_num][0])
+        if (
+            list_of_scans[scan_num][0].size != 0
+            and list_of_scans[scan_num][1].size != 0
+            and list_of_scans[scan_num][0].size == list_of_scans[scan_num][1].size
+        ):
+            mz_array = tims_index_to_mz(
+                tdf_data.api, tdf_data.handle, frame, list_of_scans[scan_num][0]
+            )
             intensity_array = list_of_scans[scan_num][1]
-            mobility = tims_scannum_to_oneoverk0(tdf_data.api, tdf_data.handle, frame, np.array([scan_num]))[0]
+            mobility = tims_scannum_to_oneoverk0(
+                tdf_data.api, tdf_data.handle, frame, np.array([scan_num])
+            )[0]
             mobility_array = np.repeat(mobility, mz_array.size)
             frame_mz_arrays.append(mz_array)
             frame_intensity_arrays.append(intensity_array)
             frame_mobility_arrays.append(mobility_array)
     if frame_mz_arrays and frame_intensity_arrays and frame_mobility_arrays:
-        frames_array = np.stack((np.concatenate(frame_mz_arrays, axis=None),
-                                 np.concatenate(frame_intensity_arrays, axis=None),
-                                 np.concatenate(frame_mobility_arrays, axis=None)),
-                                axis=-1)
+        frames_array = np.stack(
+            (
+                np.concatenate(frame_mz_arrays, axis=None),
+                np.concatenate(frame_intensity_arrays, axis=None),
+                np.concatenate(frame_mobility_arrays, axis=None),
+            ),
+            axis=-1,
+        )
         frames_array = np.unique(frames_array[np.argsort(frames_array[:, 0])], axis=0)
         mz_array = frames_array[:, 0]
         intensity_array = frames_array[:, 1]
@@ -833,8 +979,14 @@ def extract_3d_tdf_spectrum(tdf_data, frame, scan_begin, scan_end):
         return None, None, None
 
 
-def extract_ddapasef_precursor_spectrum(tdf_data, pasefframemsmsinfo_dicts, mode, profile_bins, mz_encoding,
-                                        intensity_encoding):
+def extract_ddapasef_precursor_spectrum(
+    tdf_data,
+    pasefframemsmsinfo_dicts,
+    mode,
+    profile_bins,
+    mz_encoding,
+    intensity_encoding,
+):
     """
     Extract spectrum from TDF data with m/z and intensity arrays. Spectrum can either be centroid or quasi-profile
     mode. "Raw" mode uses pyTDFSDK.tims.tims_read_scans_v2() method, while "centroid" mode uses
@@ -859,33 +1011,48 @@ def extract_ddapasef_precursor_spectrum(tdf_data, pasefframemsmsinfo_dicts, mode
     pasef_mz_arrays = []
     pasef_intensity_arrays = []
     for pasef_dict in pasefframemsmsinfo_dicts:
-        scan_begin = int(pasef_dict['ScanNumBegin'])
-        scan_end = int(pasef_dict['ScanNumEnd'])
-        mz_array, intensity_array = extract_2d_tdf_spectrum(tdf_data,
-                                                            int(pasef_dict['Frame']),
-                                                            scan_begin,
-                                                            scan_end,
-                                                            mode,
-                                                            profile_bins,
-                                                            mz_encoding,
-                                                            intensity_encoding)
-        if mz_array.size != 0 and intensity_array.size != 0 and mz_array.size == intensity_array.size:
+        scan_begin = int(pasef_dict["ScanNumBegin"])
+        scan_end = int(pasef_dict["ScanNumEnd"])
+        mz_array, intensity_array = extract_2d_tdf_spectrum(
+            tdf_data,
+            int(pasef_dict["Frame"]),
+            scan_begin,
+            scan_end,
+            mode,
+            profile_bins,
+            mz_encoding,
+            intensity_encoding,
+        )
+        if (
+            mz_array.size != 0
+            and intensity_array.size != 0
+            and mz_array.size == intensity_array.size
+        ):
             pasef_mz_arrays.append(mz_array)
             pasef_intensity_arrays.append(intensity_array)
     if pasef_mz_arrays and pasef_intensity_arrays:
-        pasef_array = np.stack((np.concatenate(pasef_mz_arrays, axis=None),
-                                np.concatenate(pasef_intensity_arrays, axis=None)),
-                               axis=-1)
+        pasef_array = np.stack(
+            (
+                np.concatenate(pasef_mz_arrays, axis=None),
+                np.concatenate(pasef_intensity_arrays, axis=None),
+            ),
+            axis=-1,
+        )
         pasef_array = np.unique(pasef_array[np.argsort(pasef_array[:, 0])], axis=0)
 
-        mz_acq_range_lower = float(tdf_data.analysis['GlobalMetadata']['MzAcqRangeLower'])
-        mz_acq_range_upper = float(tdf_data.analysis['GlobalMetadata']['MzAcqRangeUpper'])
+        mz_acq_range_lower = float(tdf_data.GlobalMetadata["MzAcqRangeLower"])
+        mz_acq_range_upper = float(tdf_data.GlobalMetadata["MzAcqRangeUpper"])
         bin_size = 0.005
-        bins = np.arange(mz_acq_range_lower, mz_acq_range_upper, bin_size,
-                         dtype=get_encoding_dtype(mz_encoding))
+        bins = np.arange(
+            mz_acq_range_lower,
+            mz_acq_range_upper,
+            bin_size,
+            dtype=get_encoding_dtype(mz_encoding),
+        )
 
-        unique_indices, inverse_indices = np.unique(np.digitize(pasef_array[:, 0], bins),
-                                                    return_inverse=True)
+        unique_indices, inverse_indices = np.unique(
+            np.digitize(pasef_array[:, 0], bins), return_inverse=True
+        )
         bin_counts = np.bincount(inverse_indices)
         np.place(bin_counts, bin_counts < 1, [1])
 

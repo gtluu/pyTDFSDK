@@ -33,13 +33,18 @@ def call_conversion_func(tdf_sdk, handle, frame_id, input_data, func):
         in_array = np.array(input_data, dtype=np.float64)
     cnt = len(in_array)
     out = np.empty(shape=cnt, dtype=np.float64)
-    success = func(handle,
-                   frame_id,
-                   in_array.ctypes.data_as(POINTER(c_double)),
-                   out.ctypes.data_as(POINTER(c_double)),
-                   cnt)
+    success = func(
+        handle,
+        frame_id,
+        in_array.ctypes.data_as(POINTER(c_double)),
+        out.ctypes.data_as(POINTER(c_double)),
+        cnt,
+    )
     if success == 0:
-        throw_last_timsdata_error(tdf_sdk)
+        if func.__name__.startswith("tsf"):
+            throw_last_tsfdata_error(tdf_sdk)
+        else:
+            throw_last_timsdata_error(tdf_sdk)
     return out
 
 
@@ -70,10 +75,10 @@ def get_centroid_status(mode, exclude_mobility=None):
     :return: Tuple of (centroided status (bool), exclude_mobility status (bool))
     :rtype: tuple[bool]
     """
-    if mode == 'profile':
+    if mode == "profile":
         centroided = False
         exclude_mobility = True
-    elif mode == 'centroid' or mode == 'raw':
+    elif mode == "centroid" or mode == "raw":
         centroided = True
     return centroided, exclude_mobility
 
@@ -89,12 +94,15 @@ def get_maldi_coords(data, maldiframeinfo_dict):
     :return: x-y (or x-y-z if available) coordinates for the current spectrum.
     :rtype: tuple[int]
     """
-    if data.analysis['GlobalMetadata']['MaldiApplicationType'] == 'SingleSpectra':
-        coords = maldiframeinfo_dict['SpotName']
-    elif data.analysis['GlobalMetadata']['MaldiApplicationType'] == 'Imaging':
-        coords = [int(maldiframeinfo_dict['XIndexPos']), int(maldiframeinfo_dict['YIndexPos'])]
-        if 'ZIndexPos' in data.analysis['MaldiFrameInfo'].columns:
-            coords.append(int(maldiframeinfo_dict['ZIndexPos']))
+    if data.analysis["GlobalMetadata"]["MaldiApplicationType"] == "SingleSpectra":
+        coords = maldiframeinfo_dict["SpotName"]
+    elif data.analysis["GlobalMetadata"]["MaldiApplicationType"] == "Imaging":
+        coords = [
+            int(maldiframeinfo_dict["XIndexPos"]),
+            int(maldiframeinfo_dict["YIndexPos"]),
+        ]
+        if "ZIndexPos" in data.analysis["MaldiFrameInfo"].columns:
+            coords.append(int(maldiframeinfo_dict["ZIndexPos"]))
         coords = tuple(coords)
     return coords
 
@@ -116,8 +124,15 @@ def bin_profile_spectrum(mz_array, intensity_array, profile_bins, mz_encoding):
     """
     mz_acq_range_lower = float(mz_array[0])
     mz_acq_range_upper = float(mz_array[-1])
-    bins = np.linspace(mz_acq_range_lower, mz_acq_range_upper, profile_bins, dtype=get_encoding_dtype(mz_encoding))
-    unique_indices, inverse_indices = np.unique(np.digitize(mz_array, bins), return_inverse=True)
+    bins = np.linspace(
+        mz_acq_range_lower,
+        mz_acq_range_upper,
+        profile_bins,
+        dtype=get_encoding_dtype(mz_encoding),
+    )
+    unique_indices, inverse_indices = np.unique(
+        np.digitize(mz_array, bins), return_inverse=True
+    )
     bin_counts = np.bincount(inverse_indices)
     np.place(bin_counts, bin_counts < 1, [1])
     mz_array = np.bincount(inverse_indices, weights=mz_array) / bin_counts
