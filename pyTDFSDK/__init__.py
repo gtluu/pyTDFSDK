@@ -13,3 +13,4 @@ from pyTDFSDK.tims import *
 from pyTDFSDK.tsf import *
 from pyTDFSDK.util import *
 from pyTDFSDK.error import *
+from pyTDFSDK.fragmentation import *
