@@ -10,6 +10,7 @@ from pyTDFSDK.tsf import *
 from pyTDFSDK.util import *
 from pyTDFSDK.ctypes_data_structures import *
 from pyTDFSDK.error import *
+from pyTDFSDK.fragmentation import *
 
 
 class TsfData(object):
@@ -209,6 +210,9 @@ class TsfSpectrum(object):
         self.charge_state = None
         self.activation = None
         self.collision_energy = None
+        self.electron_energy = None
+        self.reaction_time = None
+        self.precursor_group = None
         self.frame = frame
         self.parent_frame = None
         self.parent_scan = None
@@ -248,9 +252,10 @@ class TsfSpectrum(object):
             if int(frames_dict['MsMsType']) == 0:
                 self.scan_type = 'MS1 spectrum'
                 self.ms_level = 1
-            elif int(frames_dict['MsMsType']) in [2, 8, 9]:
-                framemsmsinfo_dict = self.tsf_data.analysis['FrameMsMsInfo'][self.tsf_data.analysis['FrameMsMsInfo']['Frame'] ==
-                                                                             self.frame].to_dict(orient='records')[0]
+            elif int(frames_dict['MsMsType']) in [2, 3, 8, 9]:
+                framemsmsinfo_dict = self.get_framemsmsinfo_dict()
+                if framemsmsinfo_dict is None:
+                    return
                 # Auto MS/MS
                 if int(frames_dict['ScanMode']) == 1:
                     self.scan_type = 'MSn spectrum'
@@ -260,9 +265,12 @@ class TsfSpectrum(object):
                     self.isolation_upper_offset = float(framemsmsinfo_dict['IsolationWidth']) / 2
                     self.selected_ion_mz = float(framemsmsinfo_dict['TriggerMass'])
                     self.charge_state = framemsmsinfo_dict['PrecursorCharge']
-                    self.activation = 'collision-induced dissociation'
-                    self.collision_energy = float(framemsmsinfo_dict['CollisionEnergy'])
-                    self.parent_frame = int(framemsmsinfo_dict['Parent'])
+                    self.activation, self.electron_energy, self.reaction_time = get_activation(framemsmsinfo_dict)
+                    # CollisionEnergy is None for an ExD frame without a CID step (schema v5).
+                    if framemsmsinfo_dict['CollisionEnergy'] is not None:
+                        self.collision_energy = float(framemsmsinfo_dict['CollisionEnergy'])
+                    parent = framemsmsinfo_dict['Parent']
+                    self.parent_frame = None if parent is None else int(parent)
                 # MRM
                 elif int(frames_dict['ScanMode']) == 2:
                     self.scan_type = 'MSn spectrum'
@@ -281,6 +289,32 @@ class TsfSpectrum(object):
                     self.activation = 'collision-induced dissociation'
                     self.collision_energy = float(framemsmsinfo_dict['CollisionEnergy'])
                     self.ms2_no_precursor = True
+
+    def get_framemsmsinfo_dict(self):
+        """
+        Get the MS/MS settings of the current TSF frame as a row of the FrameMsMsInfo table. In schema v5 that table
+        is a view that drops frames without a CID step (i.e. ExD), so the Fragmentation* tables are read instead.
+        The row then also has ReactionTime and ElectronEnergy, and CollisionEnergy and Parent may be None.
+
+        :return: Dictionary with the keys Frame, Parent, TriggerMass, IsolationWidth, PrecursorCharge and
+            CollisionEnergy, or None if a schema v5 frame has no fragmentation step.
+        :rtype: dict | None
+        """
+        if not has_fragmentation_tables(self.tsf_data.analysis):
+            return self.tsf_data.analysis['FrameMsMsInfo'][self.tsf_data.analysis['FrameMsMsInfo']['Frame'] ==
+                                                           self.frame].to_dict(orient='records')[0]
+        steps = get_steps_by_frame(self.tsf_data).get(self.frame, [])
+        if len(steps) == 0:
+            return None
+        step = steps[0]
+        return {'Frame': self.frame,
+                'Parent': step['Parent'],
+                'TriggerMass': step['IsolationMz'],
+                'IsolationWidth': step['IsolationWidth'],
+                'PrecursorCharge': step['PrecursorCharge'],
+                'CollisionEnergy': step['CollisionEnergy'],
+                'ReactionTime': step['ReactionTime'],
+                'ElectronEnergy': step['ElectronEnergy']}
 
     def get_maldi_tsf_data(self):
         frames_dict = self.tsf_data.analysis['Frames'][self.tsf_data.analysis['Frames']['Id'] ==
@@ -395,6 +429,9 @@ class TdfSpectrum(object):
         self.charge_state = None
         self.activation = None
         self.collision_energy = None
+        self.electron_energy = None
+        self.reaction_time = None
+        self.precursor_group = None
         self.frame = frame
         self.parent_frame = None
         self.parent_scan = None
@@ -594,8 +631,14 @@ class TdfSpectrum(object):
                                                               self.precursor].to_dict(orient='records')[0]
         frames_dict = self.tdf_data.analysis['Frames'][self.tdf_data.analysis['Frames']['Id'] ==
                                                        precursor_dict['Parent']].to_dict(orient='records')[0]
-        pasefframemsmsinfo_dicts = self.tdf_data.analysis['PasefFrameMsMsInfo'][self.tdf_data.analysis['PasefFrameMsMsInfo']['Precursor'] ==
-                                                                                self.precursor].to_dict(orient='records')
+        if has_fragmentation_tables(self.tdf_data.analysis):
+            # Schema v5: PasefFrameMsMsInfo is a view that drops frames without a CID step (i.e. ExD).
+            pasefframemsmsinfo_dicts = get_precursor_steps(self.tdf_data).get(self.precursor, [])
+            if len(pasefframemsmsinfo_dicts) == 0:
+                return
+        else:
+            pasefframemsmsinfo_dicts = self.tdf_data.analysis['PasefFrameMsMsInfo'][self.tdf_data.analysis['PasefFrameMsMsInfo']['Precursor'] ==
+                                                                                    self.precursor].to_dict(orient='records')
         self.polarity = frames_dict['Polarity']
         self.centroided = get_centroid_status(self.mode, self.exclude_mobility)[0]
         self.retention_time = float(frames_dict['Time']) / 60
@@ -620,8 +663,10 @@ class TdfSpectrum(object):
                                                                    int(precursor_dict['Parent']),
                                                                    np.array([int(precursor_dict['ScanNumber'])]))[0]
             self.charge_state = precursor_dict['Charge']
-            self.activation = 'collision-induced dissociation'
+            self.activation, self.electron_energy, self.reaction_time = get_activation(pasefframemsmsinfo_dicts[0])
             self.collision_energy = pasefframemsmsinfo_dicts[0]['CollisionEnergy']
+            if pasefframemsmsinfo_dicts[0].get('PrecursorGroup') is not None:
+                self.precursor_group = int(pasefframemsmsinfo_dicts[0]['PrecursorGroup'])
             self.parent_frame = int(precursor_dict['Parent'])
             self.parent_scan = int(precursor_dict['ScanNumber'])
             if not np.isnan(precursor_dict['Charge']):
